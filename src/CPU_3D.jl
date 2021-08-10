@@ -5,6 +5,9 @@ module CPU_3D
 export isotropic_forward_solver,isotropic_adjoint_solver
 ## Using ParallelStencil
 include("./ParallelStencil/ParallelStencil.jl");
+## utilities
+include("./utilities.jl");
+##
 using Random,MAT,Plots,Dates,TimerOutputs,WriteVTK,ProgressMeter,DataFrames,CSV,
 .ParallelStencil,.ParallelStencil.FiniteDifferences3D
 ## Use CPU for ParallelStencil

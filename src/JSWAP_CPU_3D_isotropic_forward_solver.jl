@@ -4,7 +4,7 @@ Finite-difference solver for isotropic viscoelastic media.
 @timeit ti "iso_3D" function isotropic_forward_solver(input2);
 
 #global data
-
+global data
 # zero stress condition at the boundaries
 input2.lambda[1:5,:,:] .=0;
 input2.lambda[end-4:end,:,:] .=0;

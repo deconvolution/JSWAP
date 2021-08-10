@@ -15,12 +15,7 @@ input2.nx=80;
 input2.ny=80;
 # nz
 input2.nz=90;
-# 3D true coordinate X
-input2.X=nothing;
-# 3D true coordinate Y
-input2.Y=nothing;
-# 3D true coordinate Z
-input2.Z=nothing;
+# 3D true coordinate X, Y and Z
 input2.Y,input2.X,input2.Z=JSWAP.meshgrid(1:80,1:80,1:90);
 ## material properties
 input2.lambda=ones(80,80,90)*10^9*1.0;
@@ -54,7 +49,7 @@ input2.src1=zeros(input2.nt,1);
 # source signal y
 input2.src2=zeros(input2.nt,1);
 # source signal z
-input2.src3=reshape(rickerWave(5,10^-3*.1,1000,2),input2.nt,1);
+input2.src3=reshape(rickerWave(2,10^-3*.1,1000,2),input2.nt,1);
 # source signal pressure
 input2.srcp=zeros(input2.nt,1);
 # receiver true location x

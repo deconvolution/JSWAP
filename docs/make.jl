@@ -10,6 +10,13 @@ makedocs(
     ),
     pages=[
         "Home" => "index.md",
+        "Tutorials" => Any[
+        "Inputs" =>"Inputs.md"
+        "Outputs"=>"Outputs.md"
+        "How to implement"=>"How_to_implement"
+        "Utilities"=>"Utilities.md"
+        ],
+        "List of functions" =>"list_of_functions.md"
     ],
 )
 
