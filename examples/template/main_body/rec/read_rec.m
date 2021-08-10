@@ -4,7 +4,7 @@ https://ch.mathworks.com/matlabcentral/fileexchange/54813-cqwva-d-y-x-index_incr
 %}
 dt=10^-3;
 nt=1000;
-tt=load('./rec_p.mat');
+tt=load('./rec_3.mat');
 R=tt.data;
 %%
 cqwva(R,dt:dt:dt*nt,1:size(R,2),1,1,3,'black','black','new','max');
