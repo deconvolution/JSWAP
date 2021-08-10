@@ -1,3 +1,7 @@
+%{
+Please download this package first for plotting seismograms cqwva:
+https://ch.mathworks.com/matlabcentral/fileexchange/54813-cqwva-d-y-x-index_incre-lvl-clip-line_color-face_color-mode-trace_balance
+%}
 dt=10^-3;
 nt=1000;
 tt=load('./rec_p.mat');

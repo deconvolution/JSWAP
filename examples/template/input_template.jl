@@ -49,7 +49,7 @@ input2.src1=zeros(input2.nt,1);
 # source signal y
 input2.src2=zeros(input2.nt,1);
 # source signal z
-input2.src3=reshape(rickerWave(2,10^-3*.1,1000,2),input2.nt,1);
+input2.src3=reshape(rickerWave(2,10^-3*1.0,1000,2),input2.nt,1);
 # source signal pressure
 input2.srcp=zeros(input2.nt,1);
 # receiver true location x
