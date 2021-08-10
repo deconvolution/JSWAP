@@ -6,7 +6,7 @@
 
 A Julia package for Sound WAve Propagation (JSWAP).
 ![Farmers Market Finder Demo](./docs/src/pictures/readme.gif)
-Simulation for Campi Flegrei. Read Dots: source. Green dots: receivers. X: Latitude. Y: Longitude. Z: Altitude [m]. v3: Vertical particle velocity [m/s].
+Simulation for Campi Flegrei. Units of time: s. Red dots: source. Green dots: receivers. X: Latitude. Y: Longitude. Z: Altitude [m]. v3: Vertical particle velocity [m/s].
 ## Contents
 * [Target](#Target)
 * [Highlights](#Highlights)
