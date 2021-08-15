@@ -79,6 +79,17 @@ R2=copy(R1);
 R3=copy(R1);
 P=@zeros(input2.nt,length(input2.r3));
 
+# decompose moment tensor
+if isdefined(input2,:M33)
+    Mp=-1/3*(input2.M11+input2.M22+input2.M33);
+    Ms11=input2.M11+Mp;
+    Ms22=input2.M22+Mp;
+    Ms33=input2.M33+Mp;
+    Ms23=input2.M23;
+    Ms13=input2.M13;
+    Ms12=input2.M12;
+end
+
 # wave vector
 v1=@zeros(input2.nx,input2.ny,input2.nz);
 v2=copy(v1);
@@ -213,6 +224,28 @@ for l=1:input2.nt-1
     Ax,Ax2,Ax3,Ax4,Ax5,Ax6,Ax7,
     ax_dt,ax2_dt,ax3_dt,ax4_dt,ax5_dt,ax6_dt,ax7_dt);
 
+    # moment tensor source
+    if isdefined(input2,:M33)
+        if ns==1 && l<=size(Ms33,1)
+            sigmas11[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas11[CartesianIndex.(input2.s1,input2.s2,input2.s3)]+@ones(1,1)*Ms11[l];
+            sigmas22[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas22[CartesianIndex.(input2.s1,input2.s2,input2.s3)]+@ones(1,1)*Ms22[l];
+            sigmas33[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas33[CartesianIndex.(input2.s1,input2.s2,input2.s3)]+@ones(1,1)*Ms33[l];
+            sigmas23[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas23[CartesianIndex.(input2.s1,input2.s2,input2.s3)]+@ones(1,1)*Ms23[l];
+            sigmas13[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas13[CartesianIndex.(input2.s1,input2.s2,input2.s3)]+@ones(1,1)*Ms13[l];
+            sigmas12[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas12[CartesianIndex.(input2.s1,input2.s2,input2.s3)]+@ones(1,1)*Ms12[l];
+            p[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=p[CartesianIndex.(input2.s1,input2.s2,input2.s3)]+@ones(1,1)*Mp[l];
+        end
+        if ns>=2 && l<=size(Ms33,1)
+            sigmas11[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas11[CartesianIndex.(input2.s1,input2.s2,input2.s3)]+Ms11[l,:]';
+            sigmas22[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas22[CartesianIndex.(input2.s1,input2.s2,input2.s3)]+Ms22[l,:]';
+            sigmas33[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas33[CartesianIndex.(input2.s1,input2.s2,input2.s3)]+Ms33[l,:]';
+            sigmas23[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas23[CartesianIndex.(input2.s1,input2.s2,input2.s3)]+Ms23[l,:]';
+            sigmas13[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas13[CartesianIndex.(input2.s1,input2.s2,input2.s3)]+Ms13[l,:]';
+            sigmas12[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas12[CartesianIndex.(input2.s1,input2.s2,input2.s3)]+Ms12[l,:]';
+            p[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=p[CartesianIndex.(input2.s1,input2.s2,input2.s3)]+Mp[l,:]';
+        end
+    end
+
     @parallel Dx_inn(sigmas11,dtt1);
     @parallel (2:input2.ny-1,2:input2.nz-1) u_1_minus(dtt1,sigmas11_1_minus);
 
@@ -255,17 +288,21 @@ for l=1:input2.nt-1
     sigmas12_1_plus,sigmas12_2_plus,
     p_1_minus,p_2_minus,p_3_minus);
 
-    if ns==1
-        v1[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=v1[CartesianIndex.(input2.s1,input2.s2,input2.s3)]+1 ./input2.rho[CartesianIndex.(input2.s1,input2.s2,input2.s3)] .*input2.src1[l];
-        v2[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=v2[CartesianIndex.(input2.s1,input2.s2,input2.s3)]+1 ./input2.rho[CartesianIndex.(input2.s1,input2.s2,input2.s3)] .*input2.src2[l];
-        v3[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=v3[CartesianIndex.(input2.s1,input2.s2,input2.s3)]+1 ./input2.rho[CartesianIndex.(input2.s1,input2.s2,input2.s3)] .*input2.src3[l];
-        p[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=p[CartesianIndex.(input2.s1,input2.s2,input2.s3)]+1 ./input2.rho[CartesianIndex.(input2.s1,input2.s2,input2.s3)] .*input2.srcp[l];
-    else
-        v1[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=v1[CartesianIndex.(input2.s1,input2.s2,input2.s3)]+1 ./input2.rho[CartesianIndex.(input2.s1,input2.s2,input2.s3)] .*input2.src1[l,:]';
-        v2[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=v2[CartesianIndex.(input2.s1,input2.s2,input2.s3)]+1 ./input2.rho[CartesianIndex.(input2.s1,input2.s2,input2.s3)] .*input2.src2[l,:]';
-        v3[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=v3[CartesianIndex.(input2.s1,input2.s2,input2.s3)]+1 ./input2.rho[CartesianIndex.(input2.s1,input2.s2,input2.s3)] .*input2.src3[l,:]';
-        p[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=p[CartesianIndex.(input2.s1,input2.s2,input2.s3)]+1 ./input2.rho[CartesianIndex.(input2.s1,input2.s2,input2.s3)] .*input2.srcp[l,:]';
+    if isdefined(input2,:src3)
+        if ns==1 && l<=size(input2.src3,1)
+            v1[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=v1[CartesianIndex.(input2.s1,input2.s2,input2.s3)]+1 ./input2.rho[CartesianIndex.(input2.s1,input2.s2,input2.s3)] .*input2.src1[l];
+            v2[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=v2[CartesianIndex.(input2.s1,input2.s2,input2.s3)]+1 ./input2.rho[CartesianIndex.(input2.s1,input2.s2,input2.s3)] .*input2.src2[l];
+            v3[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=v3[CartesianIndex.(input2.s1,input2.s2,input2.s3)]+1 ./input2.rho[CartesianIndex.(input2.s1,input2.s2,input2.s3)] .*input2.src3[l];
+            p[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=p[CartesianIndex.(input2.s1,input2.s2,input2.s3)]+@ones(1,1) .*input2.srcp[l];
+        end
+        if ns>=2 && l<=size(input2.src3,1)
+            v1[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=v1[CartesianIndex.(input2.s1,input2.s2,input2.s3)]+1 ./input2.rho[CartesianIndex.(input2.s1,input2.s2,input2.s3)] .*input2.src1[l,:]';
+            v2[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=v2[CartesianIndex.(input2.s1,input2.s2,input2.s3)]+1 ./input2.rho[CartesianIndex.(input2.s1,input2.s2,input2.s3)] .*input2.src2[l,:]';
+            v3[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=v3[CartesianIndex.(input2.s1,input2.s2,input2.s3)]+1 ./input2.rho[CartesianIndex.(input2.s1,input2.s2,input2.s3)] .*input2.src3[l,:]';
+            p[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=p[CartesianIndex.(input2.s1,input2.s2,input2.s3)]+@ones(1,ns) .*input2.srcp[l,:]';
+        end
     end
+
 
     # assign recordings
     @timeit ti "receiver" R1[l+1,:]=reshape(v1[CartesianIndex.(input2.r1,input2.r2,input2.r3)],length(input2.r3),);
