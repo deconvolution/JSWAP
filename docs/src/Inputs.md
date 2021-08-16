@@ -8,8 +8,8 @@ In JSWAP, all of the input parameters are assigned to a struct input2. The follo
  Dimension: [].
 
  Example:
+
  ```
- # dt
  input2.dt=10.0^-3;
  ```
 
@@ -21,12 +21,10 @@ In JSWAP, all of the input parameters are assigned to a struct input2. The follo
  Dimension: [].
 
  Example:
+
  ```
- # dx
  input2.dx=10.0;
- # dy
  input2.dy=10.0;
- # dz
  input2.dz=10.0;
  ```
 
@@ -38,8 +36,8 @@ In JSWAP, all of the input parameters are assigned to a struct input2. The follo
  Dimension: [].
 
  Example:
+
  ```
- # nt
  input2.nt=10.0^3;
  ```
 
@@ -49,12 +47,10 @@ In JSWAP, all of the input parameters are assigned to a struct input2. The follo
  Type: Int32.
 
  Dimension: [].
+
  ```
- # nx
  input2.nx=80;
- # ny
  input2.ny=80;
- # nz
  input2.nz=90;
  ```
 
@@ -66,10 +62,11 @@ In JSWAP, all of the input parameters are assigned to a struct input2. The follo
  Dimension: [nx, ny, nz]
 
  Example:
+
  ```
- # 3D true coordinate X, Y and Z
  input2.Y,input2.X,input2.Z=JSWAP.meshgrid(1:80,1:80,1:90);
  ```
+
  # 6. lambda, mu
  Explanation: Lame constants, &lambda; and &mu;.
 
@@ -86,6 +83,7 @@ In JSWAP, all of the input parameters are assigned to a struct input2. The follo
  Dimension: [nx, ny, nz].
 
  Example:
+
  ```
  input2.rho=ones(80,80,90)*1000.0;
  ```
@@ -98,6 +96,7 @@ In JSWAP, all of the input parameters are assigned to a struct input2. The follo
  Dimension: [nx, ny, nz].
 
  Example:
+
  ```
  input2.inv_Qa=ones(80,80,90)*0.0;
  ```
@@ -110,14 +109,14 @@ In JSWAP, all of the input parameters are assigned to a struct input2. The follo
  Dimension: Each of them is a 2-dimensional matrix, with the first direction to be 1 and the second direction as the number of receiver numbers.
 
  Here is an example of 50 receivers.
+
  ```
- # receiver grid location x
  input2.r1=zeros(Int32,1,50);
  input2.r1[:]=30:79;
- # receiver grid location y
+
  input2.r2=zeros(Int32,1,50);
  input2.r2[:]=30:79;
- # receiver grid location z
+
  input2.r3=zeros(Int32,1,50);
  input2.r3 .=15;
  ```
@@ -130,14 +129,14 @@ In JSWAP, all of the input parameters are assigned to a struct input2. The follo
  Dimension: Each of them is a 2-dimensional matrix, with the first direction to be 1 and the second direction as the number of receiver numbers.
 
  Here is an example of 2 sources.
+
  ```
- # source grid location x
  input2.s1=zeros(Int32,1,2);
  input2.s1[:] =[60 60];
- # source grid location y
+
  input2.s2=zeros(Int32,1,2);
  input2.s2[:] =[49 51];
- # source grid location z
+
  input2.s3=zeros(Int32,1,2);
  input2.s3[:] =[49 51];
  ```
@@ -159,14 +158,11 @@ In JSWAP, all of the input parameters are assigned to a struct input2. The follo
  Dimension: [1, number of receivers].
 
  Example of computation true locations based on above information.
+
  ```
- # receiver true location x
  input2.r1t=input2.r1*input2.dx;
- # receiver true location y
  input2.r2t=input2.r2*input2.dy;
- # receiver true location z
  input2.r3t=input2.r3*input2.dz;
- # 11. s1t, s2t, s3t
  ```
 
  # 12. Rm
@@ -179,6 +175,7 @@ In JSWAP, all of the input parameters are assigned to a struct input2. The follo
  Component: 1 - x component, 2 - y component, 3 - z component, 4 - pressure component.
 
  If one does not want to mute any receivers, then
+
  ```
  input2.Rm=ones(length(input2.r3),4);
  ```
@@ -192,12 +189,10 @@ In JSWAP, all of the input parameters are assigned to a struct input2. The follo
  Dimension: [1, number of sources].
 
  Here is an example of 50 receivers.
+
  ```
- # source true location x
  input2.s1t=input2.s1*input2.dx;
- # source true location y
  input2.s2t=input2.s2*input2.dy;
- # source true location z
  input2.s3t=input2.s3*input2.dz;
  ```
 
@@ -209,8 +204,8 @@ In JSWAP, all of the input parameters are assigned to a struct input2. The follo
  Dimension: [].
 
  For a 10 layer PML,
+
  ```
- # PML layers
  input2.lp=10;
  ```
 
@@ -222,8 +217,8 @@ In JSWAP, all of the input parameters are assigned to a struct input2. The follo
  Dimension: [].
 
  Example:
+
  ```
- # PML power
  input2.nPML=2;
  ```
 
@@ -244,8 +239,8 @@ In JSWAP, all of the input parameters are assigned to a struct input2. The follo
  |40             |10.0^-4|
 
  Example:
+
  ```
- # PML theorecital reflection coefficient for 10 layers of PML
  input2.Rc=.1;
  ```
 
@@ -257,9 +252,8 @@ In JSWAP, all of the input parameters are assigned to a struct input2. The follo
  Dimension: [1, 6].
 
  Example for only zminus PML is deactivated:
+
  ```
- # set PML active
- # xminus,xplus,yminus,yplus,zminus,zplus
  input2.PML_active=[1 1 1 1 0 1];
  ```
 
@@ -271,7 +265,6 @@ In JSWAP, all of the input parameters are assigned to a struct input2. The follo
  Dimension: NA.
 
  ```
- # path for storage.
  input2.path=p3;
  ```
 
@@ -283,9 +276,7 @@ In JSWAP, all of the input parameters are assigned to a struct input2. The follo
  Dimension: NA.
 
  ```
- # path for wavefield .vtk
  input2.path_pic=string(input2.path,"/pic");
- # do not save wavefield snapshot
  input2.path_pic=nothing;
  ```
 
@@ -297,7 +288,6 @@ In JSWAP, all of the input parameters are assigned to a struct input2. The follo
  Dimension: NA.
 
  ```
- # path for model
  input2.path_model=string(input2.path,"/model");
  ```
  # 21. path_wavefield
@@ -308,7 +298,6 @@ In JSWAP, all of the input parameters are assigned to a struct input2. The follo
  Dimension: NA.
 
  ```
- # path for wavefield .mat
  input2.path_wavefield=string(input2.path,"/wavefield");
  ```
 
@@ -320,7 +309,6 @@ In JSWAP, all of the input parameters are assigned to a struct input2. The follo
  Dimension: NA.
 
  ```
- # path for recordings
  input2.path_rec=string(input2.path,"/rec");
  ```
 
@@ -332,7 +320,6 @@ In JSWAP, all of the input parameters are assigned to a struct input2. The follo
  Dimension: [].
 
  ```
- # plot interval
  input2.plot_interval=100;
  ```
 
@@ -342,8 +329,8 @@ In JSWAP, all of the input parameters are assigned to a struct input2. The follo
  Type: Int32.
 
  Dimension: [].
+ 
  ```
- # wavefield interval
  input2.wavefield_interval=0;
  ```
 

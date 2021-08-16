@@ -2,12 +2,10 @@ An example of the simulation implementation is given [here](https://github.com/d
 
 The main file is `main_body.jl`. Only one line is needed to change:
 ```
-# Specify where the input file is
 path_to_input=["./input_template.jl"];
 ```
 This line is used to tell JSWAP where the input file is. Multiple input files can be added. For instance,
 ```
-# Specify where the input file is
 path_to_input=["./input_template.jl","./input_template2.jl",];
 ```
 
