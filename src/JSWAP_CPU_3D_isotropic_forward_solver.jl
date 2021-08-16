@@ -244,22 +244,23 @@ for l=1:input2.nt-1
     # moment tensor source
     if isdefined(input2,:M33)
         if ns==1 && l<=size(Ms33_t,1)
-            sigmas11[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas11[CartesianIndex.(input2.s1,input2.s2,input2.s3)]+@ones(1,1)*input2.dt/input2.dx/input2.dy/input2.dz*Ms11_t[l];
-            sigmas22[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas22[CartesianIndex.(input2.s1,input2.s2,input2.s3)]+@ones(1,1)*input2.dt/input2.dx/input2.dy/input2.dz*Ms22_t[l];
-            sigmas33[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas33[CartesianIndex.(input2.s1,input2.s2,input2.s3)]+@ones(1,1)*input2.dt/input2.dx/input2.dy/input2.dz*Ms33_t[l];
-            sigmas23[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas23[CartesianIndex.(input2.s1,input2.s2,input2.s3)]+@ones(1,1)*input2.dt/input2.dx/input2.dy/input2.dz*Ms23_t[l];
-            sigmas13[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas13[CartesianIndex.(input2.s1,input2.s2,input2.s3)]+@ones(1,1)*input2.dt/input2.dx/input2.dy/input2.dz*Ms13_t[l];
-            sigmas12[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas12[CartesianIndex.(input2.s1,input2.s2,input2.s3)]+@ones(1,1)*input2.dt/input2.dx/input2.dy/input2.dz*Ms12_t[l];
-            p[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=p[CartesianIndex.(input2.s1,input2.s2,input2.s3)]+@ones(1,1)*input2.dt/input2.dx/input2.dy/input2.dz*Mp_t[l];
+            sigmas11[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas11[CartesianIndex.(input2.s1,input2.s2,input2.s3)]-@ones(1,1)*input2.dt/input2.dx/input2.dy/input2.dz*Ms11_t[l];
+            sigmas22[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas22[CartesianIndex.(input2.s1,input2.s2,input2.s3)]-@ones(1,1)*input2.dt/input2.dx/input2.dy/input2.dz*Ms22_t[l];
+            sigmas33[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas33[CartesianIndex.(input2.s1,input2.s2,input2.s3)]-@ones(1,1)*input2.dt/input2.dx/input2.dy/input2.dz*Ms33_t[l];
+            sigmas23[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas23[CartesianIndex.(input2.s1,input2.s2,input2.s3)]-@ones(1,1)*input2.dt/input2.dx/input2.dy/input2.dz*Ms23_t[l];
+            sigmas13[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas13[CartesianIndex.(input2.s1,input2.s2,input2.s3)]-@ones(1,1)*input2.dt/input2.dx/input2.dy/input2.dz*Ms13_t[l];
+            sigmas12[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas12[CartesianIndex.(input2.s1,input2.s2,input2.s3)]-@ones(1,1)*input2.dt/input2.dx/input2.dy/input2.dz*Ms12_t[l];
+            p[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=p[CartesianIndex.(input2.s1,input2.s2,input2.s3)]-@ones(1,1)*input2.dt/input2.dx/input2.dy/input2.dz*Mp_t[l];
         end
+
         if ns>=2 && l<=size(Ms33_t,1)
-            sigmas11[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas11[CartesianIndex.(input2.s1,input2.s2,input2.s3)]+input2.dt/input2.dx/input2.dy/input2.dz*Ms11_t[l,:]';
-            sigmas22[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas22[CartesianIndex.(input2.s1,input2.s2,input2.s3)]+input2.dt/input2.dx/input2.dy/input2.dz*Ms22_t[l,:]';
-            sigmas33[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas33[CartesianIndex.(input2.s1,input2.s2,input2.s3)]+input2.dt/input2.dx/input2.dy/input2.dz*Ms33_t[l,:]';
-            sigmas23[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas23[CartesianIndex.(input2.s1,input2.s2,input2.s3)]+input2.dt/input2.dx/input2.dy/input2.dz*Ms23_t[l,:]';
-            sigmas13[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas13[CartesianIndex.(input2.s1,input2.s2,input2.s3)]+input2.dt/input2.dx/input2.dy/input2.dz*Ms13_t[l,:]';
-            sigmas12[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas12[CartesianIndex.(input2.s1,input2.s2,input2.s3)]+input2.dt/input2.dx/input2.dy/input2.dz*Ms12_t[l,:]';
-            p[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=p[CartesianIndex.(input2.s1,input2.s2,input2.s3)]+input2.dt/input2.dx/input2.dy/input2.dz*Mp_t[l,:]';
+            sigmas11[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas11[CartesianIndex.(input2.s1,input2.s2,input2.s3)]-input2.dt/input2.dx/input2.dy/input2.dz*Ms11_t[l,:]';
+            sigmas22[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas22[CartesianIndex.(input2.s1,input2.s2,input2.s3)]-input2.dt/input2.dx/input2.dy/input2.dz*Ms22_t[l,:]';
+            sigmas33[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas33[CartesianIndex.(input2.s1,input2.s2,input2.s3)]-input2.dt/input2.dx/input2.dy/input2.dz*Ms33_t[l,:]';
+            sigmas23[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas23[CartesianIndex.(input2.s1,input2.s2,input2.s3)]-input2.dt/input2.dx/input2.dy/input2.dz*Ms23_t[l,:]';
+            sigmas13[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas13[CartesianIndex.(input2.s1,input2.s2,input2.s3)]-input2.dt/input2.dx/input2.dy/input2.dz*Ms13_t[l,:]';
+            sigmas12[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas12[CartesianIndex.(input2.s1,input2.s2,input2.s3)]-input2.dt/input2.dx/input2.dy/input2.dz*Ms12_t[l,:]';
+            p[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=p[CartesianIndex.(input2.s1,input2.s2,input2.s3)]-input2.dt/input2.dx/input2.dy/input2.dz*Mp_t[l,:]';
         end
     end
 
@@ -373,10 +374,10 @@ for l=1:input2.nt-1
     next!(pro_bar);
 end
 
-R1=R1 .*input2.Rm[:,:,1];
-R2=R2 .*input2.Rm[:,:,2];
-R3=R3 .*input2.Rm[:,:,3];
-P=P .*input2.Rm[:,:,4];
+R1=R1 .*repeat(input2.Rm[:,1],input2.nt,1);
+R2=R2 .*repeat(input2.Rm[:,2],input2.nt,1);
+R3=R3 .*repeat(input2.Rm[:,3],input2.nt,1);
+P=P .*repeat(input2.Rm[:,4],input2.nt,1);
 
 data=R1;
 write2mat(string(input2.path_rec,"/rec_1.mat"),data);

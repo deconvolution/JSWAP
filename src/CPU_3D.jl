@@ -2,7 +2,7 @@
 3D solver on CPU, including isotropic, anisotropic, forward and adjoint solvers.
 "
 module CPU_3D
-export isotropic_forward_solver,isotropic_adjoint_solver
+export isotropic_forward_solver,isotropic_adjoint_solver,PML_configuration
 ## Using ParallelStencil
 include("./ParallelStencil/ParallelStencil.jl");
 ## utilities
@@ -22,7 +22,7 @@ include("./finite_difference_method.jl");
 ## timing
 ti=TimerOutput();
 ## function configure_PML
-include("./configure_PML.jl");
+include("./PML_configuration.jl");
 ## function JSWAP_CPU_3D_isotropic_forward_solver and its dependencies
 # function JSWAP_CPU_3D_isotropic_forward_solver_compute_au_for_sigma
 include("./JSWAP_CPU_3D_isotropic_forward_solver_compute_au_for_sigma.jl");

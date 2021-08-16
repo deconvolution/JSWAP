@@ -59,7 +59,7 @@ input2.r2t=input2.r2*input2.dy;
 # receiver true location z
 input2.r3t=input2.r3*input2.dz;
 # activate receivers
-input2.Rm=ones(input2.nt,length(input2.r3),4);
+input2.Rm=ones(length(input2.r3),4);
 # source true location x
 input2.s1t=input2.s1*input2.dx;
 # source true location y
