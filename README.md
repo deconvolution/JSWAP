@@ -5,7 +5,7 @@
 [![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://deconvolution.github.io/JSWAP/dev/)
 
 A Julia package for Sound WAve Propagation (JSWAP).
-![Farmers Market Finder Demo](./docs/src/pictures/readme.gif)
+![animation](./docs/src/pictures/readme.gif)
 Simulation for Campi Flegrei. Unit of time: s. Red dots: source. Green dots: receivers. X: Latitude. Y: Longitude. Z: Altitude [m]. v3: Vertical particle velocity [m/s].
 ## Contents
 * [Target](#Target)
