@@ -9,7 +9,7 @@ In JSWAP, all of the input parameters are assigned to a struct input2. The follo
  Dimension: [].
 
  Example:
- ```
+ ```Julia
  # dt
  input2.dt=10.0^-3;
  ```
@@ -22,7 +22,7 @@ In JSWAP, all of the input parameters are assigned to a struct input2. The follo
  Dimension: [].
 
  Example:
- ```
+ ```Julia
  # dx
  input2.dx=10.0;
  # dy
@@ -39,7 +39,7 @@ In JSWAP, all of the input parameters are assigned to a struct input2. The follo
  Dimension: [].
 
  Example:
- ```
+ ```Julia
  # nt
  input2.nt=10.0^3;
  ```
@@ -50,7 +50,7 @@ In JSWAP, all of the input parameters are assigned to a struct input2. The follo
  Type: Int32.
 
  Dimension: [].
- ```
+ ```Julia
  # nx
  input2.nx=80;
  # ny
@@ -67,7 +67,7 @@ In JSWAP, all of the input parameters are assigned to a struct input2. The follo
  Dimension: [nx, ny, nz]
 
  Example:
- ```
+ ```Julia
  # 3D true coordinate X, Y and Z
  input2.Y,input2.X,input2.Z=JSWAP.meshgrid(1:80,1:80,1:90);
  ```
@@ -87,7 +87,7 @@ In JSWAP, all of the input parameters are assigned to a struct input2. The follo
  Dimension: [nx, ny, nz].
 
  Example:
- ```
+ ```Julia
  input2.rho=ones(80,80,90)*1000.0;
  ```
 
@@ -99,11 +99,11 @@ In JSWAP, all of the input parameters are assigned to a struct input2. The follo
  Dimension: [nx, ny, nz].
 
  Example:
- ```
+ ```Julia
  input2.inv_Qa=ones(80,80,90)*0.0;
  ```
 
- # 8. r1, r2, r3
+ # 9. r1, r2, r3
  Explanation: Grid locations of receivers in the x, y and z directions.
 
  Type: Int32.
@@ -111,7 +111,7 @@ In JSWAP, all of the input parameters are assigned to a struct input2. The follo
  Dimension: Each of them is a 2-dimensional matrix, with the first direction to be 1 and the second direction as the number of receiver numbers.
 
  Here is an example of 50 receivers.
- ```
+ ```Julia
  # receiver grid location x
  input2.r1=zeros(Int32,1,50);
  input2.r1[:]=30:79;
@@ -123,7 +123,7 @@ In JSWAP, all of the input parameters are assigned to a struct input2. The follo
  input2.r3 .=15;
  ```
 
- # 9. s1, s2, s3
+ # 10. s1, s2, s3
  Explanation: Grid locations of sources in the x, y and z directions.
 
  Type: Int32.
@@ -131,7 +131,7 @@ In JSWAP, all of the input parameters are assigned to a struct input2. The follo
  Dimension: Each of them is a 2-dimensional matrix, with the first direction to be 1 and the second direction as the number of receiver numbers.
 
  Here is an example of 2 sources.
- ```
+ ```Julia
  # source grid location x
  input2.s1=zeros(Int32,1,2);
  input2.s1[:] =[60 60];
@@ -143,7 +143,7 @@ In JSWAP, all of the input parameters are assigned to a struct input2. The follo
  input2.s3[:] =[49 51];
  ```
 
- # 10. Source signals
+ # 11. Source signals
  Explanation: Source signal in each component. The source can be either directional source, P-wave source or moment-tensor source. There are 2 options:
  * If one chooses directional source and P-wave source, the input is supposed to be input2.src1, input2.src2, input2.src3 and input2.srcp, corresponding to the source signals in the x, y, z directions and the P-wave components.
  * If moment tensor source is wanted, M11, M22, M33, M23, M13 and M12 are desired.
@@ -152,7 +152,7 @@ In JSWAP, all of the input parameters are assigned to a struct input2. The follo
 
  Dimensions: [nt, number of sources].
 
- # 11. r1t, r2t, r3t
+ # 12. r1t, r2t, r3t
  Explanation: Receiver true locations in the x, y and z directions.
 
  Type: Int32 or Float64.
@@ -160,7 +160,7 @@ In JSWAP, all of the input parameters are assigned to a struct input2. The follo
  Dimension: [1, number of receivers].
 
  Example of computation true locations based on above information.
- ```
+ ```Julia
  # receiver true location x
  input2.r1t=input2.r1*input2.dx;
  # receiver true location y
@@ -170,7 +170,7 @@ In JSWAP, all of the input parameters are assigned to a struct input2. The follo
  # 11. s1t, s2t, s3t
  ```
 
- # 12. Rm
+ # 13. Rm
  Explanation: One can mute some receivers with this option. 0 - mute, 1 - unmute.
 
  Type: Int32 or Float64.
@@ -180,12 +180,12 @@ In JSWAP, all of the input parameters are assigned to a struct input2. The follo
  Component: 1 - x component, 2 - y component, 3 - z component, 4 - pressure component.
 
  If one does not want to mute any receivers, then
- ```
+ ```Julia
  input2.Rm=ones(length(input2.r3),4);
  ```
 
 
- # 13. s1t, s2t, s3t
+ # 14. s1t, s2t, s3t
  Explanation: Source true locations in the x, y and z directions.
 
  Type: Int32 or Float64.
@@ -193,7 +193,7 @@ In JSWAP, all of the input parameters are assigned to a struct input2. The follo
  Dimension: [1, number of sources].
 
  Here is an example of 50 receivers.
- ```
+ ```Julia
  # source true location x
  input2.s1t=input2.s1*input2.dx;
  # source true location y
@@ -202,7 +202,7 @@ In JSWAP, all of the input parameters are assigned to a struct input2. The follo
  input2.s3t=input2.s3*input2.dz;
  ```
 
- # 14. lp
+ # 15. lp
  Explanation: PML layers.
 
  Type: Int32.
@@ -210,12 +210,12 @@ In JSWAP, all of the input parameters are assigned to a struct input2. The follo
  Dimension: [].
 
  For a 10 layer PML,
- ```
+ ```Julia
  # PML layers
  input2.lp=10;
  ```
 
- # 15. nPML
+ # 16. nPML
  Explanation: power of PML, normally 2.
 
  Type: Int32.
@@ -223,12 +223,12 @@ In JSWAP, all of the input parameters are assigned to a struct input2. The follo
  Dimension: [].
 
  Example:
- ```
+ ```Julia
  # PML power
  input2.nPML=2;
  ```
 
- # 16. Rc
+ # 17. Rc
  Explanation: PML theoretical reflection coefficient.
 
  Type: Float64.
@@ -245,12 +245,12 @@ In JSWAP, all of the input parameters are assigned to a struct input2. The follo
  |40             |10.0^-4|
 
  Example:
- ```
+ ```Julia
  # PML theorecital reflection coefficient for 10 layers of PML
  input2.Rc=.1;
  ```
 
- # 17. PML_active
+ # 18. PML_active
  Explanation: One can set if PML at one edge is working. Each element of the 1 by 6 matrix means if the PML is activated on the edge in an order of xminus, xplus, yminus, yplus, zminus, zplus. "0" is deactivated and "1" is activated.
 
  Type: Float64.
@@ -258,92 +258,92 @@ In JSWAP, all of the input parameters are assigned to a struct input2. The follo
  Dimension: [1, 6].
 
  Example for only zminus PML is deactivated:
- ```
+ ```Julia
  # set PML active
  # xminus,xplus,yminus,yplus,zminus,zplus
  input2.PML_active=[1 1 1 1 0 1];
  ```
 
- # 18. path
+ # 19. path
  Explanation: Path of master branch on where to store the wavefield vtk and wavefield mat file. This must be a parent path of path_pic, path_model and path_wavefield, path_rec.
 
  Type: String.
 
  Dimension: NA.
 
- ```
+ ```Julia
  # path for storage.
  input2.path=p3;
  ```
 
- # 19. path_pic
+ # 20. path_pic
  Explanation: Path to store wavefield snapshot vtk file. If one assign it "nothing", then no wavefield snapshot will be saved.
 
  Type: String.
 
  Dimension: NA.
 
- ```
+ ```Julia
  # path for wavefield .vtk
  input2.path_pic=string(input2.path,"/pic");
  # do not save wavefield snapshot
  input2.path_pic=nothing;
  ```
 
- # 20. path_model
+ # 21. path_model
  Explanation: Path to store the model, including material parameters and source and receiver locations.
 
  Type: String.
 
  Dimension: NA.
 
- ```
+ ```Julia
  # path for model
  input2.path_model=string(input2.path,"/model");
  ```
- # 21. path_wavefield
+ # 22. path_wavefield
  Explanation: Path to store mat wavefield. No wavefield matfile will be stored if path_wavefield is "nothing".
 
  Type: String.
 
  Dimension: NA.
 
- ```
+ ```Julia
  # path for wavefield .mat
  input2.path_wavefield=string(input2.path,"/wavefield");
  ```
 
- # 22. path_rec
+ # 23. path_rec
  Explanation: Path to store recordings.
 
  Type: String.
 
  Dimension: NA.
 
- ```
+ ```Julia
  # path for recordings
  input2.path_rec=string(input2.path,"/rec");
  ```
 
- # 23. plot_interval
+ # 24. plot_interval
  Explanation: Plot frequency/interval of vtk file. "0" for saving nothing.
 
  Type: Int32.
 
  Dimension: [].
 
- ```
+ ```Julia
  # plot interval
  input2.plot_interval=100;
  ```
 
- # 24. wavefield_interval
+ # 25. wavefield_interval
  Explanation: How frequent the wavefield is saved. "0" for saving nothing.
 
  Type: Int32.
 
  Dimension: [].
- ```
+ ```Julia
  # wavefield interval
  input2.wavefield_interval=0;
  ```
