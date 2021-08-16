@@ -1,4 +1,4 @@
-# JSWAP
+# JSWAP, das
 
 [![Documenter](https://github.com/deconvolution/JSWAP/actions/workflows/Documenter.yml/badge.svg)](https://github.com/deconvolution/JSWAP/actions/workflows/Documenter.yml)
 [![Runtests](https://github.com/deconvolution/JSWAP/actions/workflows/Runtests.yml/badge.svg)](https://github.com/deconvolution/JSWAP/actions/workflows/Runtests.yml)
