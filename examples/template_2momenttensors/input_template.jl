@@ -16,7 +16,7 @@ input2.ny=80;
 # nz
 input2.nz=90;
 # 3D true coordinate X, Y and Z
-input2.Y,input2.X,input2.Z=JSWAP.meshgrid(1:80,1:80,1:90);
+input2.Y,input2.X,input2.Z=JSWAP.meshgrid((1:80)*10,(1:80)*10,(1:90)*10);
 ## material properties
 input2.lambda=ones(80,80,90)*10^9*1.0;
 input2.mu=ones(80,80,90)*10^9*1.0;
@@ -51,12 +51,12 @@ input2.M33=zeros(input2.nt,2);
 input2.M23=zeros(input2.nt,2);
 input2.M13=zeros(input2.nt,2);
 input2.M12=zeros(input2.nt,2);
-input2.M11[:]=repeat(rickerWave(20,10^-3*1.0,1000,2),1,2);
-input2.M22[:]=repeat(rickerWave(20,10^-3*1.0,1000,2),1,2);
-input2.M33[:]=repeat(rickerWave(20,10^-3*1.0,1000,2),1,2);
-input2.M23[:]=repeat(rickerWave(20,10^-3*1.0,1000,2),1,2);
-input2.M13[:]=repeat(rickerWave(20,10^-3*1.0,1000,2),1,2);
-input2.M12[:]=repeat(rickerWave(20,10^-3*1.0,1000,2),1,2);
+input2.M11[:]=repeat(rickerWave(10,10^-3*1.0,1000,2),1,2);
+input2.M22[:]=repeat(rickerWave(10,10^-3*1.0,1000,2),1,2);
+input2.M33[:]=repeat(rickerWave(10,10^-3*1.0,1000,2),1,2);
+input2.M23[:]=repeat(rickerWave(10,10^-3*1.0,1000,2),1,2);
+input2.M13[:]=repeat(rickerWave(10,10^-3*1.0,1000,2),1,2);
+input2.M12[:]=repeat(rickerWave(10,10^-3*1.0,1000,2),1,2);
 
 # receiver true location x
 input2.r1t=input2.r1*input2.dx;

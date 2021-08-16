@@ -374,10 +374,10 @@ for l=1:input2.nt-1
     next!(pro_bar);
 end
 
-R1=R1 .*repeat(input2.Rm[:,1],input2.nt,1);
-R2=R2 .*repeat(input2.Rm[:,2],input2.nt,1);
-R3=R3 .*repeat(input2.Rm[:,3],input2.nt,1);
-P=P .*repeat(input2.Rm[:,4],input2.nt,1);
+R1=R1 .*repeat(input2.Rm[:,1]',input2.nt,1);
+R2=R2 .*repeat(input2.Rm[:,2]',input2.nt,1);
+R3=R3 .*repeat(input2.Rm[:,3]',input2.nt,1);
+P=P .*repeat(input2.Rm[:,4]',input2.nt,1);
 
 data=R1;
 write2mat(string(input2.path_rec,"/rec_1.mat"),data);
