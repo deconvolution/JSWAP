@@ -13,7 +13,7 @@ In JSWAP, all of the input parameters are assigned to a struct input2. The follo
  input2.dt=10.0^-3;
  ```
 
- # 2. dx, dy ,dz
+ # 2. dx dy dz
 Explanation: Grid spacing in the x, y and z directions.
 
 Type: Float64.
