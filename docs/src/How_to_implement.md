@@ -1,5 +1,5 @@
+# How to implement
 An example of the simulation implementation is given [here](https://github.com/deconvolution/JSWAP/tree/main/examples/template).
-
 The main file is `main_body.jl`. Only one line is needed to change:
 ```
 path_to_input=["./input_template.jl"];

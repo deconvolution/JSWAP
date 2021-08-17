@@ -1,3 +1,4 @@
+# Utilities
 ```@docs
 JSWAP.meshgrid
 JSWAP.write2mat

@@ -1,3 +1,4 @@
+# Outputs
 After running the "main_body.jl", a folder for output will be generated in the destination specified in the input file. For instance, the example "template_2momenttensors" will have a folder called "main_body", in which there are "model", "pic", "rec" and "wavefield" and "time_info.pvd". Each of them will be explained in details. ParaView is needed to visualize the model and the wavefield.
 
  # 1. model setup
@@ -21,6 +22,9 @@ After running the "main_body.jl", a folder for output will be generated in the d
  * rec_2.mat: seismogram y component.
  * rec_3.mat: seismogram z component.
  * rec_p.mat: seismogram pressure component.
+
+ Structure of every file: first dimension - time dependent signals, second dimension - receiver number.
+ 
  ![v1](./pictures/v1.jpg)
  ![v2](./pictures/v2.jpg)
  ![v3](./pictures/v3.jpg)
