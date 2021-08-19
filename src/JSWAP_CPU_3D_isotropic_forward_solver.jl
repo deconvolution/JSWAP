@@ -27,8 +27,10 @@ d0=Dates.now();
 ns=length(input2.s3);
 
 # create main folder
-if isdir(input2.path)==0
-    mkdir(input2.path);
+if input2.path!=nothing
+    if isdir(input2.path)==0
+        mkdir(input2.path);
+    end
 end
 
 # create folder for picture
@@ -43,7 +45,7 @@ if input2.path_pic!=nothing
 end
 
 # create folder for model
-if input2.path_model!=nothing
+if input2.path_model!=nothing && input2.path!=nothing
     if isdir(input2.path_model)==0
         mkdir(input2.path_model);
     end
@@ -57,14 +59,14 @@ if input2.path_model!=nothing
 end
 
 # create folder for wavefield
-if input2.path_wavefield!=nothing
+if input2.path_wavefield!=nothing && input2.path!=nothing
     if isdir(input2.path_wavefield)==0
         mkdir(input2.path_wavefield)
     end
 end
 
 # create folder for rec
-if input2.path_rec!=nothing
+if input2.path_rec!=nothing && input2.path!=nothing
     if isdir(input2.path_rec)==0
         mkdir(input2.path_rec)
     end
@@ -171,7 +173,7 @@ ax7_dt=copy(v1);
 
 l=1;
 # save wavefield
-if input2.path_wavefield!=nothing && input2.wavefield_interval!=0
+if input2.path_wavefield!=nothing && input2.wavefield_interval!=0 && input2.path!=nothing
     if mod(l,input2.wavefield_interval)==0
         data=zeros(input2.nx,input2.ny,input2.nz);
         write2mat(string(input2.path_wavefield,"/v1_",n_wavefield,".mat"),data);
@@ -328,7 +330,7 @@ for l=1:input2.nt-1
     @timeit ti "receiver" R3[l+1,:]=reshape(v3[CartesianIndex.(input2.r1,input2.r2,input2.r3)],length(input2.r3),);
     @timeit ti "receiver" P[l+1,:]=reshape(p[CartesianIndex.(input2.r1,input2.r2,input2.r3)],length(input2.r3),);
     # save wavefield
-    if input2.path_wavefield!=nothing && input2.wavefield_interval!=0
+    if input2.path_wavefield!=nothing && input2.wavefield_interval!=0 && input2.path!=nothing
         if mod(l,input2.wavefield_interval)==0
             data=v1;
             write2mat(string(input2.path_wavefield,"/v1_",n_wavefield,".mat"),data);
@@ -355,7 +357,7 @@ for l=1:input2.nt-1
     end
 
     # plot
-    if input2.path_pic!=nothing && input2.plot_interval!=0
+    if input2.path_pic!=nothing && input2.plot_interval!=0 && input2.path!=nothing
         if mod(l,input2.plot_interval)==0 || l==input2.nt-1
             vtkfile = vtk_grid(string(input2.path_pic,"/wavefield_pic_",n_picture),input2.X,input2.Y,input2.Z);
             vtkfile["v1"]=v1;
@@ -379,16 +381,18 @@ R2=R2 .*repeat(input2.Rm[:,2]',input2.nt,1);
 R3=R3 .*repeat(input2.Rm[:,3]',input2.nt,1);
 P=P .*repeat(input2.Rm[:,4]',input2.nt,1);
 
-data=R1;
-write2mat(string(input2.path_rec,"/rec_1.mat"),data);
-data=R2;
-write2mat(string(input2.path_rec,"/rec_2.mat"),data);
-data=R3;
-write2mat(string(input2.path_rec,"/rec_3.mat"),data);
-data=P;
-write2mat(string(input2.path_rec,"/rec_p.mat"),data);
+if input2.path_rec!=nothing && input2.path!=nothing
+    data=R1;
+    write2mat(string(input2.path_rec,"/rec_1.mat"),data);
+    data=R2;
+    write2mat(string(input2.path_rec,"/rec_2.mat"),data);
+    data=R3;
+    write2mat(string(input2.path_rec,"/rec_3.mat"),data);
+    data=P;
+    write2mat(string(input2.path_rec,"/rec_p.mat"),data);
+end
 
-if input2.path_pic!=nothing && input2.plot_interval!=0
+if input2.path_pic!=nothing && input2.plot_interval!=0 && input2.path!=nothing
     vtk_save(pvd);
 end
 

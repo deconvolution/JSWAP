@@ -1,3 +1,5 @@
-using Test,JSWAP
+using Test,JSWAP,JSWAP.LinearAlgebra
 
-@test true
+include("./test_JSWAP_CPU_3D_isotropic_forward_solver.jl");
+
+@test pass_test_forward

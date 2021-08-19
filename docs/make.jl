@@ -13,7 +13,7 @@ makedocs(
         "Tutorials" => Any[
         "Inputs" =>"Inputs.md"
         "Outputs"=>"Outputs.md"
-        "How to implement"=>"How_to_implement.md"
+        "How to implement"=>"Forward_simulation.md"
         "Utilities"=>"Utilities.md"
         ],
         "List of functions" =>"list_of_functions.md"
