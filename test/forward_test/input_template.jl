@@ -8,39 +8,39 @@ input2.dy=10.0;
 # dz
 input2.dz=10.0;
 # number of time steps
-input2.nt=30;
+input2.nt=50;
 # nx
-input2.nx=50;
+input2.nx=80;
 # ny
-input2.ny=50;
+input2.ny=80;
 # nz
-input2.nz=50;
+input2.nz=90;
 # 3D true coordinate X, Y and Z
-input2.Y,input2.X,input2.Z=JSWAP.meshgrid(1:500,1:500,1:500);
+input2.Y,input2.X,input2.Z=JSWAP.meshgrid(1:80,1:80,1:90);
 ## material properties
-input2.lambda=ones(50,50,50)*10^9*1.0;
-input2.mu=ones(50,50,50)*10^9*1.0;
-input2.rho=ones(50,50,50)*1000.0;
-input2.inv_Qa=ones(50,50,50)*10.0^-4;
+input2.lambda=ones(80,80,90)*10^9*1.0;
+input2.mu=ones(80,80,90)*10^9*1.0;
+input2.rho=ones(80,80,90)*1000.0;
+input2.inv_Qa=ones(80,80,90)*0.0;
 ## receiver and source configuration.
 "
 The type of r1,r2,r3,s1,s2 and s3 should not be changed.
 "
 # receiver grid location x
-input2.r1=zeros(Int32,1,2);
-input2.r1[:]=[20 30];
+input2.r1=zeros(Int32,1,50);
+input2.r1[:]=30:79;
 # receiver grid location y
-input2.r2=zeros(Int32,1,2);
-input2.r2[:]=[20 30];
+input2.r2=zeros(Int32,1,50);
+input2.r2[:]=30:79;
 # receiver grid location z
-input2.r3=zeros(Int32,1,2);
+input2.r3=zeros(Int32,1,50);
 input2.r3 .=15;
 # source grid location x
 input2.s1=zeros(Int32,1,1);
-input2.s1[:] .=30;
+input2.s1[:] .=60;
 # source grid location y
 input2.s2=zeros(Int32,1,1);
-input2.s2[:] .=30;
+input2.s2[:] .=50;
 # source grid location z
 input2.s3=zeros(Int32,1,1);
 input2.s3[:] .=30;
@@ -49,7 +49,7 @@ input2.src1=zeros(input2.nt,1);
 # source signal y
 input2.src2=zeros(input2.nt,1);
 # source signal z
-input2.src3=reshape(rickerWave(20.0,10.0^-3*1.0,30,2),input2.nt,1);
+input2.src3=reshape(rickerWave(20,10^-3*1.0,1000,2),input2.nt,1);
 # source signal pressure
 input2.srcp=zeros(input2.nt,1);
 # receiver true location x
@@ -80,14 +80,14 @@ input2.PML_active=[1 1 1 1 1 1];
 # path for storage. This must be the master branch of the following pathes.
 input2.path=p3;
 # path for wavefield .vtk
-input2.path_pic=nothing;
+input2.path_pic=string(input2.path,"/pic");
 # path for model
-input2.path_model=nothing;
+input2.path_model=string(input2.path,"/model");
 # path for wavefield .mat
 input2.path_wavefield=string(input2.path,"/wavefield");
 # path for recordings
-input2.path_rec=nothing;
+input2.path_rec=string(input2.path,"/rec");
 # plot interval
 input2.plot_interval=100;
 # wavefield interval
-input2.wavefield_interval=50;
+input2.wavefield_interval=0;

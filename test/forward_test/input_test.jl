@@ -84,10 +84,10 @@ input2.path_pic=nothing;
 # path for model
 input2.path_model=nothing;
 # path for wavefield .mat
-input2.path_wavefield=string(input2.path,"/wavefield");
+input2.path_wavefield=nothing;
 # path for recordings
 input2.path_rec=nothing;
 # plot interval
 input2.plot_interval=0;
 # wavefield interval
-input2.wavefield_interval=nothing;
+input2.wavefield_interval=0;

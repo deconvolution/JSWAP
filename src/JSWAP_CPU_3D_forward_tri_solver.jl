@@ -400,4 +400,5 @@ function JSWAP_CPU_3D_forward_tri_solver(input2)
     if input2.path_pic!=nothing && input2.plot_interval!=0 && input2.path!=nothing
         vtk_save(pvd);
     end
+    return v1,v2,v3,R1,R2,R3,P
 end

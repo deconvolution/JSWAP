@@ -375,6 +375,7 @@ function JSWAP_CPU_3D_forward_isotropic_solver(input2)
         next!(pro_bar);
     end
 
+
     R1=R1 .*repeat(input2.Rm[:,1]',input2.nt,1);
     R2=R2 .*repeat(input2.Rm[:,2]',input2.nt,1);
     R3=R3 .*repeat(input2.Rm[:,3]',input2.nt,1);
@@ -394,5 +395,5 @@ function JSWAP_CPU_3D_forward_isotropic_solver(input2)
     if input2.path_pic!=nothing && input2.plot_interval!=0 && input2.path!=nothing
         vtk_save(pvd);
     end
-
+    return v1,v2,v3,R1,R2,R3,P
 end
