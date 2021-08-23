@@ -14,7 +14,7 @@ Example:
 input2.dt=10.0^-3;
 ```
 
-# 2. dx dy dz
+# 2. dx, dy, dz
 Explanation: Grid spacing in the x, y and z directions.
 
 Type: Float64.
@@ -68,13 +68,43 @@ Example:
 input2.Y,input2.X,input2.Z=JSWAP.meshgrid(1:80,1:80,1:90);
 ```
 
-# 6. lambda, mu
-Explanation: Lame constants, &lambda; and &mu;.
+# 6. Stiffness
+Explanation: Lame constants, &lambda; and &mu or stiffness matrix (Cij). Either of them is required for input.
 
 Type: Float64.
 
-Dimension: [nx, ny, nz]
+Dimension: [nx, ny, nz].
 
+Example:
+```
+# Lame constants for isotropic media
+input2.lambda=ones(80,80,90)*10^9*1.0;
+input2.mu=ones(80,80,90)*10^9*1.0;
+
+# Stiffness matrix for anisotropic media
+input2.C11=ones(80,80,90)*10^9*3.0;
+input2.C12=ones(80,80,90)*10^9*1.0;
+input2.C13=ones(80,80,90)*10^9*1.0;
+input2.C14=ones(80,80,90)*10^9*0;
+input2.C15=ones(80,80,90)*10^9*0;
+input2.C16=ones(80,80,90)*10^9*.5;
+input2.C22=ones(80,80,90)*10^9*3.0;
+input2.C23=ones(80,80,90)*10^9*1.0;
+input2.C24=ones(80,80,90)*10^9*0;
+input2.C25=ones(80,80,90)*10^9*0;
+input2.C26=ones(80,80,90)*10^9*.5;
+input2.C33=ones(80,80,90)*10^9*3.0;
+input2.C34=ones(80,80,90)*10^9*0;
+input2.C35=ones(80,80,90)*10^9*0;
+input2.C36=ones(80,80,90)*10^9*0;
+input2.C44=ones(80,80,90)*10^9*1.0;
+input2.C45=ones(80,80,90)*10^9*0;
+input2.C46=ones(80,80,90)*10^9*0;
+input2.C55=ones(80,80,90)*10^9*1.0;
+input2.C56=ones(80,80,90)*10^9*0;
+input2.C66=ones(80,80,90)*10^9*1.0;
+
+```
 
 # 7. rho
 Explanation: Density.
