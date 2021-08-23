@@ -7,10 +7,9 @@ if isdir(p3)==0
     mkdir(p3);
 end
 ## Specify where the input file is
-path_to_input=["./input_explosion.jl" "./input_normal.jl" "./input_strike.jl"
-"input_CLVD.jl" "input_thrust.jl"];
+path_to_input=["./input_explosion.jl" "./input_normal.jl" "./input_strike.jl" "input_CLVD.jl" "input_thrust.jl"];
 ## Run solvers
 for I=1:length(path_to_input)
     include(path_to_input[I]);
-    JSWAP.CPU_3D.isotropic_forward_solver(input2);
+    JSWAP.CPU_3D.forward_solver(input2);
 end

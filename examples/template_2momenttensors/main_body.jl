@@ -11,5 +11,5 @@ path_to_input=["./input_template.jl"];
 ## Run solvers
 for I=1:length(path_to_input)
     include(path_to_input[I]);
-    JSWAP.CPU_3D.isotropic_forward_solver(input2);
+    JSWAP.CPU_3D.forward_solver(input2);
 end
