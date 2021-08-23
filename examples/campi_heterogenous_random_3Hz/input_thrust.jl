@@ -55,9 +55,9 @@ input2.M33=zeros(input2.nt,1);
 input2.M23=zeros(input2.nt,1);
 input2.M13=zeros(input2.nt,1);
 input2.M12=zeros(input2.nt,1);
-input2.M11[:]=rickerWave(3,input2.dt,input2.nt,2);
+input2.M11[:]=rickerWave(3,input2.dt,input2.nt,2)*0.0;
 input2.M22[:]=-rickerWave(3,input2.dt,input2.nt,2);
-input2.M33[:]=rickerWave(3,input2.dt,input2.nt,2)*0.0;
+input2.M33[:]=rickerWave(3,input2.dt,input2.nt,2)*1.0;
 input2.M23[:]=rickerWave(3,input2.dt,input2.nt,2)*0.0;
 input2.M13[:]=rickerWave(3,input2.dt,input2.nt,2)*0.0;
 input2.M12[:]=rickerWave(3,input2.dt,input2.nt,2)*0.0;
@@ -88,7 +88,7 @@ input2.Rc=.1;
 input2.PML_active=[1 1 1 1 0 1];
 ## plot
 # path for storage. This must be the master branch of the following pathes.
-input2.path=p3;
+input2.path="./thrust";
 # path for wavefield .vtk
 input2.path_pic=string(input2.path,"/pic");
 # path for model
