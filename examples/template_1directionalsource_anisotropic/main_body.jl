@@ -1,5 +1,5 @@
 ## Initialization of JSWAP
-include("./JSWAP_initialization.jl");
+include("JSWAP_initialization.jl");
 ## create folder for saving
 p2= @__FILE__;
 p3=chop(p2,head=0,tail=3);

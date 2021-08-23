@@ -1,7 +1,7 @@
 "
 Configure PML
 "
-function PML_configuration(nx,ny,nz,dx,dy,dz,lambda,mu,rho,nPML,Rc,lp,PML_active)
+function isotropic_PML_configuration(nx,ny,nz,dx,dy,dz,lambda,mu,rho,nPML,Rc,lp,PML_active)
     # PML
     vmax=sqrt.((lambda+2*mu) ./rho);
     beta0=(ones(nx,ny,nz) .*vmax .*(nPML+1) .*log(1/Rc)/2/lp/((dx+dy+dz)/3));

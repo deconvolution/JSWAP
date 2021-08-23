@@ -7,7 +7,7 @@ export isotropic_forward_solver,isotropic_adjoint_solver,PML_configuration
 include("./ParallelStencil/ParallelStencil.jl");
 ## utilities
 include("./utilities.jl");
-##
+## using packages
 using Random,MAT,Plots,Dates,TimerOutputs,WriteVTK,ProgressMeter,DataFrames,CSV,
 .ParallelStencil,.ParallelStencil.FiniteDifferences3D
 ## Use CPU for ParallelStencil
@@ -17,28 +17,6 @@ const USE_GPU=false
 else
     @init_parallel_stencil(Threads, Float64, 3);
 end
-## finite-difference method package
-include("./finite_difference_method.jl");
-## timing
-ti=TimerOutput();
-## function configure_PML
-include("./PML_configuration.jl");
-## function JSWAP_CPU_3D_isotropic_forward_solver and its dependencies
-# function JSWAP_CPU_3D_isotropic_forward_solver_compute_au_for_sigma
-include("./JSWAP_CPU_3D_isotropic_forward_solver_compute_au_for_sigma.jl");
-# function JSWAP_CPU_3D_isotropic_forward_solver_compute_sigma
-include("./JSWAP_CPU_3D_isotropic_forward_solver_compute_sigma.jl");
-# function JSWAP_CPU_3D_isotropic_forward_solver_compute_v
-include("./JSWAP_CPU_3D_isotropic_forward_solver_compute_v.jl");
-# function JSWAP_CPU_3D_isotropic_forward_solver
-include("./JSWAP_CPU_3D_isotropic_forward_solver.jl");
-## function JSWAP_CPU_3D_isotropic_adjoint_solver and its dependencies
-# function JSWAP_CPU_3D_isotropic_forward_solver_compute_au_for_sigma
-include("./JSWAP_CPU_3D_isotropic_forward_solver_compute_au_for_sigma.jl");
-# function JSWAP_CPU_3D_isotropic_forward_solver_compute_sigma
-include("./JSWAP_CPU_3D_isotropic_forward_solver_compute_sigma.jl");
-# function JSWAP_CPU_3D_isotropic_forward_solver_compute_v
-include("./JSWAP_CPU_3D_isotropic_forward_solver_compute_v.jl");
-# function JSWAP_CPU_3D_isotropic_forward_solver
-include("./JSWAP_CPU_3D_isotropic_forward_solver.jl");
+## forward isotropic
+include("./JSWAP_CPU_3D_forward.jl");
 end

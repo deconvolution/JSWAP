@@ -1,9 +1,9 @@
 "
 Configure PML
 "
-function PML_configuration(nx,ny,nz,dx,dy,dz,lambda,mu,rho,nPML,Rc,lp,PML_active)
+function tri_PML_configuration(nx,ny,nz,dx,dy,dz,C33,C55,rho,nPML,Rc,lp,PML_active)
     # PML
-    vmax=sqrt.((lambda+2*mu) ./rho);
+    vmax=sqrt.((C33) ./rho);
     beta0=(ones(nx,ny,nz) .*vmax .*(nPML+1) .*log(1/Rc)/2/lp/dx);
     beta1=(zeros(nx,ny,nz));
     beta2=copy(beta1);

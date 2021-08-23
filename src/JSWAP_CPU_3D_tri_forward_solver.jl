@@ -1,24 +1,24 @@
 "
 Finite-difference solver for isotropic viscoelastic media.
 "
-@timeit ti "iso_3D" function isotropic_forward_solver(input2);
+@timeit ti "tri_3D" function JSWAP_CPU_3D_forward_tri_solver(input2);
 
 #global data
 global data
 # zero stress condition at the boundaries
-input2.lambda[1:5,:,:] .=0;
-input2.lambda[end-4:end,:,:] .=0;
-input2.lambda[:,1:5,:] .=0;
-input2.lambda[:,end-4:end,:] .=0;
-input2.lambda[:,:,1:5] .=0;
-input2.lambda[:,:,end-4:end] .=0;
+input2.C33[1:5,:,:] .=0;
+input2.C33[end-4:end,:,:] .=0;
+input2.C33[:,1:5,:] .=0;
+input2.C33[:,end-4:end,:] .=0;
+input2.C33[:,:,1:5] .=0;
+input2.C33[:,:,end-4:end] .=0;
 
-input2.mu[1:5,:,:] .=0;
-input2.mu[end-4:end,:,:] .=0;
-input2.mu[:,1:5,:] .=0;
-input2.mu[:,end-4:end,:] .=0;
-input2.mu[:,:,1:5] .=0;
-input2.mu[:,:,end-4:end] .=0;
+input2.C55[1:5,:,:] .=0;
+input2.C55[end-4:end,:,:] .=0;
+input2.C55[:,1:5,:] .=0;
+input2.C55[:,end-4:end,:] .=0;
+input2.C55[:,:,1:5] .=0;
+input2.C55[:,:,end-4:end] .=0;
 
 IND_accuracy=9;
 d0=Dates.now();
@@ -50,8 +50,8 @@ if input2.path_model!=nothing && input2.path!=nothing
         mkdir(input2.path_model);
     end
     vtkfile = vtk_grid(string(input2.path_model,"/material_properties"),input2.X,input2.Y,input2.Z);
-    vtkfile["lambda"]=input2.lambda;
-    vtkfile["mu"]=input2.mu;
+    vtkfile["C33"]=input2.C33;
+    vtkfile["C55"]=input2.C55;
     vtkfile["rho"]=input2.rho;
     vtk_save(vtkfile);
     CSV.write(string(input2.path_model,"/receiver location.csv"),DataFrame([input2.r1t' input2.r2t' input2.r3t'],:auto));
@@ -72,8 +72,8 @@ if input2.path_rec!=nothing && input2.path!=nothing
     end
 end
 
-beta=PML_configuration(input2.nx,input2.ny,input2.nz,input2.dx,input2.dy,input2.dz,
-input2.lambda,input2.mu,input2.rho,input2.nPML,input2.Rc,input2.lp,input2.PML_active);
+beta=tri_PML_configuration(input2.nx,input2.ny,input2.nz,input2.dx,input2.dy,input2.dz,
+input2.C33,input2.C55,input2.rho,input2.nPML,input2.Rc,input2.lp,input2.PML_active);
 
 # receiver configuration
 R1=@zeros(input2.nt,length(input2.r3));
@@ -221,8 +221,14 @@ for l=1:input2.nt-1
     @parallel Dz_inn(v3,dtt3);
     @parallel (2:input2.nx-1,2:input2.ny-1) u_3_plus(dtt3,v3_3_plus);
 
-    @timeit ti "compute_sigma" @parallel JSWAP_CPU_3D_isotropic_forward_solver_compute_au_for_sigma(input2.dt,input2.dx,input2.dy,input2.dz,
-    input2.inv_Qa,input2.lambda,input2.mu,
+    @timeit ti "compute_sigma" @parallel JSWAP_CPU_3D_tri_forward_solver_compute_au_for_sigma(input2.dt,input2.dx,input2.dy,input2.dz,
+    input2.inv_Qa,
+    input2.C11,input2.C12,input2.C13,input2.C14,input2.C15,input2.C16,
+    input2.C22,input2.C23,input2.C24,input2.C25,input2.C26,
+    input2.C33,input2.C34,input2.C35,input2.C36,
+    input2.C44,input2.C45,input2.C46,
+    input2.C55,input2.C56,
+    input2.C66,
     beta,
     v1_1_plus,v1_2_minus,v1_3_minus,
     v2_1_minus,v2_2_plus,v2_3_minus,
@@ -232,8 +238,8 @@ for l=1:input2.nt-1
     Ax,Ax2,Ax3,Ax4,Ax5,Ax6,Ax7,
     ax_dt,ax2_dt,ax3_dt,ax4_dt,ax5_dt,ax6_dt,ax7_dt);
 
-    @timeit ti "compute_sigma" @parallel JSWAP_CPU_3D_isotropic_forward_solver_compute_sigma(input2.dt,input2.dx,input2.dy,input2.dz,
-    input2.inv_Qa,input2.lambda,input2.mu,
+    @timeit ti "compute_sigma" @parallel JSWAP_CPU_3D_tri_forward_solver_compute_sigma(input2.dt,input2.dx,input2.dy,input2.dz,
+    input2.inv_Qa,
     beta,
     v1_1_plus,v1_2_minus,v1_3_minus,
     v2_1_minus,v2_2_plus,v2_3_minus,
@@ -297,7 +303,7 @@ for l=1:input2.nt-1
     @parallel Dz_inn(p,dtt3);
     @parallel (2:input2.nx-1,2:input2.ny-1) u_3_minus(dtt3,p_3_minus);
 
-    @timeit ti "compute_v" @parallel JSWAP_CPU_3D_isotropic_forward_solver_compute_v(input2.dt,input2.dx,input2.dy,input2.dz,
+    @timeit ti "compute_v" @parallel JSWAP_CPU_3D_tric_forward_solver_compute_v(input2.dt,input2.dx,input2.dy,input2.dz,
     input2.rho,beta,
     v1,v2,v3,
     sigmas11_1_minus,
@@ -365,8 +371,8 @@ for l=1:input2.nt-1
             vtkfile["v3"]=v3;
             vtkfile["p"]=p;
             vtkfile["sigmas33"]=sigmas33;
-            vtkfile["lambda"]=input2.lambda;
-            vtkfile["mu"]=input2.mu;
+            vtkfile["C33"]=input2.C33;
+            vtkfile["C55"]=input2.C55;
             vtkfile["rho"]=input2.rho;
             pvd[input2.dt*(l+1)]=vtkfile;
             n_picture=n_picture+1;
