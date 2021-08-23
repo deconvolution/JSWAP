@@ -18,27 +18,27 @@ input2.nz=90;
 # 3D true coordinate X, Y and Z
 input2.Y,input2.X,input2.Z=JSWAP.meshgrid(1:80,1:80,1:90);
 ## material properties
-input2.C11=ones(80,80,90)*10^9*3.0;
-input2.C12=ones(80,80,90)*10^9*1.0;
-input2.C13=ones(80,80,90)*10^9*1.0;
+input2.C11=ones(80,80,90)*10^9*1.056;
+input2.C12=ones(80,80,90)*10^9*(1.056-2*.4);
+input2.C13=ones(80,80,90)*10^9*.164;
 input2.C14=ones(80,80,90)*10^9*0;
 input2.C15=ones(80,80,90)*10^9*0;
-input2.C16=ones(80,80,90)*10^9*.5;
-input2.C22=ones(80,80,90)*10^9*3.0;
-input2.C23=ones(80,80,90)*10^9*1.0;
+input2.C16=ones(80,80,90)*10^9*0;
+input2.C22=ones(80,80,90)*10^9*1.056;
+input2.C23=ones(80,80,90)*10^9*.164;
 input2.C24=ones(80,80,90)*10^9*0;
 input2.C25=ones(80,80,90)*10^9*0;
-input2.C26=ones(80,80,90)*10^9*.5;
-input2.C33=ones(80,80,90)*10^9*3.0;
+input2.C26=ones(80,80,90)*10^9*0;
+input2.C33=ones(80,80,90)*10^9*1.084;
 input2.C34=ones(80,80,90)*10^9*0;
 input2.C35=ones(80,80,90)*10^9*0;
 input2.C36=ones(80,80,90)*10^9*0;
-input2.C44=ones(80,80,90)*10^9*1.0;
+input2.C44=ones(80,80,90)*10^9*.312;
 input2.C45=ones(80,80,90)*10^9*0;
 input2.C46=ones(80,80,90)*10^9*0;
-input2.C55=ones(80,80,90)*10^9*1.0;
+input2.C55=ones(80,80,90)*10^9*0.312;
 input2.C56=ones(80,80,90)*10^9*0;
-input2.C66=ones(80,80,90)*10^9*1.0;
+input2.C66=ones(80,80,90)*10^9*.4;
 
 input2.rho=ones(80,80,90)*1000.0;
 input2.inv_Qa=ones(80,80,90)*0.0;
@@ -88,11 +88,11 @@ input2.s2t=input2.s2*input2.dx;
 input2.s3t=input2.s3*input2.dx;
 ## PML
 # PML layers
-input2.lp=10;
+input2.lp=15;
 # PML power
 input2.nPML=2;
 # PML theorecital coefficient
-input2.Rc=1;
+input2.Rc=.01;
 # set PML active
 # xminus,xplus,yminus,yplus,zminus,zplus
 input2.PML_active=[1 1 1 1 1 1];
