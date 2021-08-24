@@ -55,12 +55,12 @@ input2.M33=zeros(input2.nt,1);
 input2.M23=zeros(input2.nt,1);
 input2.M13=zeros(input2.nt,1);
 input2.M12=zeros(input2.nt,1);
-input2.M11[:]=rickerWave(1,input2.dt,input2.nt,2);
-input2.M22[:]=-rickerWave(1,input2.dt,input2.nt,2);
-input2.M33[:]=rickerWave(1,input2.dt,input2.nt,2)*0.0;
-input2.M23[:]=rickerWave(1,input2.dt,input2.nt,2)*0.0;
-input2.M13[:]=rickerWave(1,input2.dt,input2.nt,2)*0.0;
-input2.M12[:]=rickerWave(1,input2.dt,input2.nt,2)*0.0;
+input2.M11[:]=rickerWave(3,input2.dt,input2.nt,2);
+input2.M22[:]=-rickerWave(3,input2.dt,input2.nt,2);
+input2.M33[:]=rickerWave(3,input2.dt,input2.nt,2)*0.0;
+input2.M23[:]=rickerWave(3,input2.dt,input2.nt,2)*0.0;
+input2.M13[:]=rickerWave(3,input2.dt,input2.nt,2)*0.0;
+input2.M12[:]=rickerWave(3,input2.dt,input2.nt,2)*0.0;
 
 # receiver true location x
 input2.r1t=minimum(input2.X) .+input2.r1*input2.dx;

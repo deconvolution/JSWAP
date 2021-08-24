@@ -11,4 +11,4 @@ path_to_input=["./input_test.jl"];
 ## Run solvers
 I=1;
 include(path_to_input[I]);
-v1,v2,v3,R1,R2,R3,P=JSWAP.CPU_3D.JSWAP_CPU_3D_forward_isotropic_solver(input2);
+v1,v2,v3,R1,R2,R3,P=JSWAP.CPU_3D.forward_solver(input2);

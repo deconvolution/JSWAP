@@ -10,38 +10,38 @@ input2.dz=10.0;
 # number of time steps
 input2.nt=1000;
 # nx
-input2.nx=80;
+input2.nx=100;
 # ny
-input2.ny=80;
+input2.ny=100;
 # nz
-input2.nz=90;
+input2.nz=100;
 # 3D true coordinate X, Y and Z
-input2.Y,input2.X,input2.Z=JSWAP.meshgrid(1:80,1:80,1:90);
+input2.Y,input2.X,input2.Z=JSWAP.meshgrid(1:10:1000,1:10:1000,1:10:1000);
 ## material properties
-input2.C11=ones(80,80,90)*10^9*1.056;
-input2.C12=ones(80,80,90)*10^9*(1.056-2*.4);
-input2.C13=ones(80,80,90)*10^9*.164;
-input2.C14=ones(80,80,90)*10^9*0;
-input2.C15=ones(80,80,90)*10^9*0;
-input2.C16=ones(80,80,90)*10^9*0;
-input2.C22=ones(80,80,90)*10^9*1.056;
-input2.C23=ones(80,80,90)*10^9*.164;
-input2.C24=ones(80,80,90)*10^9*0;
-input2.C25=ones(80,80,90)*10^9*0;
-input2.C26=ones(80,80,90)*10^9*0;
-input2.C33=ones(80,80,90)*10^9*1.084;
-input2.C34=ones(80,80,90)*10^9*0;
-input2.C35=ones(80,80,90)*10^9*0;
-input2.C36=ones(80,80,90)*10^9*0;
-input2.C44=ones(80,80,90)*10^9*.312;
-input2.C45=ones(80,80,90)*10^9*0;
-input2.C46=ones(80,80,90)*10^9*0;
-input2.C55=ones(80,80,90)*10^9*0.312;
-input2.C56=ones(80,80,90)*10^9*0;
-input2.C66=ones(80,80,90)*10^9*.4;
+input2.C11=ones(100,100,100)*10^9*1.506;
+input2.C12=ones(100,100,100)*10^9*(1.506-2*.4);
+input2.C13=ones(100,100,100)*10^9*.164;
+input2.C14=ones(100,100,100)*10^9*0;
+input2.C15=ones(100,100,100)*10^9*0;
+input2.C16=ones(100,100,100)*10^9*0;
+input2.C22=ones(100,100,100)*10^9*1.506;
+input2.C23=ones(100,100,100)*10^9*.164;
+input2.C24=ones(100,100,100)*10^9*0;
+input2.C25=ones(100,100,100)*10^9*0;
+input2.C26=ones(100,100,100)*10^9*0;
+input2.C33=ones(100,100,100)*10^9*1.084;
+input2.C34=ones(100,100,100)*10^9*0;
+input2.C35=ones(100,100,100)*10^9*0;
+input2.C36=ones(100,100,100)*10^9*0;
+input2.C44=ones(100,100,100)*10^9*.312;
+input2.C45=ones(100,100,100)*10^9*0;
+input2.C46=ones(100,100,100)*10^9*0;
+input2.C55=ones(100,100,100)*10^9*0.312;
+input2.C56=ones(100,100,100)*10^9*0;
+input2.C66=ones(100,100,100)*10^9*.4;
 
-input2.rho=ones(80,80,90)*1000.0;
-input2.inv_Qa=ones(80,80,90)*0.0;
+input2.rho=ones(100,100,100)*1000.0;
+input2.inv_Qa=ones(100,100,100)*0.0;
 ## receiver and source configuration.
 "
 The type of r1,r2,r3,s1,s2 and s3 should not be changed.
@@ -57,21 +57,21 @@ input2.r3=zeros(Int32,1,50);
 input2.r3 .=15;
 # source grid location x
 input2.s1=zeros(Int32,1,1);
-input2.s1[:] .=60;
+input2.s1[:] .=51;
 # source grid location y
 input2.s2=zeros(Int32,1,1);
-input2.s2[:] .=50;
+input2.s2[:] .=51;
 # source grid location z
 input2.s3=zeros(Int32,1,1);
-input2.s3[:] .=30;
+input2.s3[:] .=51;
 # source signal x
 input2.src1=zeros(input2.nt,1);
 # source signal y
 input2.src2=zeros(input2.nt,1);
 # source signal z
-input2.src3=reshape(rickerWave(20,10^-3*1.0,1000,2),input2.nt,1);
+input2.src3=reshape(rickerWave(10,10^-3*1.0,1000,2),input2.nt,1)*1;
 # source signal pressure
-input2.srcp=zeros(input2.nt,1);
+input2.srcp=reshape(rickerWave(10,10^-3*1.0,1000,2),input2.nt,1)*0;
 # receiver true location x
 input2.r1t=input2.r1*input2.dx;
 # receiver true location y
@@ -98,7 +98,7 @@ input2.Rc=.01;
 input2.PML_active=[1 1 1 1 1 1];
 ## plot
 # path for storage. This must be the master branch of the following pathes.
-input2.path=p3;
+input2.path="./P-source";
 # path for wavefield .vtk
 input2.path_pic=string(input2.path,"/pic");
 # path for model
