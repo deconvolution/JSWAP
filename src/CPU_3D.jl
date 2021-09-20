@@ -2,14 +2,14 @@
 3D solver on CPU, including isotropic, anisotropic, forward and adjoint solvers.
 "
 module CPU_3D
-export isotropic_forward_solver,isotropic_adjoint_solver,PML_configuration
+export isotropic_forward_solver,isotropic_adjoint_solver,PML_configuration,ParallelStencil
 ## Using ParallelStencil
-include("./ParallelStencil/ParallelStencil.jl");
+# include("./ParallelStencil/ParallelStencil.jl");
+## using packages
+using Random,MAT,Plots,Dates,TimerOutputs,WriteVTK,ProgressMeter,DataFrames,CSV,ParallelStencil,
+ParallelStencil.FiniteDifferences3D
 ## utilities
 include("./utilities.jl");
-## using packages
-using Random,MAT,Plots,Dates,TimerOutputs,WriteVTK,ProgressMeter,DataFrames,CSV,
-.ParallelStencil,.ParallelStencil.FiniteDifferences3D
 ## Use CPU for ParallelStencil
 const USE_GPU=false
 @static if USE_GPU
