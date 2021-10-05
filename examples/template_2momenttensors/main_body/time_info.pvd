@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<VTKFile type="Collection" version="1.0" byte_order="LittleEndian" compressor="vtkZLibDataCompressor">
+  <Collection>
+    <DataSet timestep="0.101" part="0" file="pic/wavefield_pic_1.vts"/>
+    <DataSet timestep="0.201" part="0" file="pic/wavefield_pic_2.vts"/>
+    <DataSet timestep="0.301" part="0" file="pic/wavefield_pic_3.vts"/>
+    <DataSet timestep="0.401" part="0" file="pic/wavefield_pic_4.vts"/>
+    <DataSet timestep="0.501" part="0" file="pic/wavefield_pic_5.vts"/>
+    <DataSet timestep="0.601" part="0" file="pic/wavefield_pic_6.vts"/>
+    <DataSet timestep="0.7010000000000001" part="0" file="pic/wavefield_pic_7.vts"/>
+    <DataSet timestep="0.801" part="0" file="pic/wavefield_pic_8.vts"/>
+    <DataSet timestep="0.901" part="0" file="pic/wavefield_pic_9.vts"/>
+    <DataSet timestep="1.0" part="0" file="pic/wavefield_pic_10.vts"/>
+  </Collection>
+</VTKFile>

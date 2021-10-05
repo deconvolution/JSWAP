@@ -1,0 +1,70 @@
+## import packages
+using JSWAP
+Threads.nthreads()
+## input struct
+mutable struct input3
+    dt
+    dx
+    dy
+    dz
+    nt
+    nx
+    ny
+    nz
+    X
+    Y
+    Z
+    C11
+    C12
+    C13
+    C14
+    C15
+    C16
+    C22
+    C23
+    C24
+    C25
+    C26
+    C33
+    C34
+    C35
+    C36
+    C44
+    C45
+    C46
+    C55
+    C56
+    C66
+    rho
+    inv_Qa
+    r1
+    r2
+    r3
+    s1
+    s2
+    s3
+    src1
+    src2
+    src3
+    srcp
+    r1t
+    r2t
+    r3t
+    Rm
+    s1t
+    s2t
+    s3t
+    lp
+    nPML
+    Rc
+    PML_active
+    plot_interval
+    wavefield_interval
+    path
+    path_pic
+    path_model
+    path_wavefield
+    path_rec
+end
+input2=input3(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
