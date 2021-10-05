@@ -53,7 +53,7 @@ input2.s3=zeros(Int32,1,size(data["s"],1));
 input2.s3[:] .=data["s"][3];
 
 # moment tensor source
-freq=.5;
+freq=1;
 input2.M11=zeros(input2.nt,1);
 input2.M22=zeros(input2.nt,1);
 input2.M33=zeros(input2.nt,1);
