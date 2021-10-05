@@ -16,7 +16,7 @@ input2.ny=80;
 # nz
 input2.nz=90;
 # 3D true coordinate X, Y and Z
-input2.Y,input2.X,input2.Z=JSWAP.meshgrid(1:80,1:80,1:90);
+input2.Y,input2.X,input2.Z=JSWAP.meshgrid((1:80)*input2.dx,(1:80)*input2.dy,(1:90)*input2.dz);
 ## material properties
 input2.lambda=ones(80,80,90)*10^9*1.0;
 input2.mu=ones(80,80,90)*10^9*1.0;
