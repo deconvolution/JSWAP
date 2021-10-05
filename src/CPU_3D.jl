@@ -2,7 +2,7 @@
 3D solver on CPU, including isotropic, anisotropic, forward and adjoint solvers.
 "
 module CPU_3D
-export isotropic_forward_solver,isotropic_adjoint_solver,PML_configuration
+export isotropic_forward_solver,isotropic_adjoint_solver,PML_configuration,ParallelStencil
 ## Using ParallelStencil
 include("./ParallelStencil/ParallelStencil.jl");
 ## utilities
