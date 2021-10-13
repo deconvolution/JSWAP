@@ -6,7 +6,7 @@ export isotropic_forward_solver,isotropic_adjoint_solver,PML_configuration,Paral
 ## Using ParallelStencil
 include("../ParallelStencil/ParallelStencil.jl");
 ## utilities
-include("../utilities.jl");
+include("..//utilities/utilities.jl");
 ## using packages
 using Random,MAT,Plots,Dates,TimerOutputs,WriteVTK,ProgressMeter,DataFrames,CSV,
 .ParallelStencil,.ParallelStencil.FiniteDifferences3D
