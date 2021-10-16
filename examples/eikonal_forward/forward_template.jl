@@ -41,6 +41,6 @@ Z=Z[tt];
 
 path="./source_1";
 ##
-T,T_obs=JSWAP.eikonal.acoustic_eikonal_forward(nx,ny,nz,h,v,s1,s2,s3,s1t,s2t,s3t,r1,r2,r3,r1t,r2t,r3t,path);
+T,T_rec=JSWAP.eikonal.acoustic_eikonal_forward(input2);
 ##
 plot(heatmap(z=reshape(T[:,s2,:],nx,nz)))
