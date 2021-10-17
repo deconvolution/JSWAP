@@ -1,7 +1,7 @@
 ## inversion paramemters
 input2.n_iteration=10^3;
-input2.max_gradient=800;
-input2.fu=20;
+input2.max_gradient=400;
+input2.fu=50;
 
 input2.R_true=Vector{Vector{Float64}}();
 input2.s1=Vector{Vector{Int32}}();
@@ -27,6 +27,7 @@ input2.Y=tt["Y"];
 input2.Z=tt["Z"];
 input2.h=tt["dx"];
 input2.v=tt["vp"];
+input2.v[:] .=5000;
 
 input2.v[input2.v .==0] .=340;
 

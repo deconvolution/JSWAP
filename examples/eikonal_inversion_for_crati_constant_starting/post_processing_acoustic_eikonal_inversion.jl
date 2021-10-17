@@ -55,10 +55,7 @@ for l=1:n_iteration
         end
     end
     if n_decrease_fu>=4
-        fu=round(Int64,fu-4);
-        if fu<=1
-            fu=1;
-        end
+        fu=round(Int64,fu/2);
     end
     s_fu[l]=fu;
     JSWAP.CSV.write(string("./inversion_progress/E_",l,".csv"),
