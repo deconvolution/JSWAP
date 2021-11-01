@@ -2,11 +2,11 @@
 # Time increment
 input2.dt=10.0^-3;
 # dx
-input2.dx=10.0;
+input2.dx=15.0;
 # dy
-input2.dy=10.0;
+input2.dy=15.0;
 # dz
-input2.dz=10.0;
+input2.dz=15.0;
 # number of time steps
 input2.nt=1000;
 # nx
@@ -16,7 +16,7 @@ input2.ny=80;
 # nz
 input2.nz=90;
 # 3D true coordinate X, Y and Z
-input2.Y,input2.X,input2.Z=JSWAP.meshgrid(1:80,1:80,1:90);
+input2.Y,input2.X,input2.Z=JSWAP.meshgrid((1:80)*input2.dx,(1:80)*input2.dy,(1:90)*input2.dz);
 ## material properties
 input2.lambda=ones(80,80,90)*10^9*1.0;
 input2.mu=ones(80,80,90)*10^9*1.0;
@@ -27,20 +27,20 @@ input2.inv_Qa=ones(80,80,90)*0.0;
 The type of r1,r2,r3,s1,s2 and s3 should not be changed.
 "
 # receiver grid location x
-input2.r1=zeros(Int32,1,50);
-input2.r1[:]=30:79;
+input2.r1=zeros(Int32,1,1);
+input2.r1[:] .=50;
 # receiver grid location y
-input2.r2=zeros(Int32,1,50);
-input2.r2[:]=30:79;
+input2.r2=zeros(Int32,1,1);
+input2.r2[:] .=40;
 # receiver grid location z
-input2.r3=zeros(Int32,1,50);
-input2.r3[:] .=15;
+input2.r3=zeros(Int32,1,1);
+input2.r3[:] .=45;
 # source grid location x
 input2.s1=zeros(Int32,1,1);
-input2.s1[:] .=60;
+input2.s1[:] .=30;
 # source grid location y
 input2.s2=zeros(Int32,1,1);
-input2.s2[:] .=50;
+input2.s2[:] .=30;
 # source grid location z
 input2.s3=zeros(Int32,1,1);
 input2.s3[:] .=30;
@@ -51,12 +51,13 @@ input2.M33=zeros(input2.nt,1);
 input2.M23=zeros(input2.nt,1);
 input2.M13=zeros(input2.nt,1);
 input2.M12=zeros(input2.nt,1);
-input2.M11[:]=rickerWave(20,10^-3*1.0,1000,2);
-input2.M22[:]=rickerWave(20,10^-3*1.0,1000,2);
-input2.M33[:]=rickerWave(20,10^-3*1.0,1000,2);
-input2.M23[:]=rickerWave(20,10^-3*1.0,1000,2);
-input2.M13[:]=rickerWave(20,10^-3*1.0,1000,2);
-input2.M12[:]=rickerWave(20,10^-3*1.0,1000,2);
+freq=10;
+input2.M11[:]=1*rickerWave(freq,input2.dt,input2.nt,2);
+input2.M22[:]=-1*rickerWave(freq,input2.dt,input2.nt,2);
+input2.M33[:]=0*rickerWave(freq,input2.dt,input2.nt,2);
+input2.M23[:]=0*rickerWave(freq,input2.dt,input2.nt,2);
+input2.M13[:]=0*rickerWave(freq,input2.dt,input2.nt,2);
+input2.M12[:]=0*rickerWave(freq,input2.dt,input2.nt,2);
 
 # receiver true location x
 input2.r1t=input2.r1*input2.dx;
@@ -74,11 +75,11 @@ input2.s2t=input2.s2*input2.dx;
 input2.s3t=input2.s3*input2.dx;
 ## PML
 # PML layers
-input2.lp=10;
+input2.lp=20;
 # PML power
 input2.nPML=2;
 # PML theorecital coefficient
-input2.Rc=.01;
+input2.Rc=.0001;
 # set PML active
 # xminus,xplus,yminus,yplus,zminus,zplus
 input2.PML_active=[1 1 1 1 1 1];

@@ -105,7 +105,6 @@ function JSWAP_CPU_3D_forward_isotropic_solver(input2)
         Ms23_t[1:end-1,:]=diff(Ms23,dims=1);
         Ms13_t[1:end-1,:]=diff(Ms13,dims=1);
         Ms12_t[1:end-1,:]=diff(Ms12,dims=1);
-
     end
 
     # wave vector
