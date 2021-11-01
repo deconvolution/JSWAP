@@ -75,11 +75,11 @@ input2.s2t=input2.s2*input2.dx;
 input2.s3t=input2.s3*input2.dx;
 ## PML
 # PML layers
-input2.lp=20;
+input2.lp=10;
 # PML power
 input2.nPML=2;
 # PML theorecital coefficient
-input2.Rc=.0001;
+input2.Rc=.001;
 # set PML active
 # xminus,xplus,yminus,yplus,zminus,zplus
 input2.PML_active=[1 1 1 1 1 1];

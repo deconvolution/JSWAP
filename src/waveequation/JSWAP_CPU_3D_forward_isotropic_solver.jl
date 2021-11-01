@@ -98,13 +98,13 @@ function JSWAP_CPU_3D_forward_isotropic_solver(input2)
         Ms13_t=copy(Mp_t);
         Ms12_t=copy(Mp_t);
 
-        Mp_t[1:end-1,:]=diff(Mp,dims=1);
-        Ms11_t[1:end-1,:]=diff(Ms11,dims=1);
-        Ms22_t[1:end-1,:]=diff(Ms22,dims=1);
-        Ms33_t[1:end-1,:]=diff(Ms33,dims=1);
-        Ms23_t[1:end-1,:]=diff(Ms23,dims=1);
-        Ms13_t[1:end-1,:]=diff(Ms13,dims=1);
-        Ms12_t[1:end-1,:]=diff(Ms12,dims=1);
+        Mp_t[1:end-1,:]=diff(Mp,dims=1)/input2.dt;
+        Ms11_t[1:end-1,:]=diff(Ms11,dims=1)/input2.dt;
+        Ms22_t[1:end-1,:]=diff(Ms22,dims=1)/input2.dt;
+        Ms33_t[1:end-1,:]=diff(Ms33,dims=1)/input2.dt;
+        Ms23_t[1:end-1,:]=diff(Ms23,dims=1)/input2.dt;
+        Ms13_t[1:end-1,:]=diff(Ms13,dims=1)/input2.dt;
+        Ms12_t[1:end-1,:]=diff(Ms12,dims=1)/input2.dt;
     end
 
     # wave vector
