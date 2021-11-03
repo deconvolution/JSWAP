@@ -4,8 +4,8 @@ Compuites auxiliary variable used to compute sigma, subfunction of JSWAP_CPU_3D_
 
 @parallel function JSWAP_CPU_3D_isotropic_forward_solver_compute_au_for_sigma_curvilinear(dt,dx,dy,dz,inv_Qa,lambda,mu,
     beta,
-    v1_1_plus,v1_2_minus,v1_3_minus,
-    v2_1_minus,v2_2_plus,v2_3_minus,
+    v1_1_plus,v1_2_minus,v1_3_minus,v1_3_plus,
+    v2_1_minus,v2_2_plus,v2_3_minus,v2_3_plus,
     v3_1_minus,v3_2_minus,v3_3_plus,
     sigmas11,sigmas22,sigmas33,sigmas23,sigmas13,sigmas12,p,
     ax,ax2,ax3,ax4,ax5,ax6,ax7,
@@ -22,40 +22,40 @@ Compuites auxiliary variable used to compute sigma, subfunction of JSWAP_CPU_3D_
     @all(Ax7)=@all(ax7);
 
     @all(ax)=4*@all(mu) .*(@all(v1_1_plus)/dx-
-    @all(Z_Kmax) .*@all(Kmax_x) .*@all(v1_3_minus)/dz)+
+    @all(Z_Kmax) .*@all(Kmax_x)  .*@all(v1_3_plus)/dz)+
     (-2*@all(mu)) .*(@all(v2_2_plus)/dy-
-    @all(Z_Kmax) .*@all(Kmax_y) .*@all(v2_3_minus)/dz)+
+    @all(Z_Kmax) .*@all(Kmax_y) .*@all(v2_3_plus)/dz)+
     (-2*@all(mu)) .*@all(Zmax_Kmax) .*@all(v3_3_plus)/dz;
-
+    #=
     @all(ax2)=(-2*@all(mu)) .*(@all(v1_1_plus)/dx-
-    @all(Z_Kmax) .*@all(Kmax_x) .*@all(v1_3_minus)/dz)+
+    @all(Z_Kmax) .*@all(Kmax_x) .*@all(v1_3_plus)/dz)+
     (4*@all(mu)) .* (@all(v2_2_plus)/dy-
-    @all(Z_Kmax) .*@all(Kmax_y) .*@all(v2_3_minus)/dz)+
+    @all(Z_Kmax) .*@all(Kmax_y) .*@all(v2_3_plus)/dz)+
     (-2*@all(mu)) .* @all(Zmax_Kmax) .*@all(v3_3_plus)/dz;
 
     @all(ax3)=(-2*@all(mu)) .*(@all(v1_1_plus)/dx-
-    @all(Z_Kmax) .*@all(Kmax_x) .*@all(v1_3_minus)/dz)+
+    @all(Z_Kmax) .*@all(Kmax_x) .*@all(v1_3_plus)/dz)+
     (-2*@all(mu)) .*(@all(v2_2_plus)/dy-
-    @all(Z_Kmax) .*@all(Kmax_y) .*@all(v2_3_minus)/dz)+
+    @all(Z_Kmax) .*@all(Kmax_y) .*@all(v2_3_plus)/dz)+
     (4*@all(mu)) .*@all(Zmax_Kmax) .*@all(v3_3_plus)/dz;
 
     @all(ax4)=@all(mu).*(@all(v2_1_minus)/dx-
-    @all(Z_Kmax) .*@all(Kmax_x) .*@all(v2_3_minus)/dz)+
+    @all(Z_Kmax) .*@all(Kmax_x) .*@all(v2_3_plus)/dz)+
     @all(mu).*(@all(v1_2_minus)/dy-
-    @all(Z_Kmax) .*@all(Kmax_y) .*@all(v1_3_minus)/dz);
+    @all(Z_Kmax) .*@all(Kmax_y) .*@all(v1_3_plus)/dz);
 
     @all(ax5)=@all(mu) .*(@all(v3_1_minus)/dx-
     @all(Z_Kmax) .*@all(Kmax_x) .*@all(v3_3_plus)/dz)+
-    @all(mu) .*@all(Zmax_Kmax).*@all(v1_3_minus)/dz;
+    @all(mu) .*@all(Zmax_Kmax).*@all(v1_3_plus)/dz;
 
     @all(ax6)=@all(mu).*(@all(v3_2_minus)/dy-
     @all(Z_Kmax) .*@all(Kmax_y) .*@all(v3_3_plus)/dz)+
     @all(mu) .*@all(Zmax_Kmax) .*@all(v2_3_minus)/dz;
-
+    =#
     @all(ax7)=(3*@all(lambda)+2*@all(mu)) .*(@all(v1_1_plus)/dx-
-    @all(Z_Kmax) .*@all(Kmax_x) .*@all(v1_3_minus)/dz)+
+    @all(Z_Kmax) .*@all(Kmax_x) .*@all(v1_3_plus)/dz)+
     (3*@all(lambda)+2*@all(mu)) .*(@all(v2_2_plus)/dy-
-    @all(Z_Kmax) .*@all(Kmax_y) .*@all(v2_3_minus)/dz)+
+    @all(Z_Kmax) .*@all(Kmax_y) .*@all(v2_3_plus)/dz)+
     (3*@all(lambda)+2*@all(mu)) .*@all(Zmax_Kmax) .*@all(v3_3_plus)/dz;
 
     @all(ax_dt)=(@all(ax)-@all(Ax))/dt;

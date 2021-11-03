@@ -9,7 +9,7 @@ input2.dy=data["dy"];
 # dz
 input2.dz=data["dz"];
 # number of time steps
-input2.nt=2400;
+input2.nt=800;
 # nx
 input2.nx=round(Int32,data["nx"]);
 # ny
@@ -25,7 +25,6 @@ input2.Y,input2.X,input2.Z=JSWAP.meshgrid((1:input2.nx)*input2.dx,(1:input2.ny)*
 ## material properties
 input2.lambda=data["lambda"];
 input2.mu=data["mu"];
-input2.mu[:] .=0;
 input2.rho=data["rho"];
 input2.inv_Qa=ones(input2.nx,input2.ny,input2.nz)*0.0;
 ## receiver and source configuration.
