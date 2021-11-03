@@ -1,8 +1,9 @@
 "
 Computes v, subfunction of JSWAP_CPU_3D_isotropic_solver.
 "
-@parallel function JSWAP_CPU_3D_isotropic_forward_solver_compute_v_curvilinear(dt,dx,dy,dz,rho,beta,
+@parallel function JSWAP_CPU_3D_isotropic_forward_solver_compute_v_bar_curvilinear(dt,dx,dy,dz,rho,beta,
     v1,v2,v3,
+    v1_bar,v2_bar,v3_bar,
     sigmas11_1_minus,sigmas11_3_plus,
     sigmas22_2_minus,sigmas22_3_plus,
     sigmas33_3_minus,
@@ -12,23 +13,23 @@ Computes v, subfunction of JSWAP_CPU_3D_isotropic_solver.
     p_1_minus,p_2_minus,p_3_minus,
     Kmax_x,Kmax_y,Z_Kmax,Zmax_Kmax)
 
-    @all(v1)=dt./@all(rho) .*((@all(sigmas11_1_minus)-@all(p_1_minus))/dx-
-    0*@all(Z_Kmax) .* @all(Kmax_x) .*(@all(sigmas11_3_plus)-@all(p_3_minus))/dz+
+    @all(v1_bar)=dt./@all(rho) .*((@all(sigmas11_1_minus)-@all(p_1_minus))/dx-
+    @all(Z_Kmax) .* @all(Kmax_x) .*(@all(sigmas11_3_plus)-@all(p_3_minus))/dz+
     @all(sigmas12_2_plus)/dy-
-    0*@all(Z_Kmax) .*@all(Kmax_y) .*@all(sigmas12_3_minus)/dz+
+    @all(Z_Kmax) .*@all(Kmax_y) .*@all(sigmas12_3_minus)/dz+
     @all(Zmax_Kmax) .*@all(sigmas13_3_plus)/dz)+
     @all(v1)-
     dt*@all(beta) .*@all(v1);
 
-    @all(v2)=dt./@all(rho) .*(@all(sigmas12_1_plus)/dx-
+    @all(v2_bar)=dt./@all(rho) .*(@all(sigmas12_1_plus)/dx-
     @all(Z_Kmax) .*@all(Kmax_x) .*@all(sigmas12_3_minus)/dz+
     (@all(sigmas22_2_minus)-@all(p_2_minus))/dy-
-    @all(Z_Kmax)./@all(Z_Kmax) .*@all(Kmax_y) .*(@all(sigmas22_3_plus)-@all(p_3_minus))/dz+
+    @all(Z_Kmax) .*@all(Kmax_y) .*(@all(sigmas22_3_plus)-@all(p_3_minus))/dz+
     @all(Zmax_Kmax) .*@all(sigmas23_3_plus)/dz)+
     @all(v2)-
     dt*@all(beta) .*@all(v2);
 
-    @all(v3)=dt./@all(rho) .*(@all(sigmas13_1_plus)/dx-
+    @all(v3_bar)=dt./@all(rho) .*(@all(sigmas13_1_plus)/dx-
     @all(Z_Kmax) .*@all(Kmax_x) .*@all(sigmas13_3_plus)/dz+
     @all(sigmas23_2_plus)/dy-
     @all(Z_Kmax) .*@all(Kmax_y) .*@all(sigmas23_3_plus)/dz+

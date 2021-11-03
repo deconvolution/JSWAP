@@ -9,7 +9,6 @@ end
 ## Specify where the input file is
 path_to_input=["./input_template.jl"];
 ## Run solvers
-for I=1:length(path_to_input)
-    include(path_to_input[I]);
-    JSWAP.CPU_3D.JSWAP_CPU_3D_forward_isotropic_curvilinear_solver(input2);
-end
+I=1;
+include(path_to_input[I]);
+v1,v2,v3,p,R1,R2,R3,P=JSWAP.CPU_3D.JSWAP_CPU_3D_forward_isotropic_curvilinear_solver(input2);

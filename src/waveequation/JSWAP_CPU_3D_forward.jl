@@ -35,10 +35,13 @@ include("./JSWAP_CPU_3D_isotropic_forward_solver_compute_v.jl");
 ## function JSWAP_CPU_3D_isotropic_forward_curvilinear_solver and its dependencies
 # function JSWAP_CPU_3D_isotropic_forward_solver_compute_au_for_sigma
 include("./JSWAP_CPU_3D_isotropic_forward_solver_compute_au_for_sigma_curvilinear.jl");
+include("./JSWAP_CPU_3D_isotropic_forward_solver_compute_au_for_sigma_bar_curvilinear.jl");
 # function JSWAP_CPU_3D_isotropic_forward_solver_compute_sigma
 include("./JSWAP_CPU_3D_isotropic_forward_solver_compute_sigma_curvilinear.jl");
+include("./JSWAP_CPU_3D_isotropic_forward_solver_compute_sigma_bar_curvilinear.jl");
 # function JSWAP_CPU_3D_isotropic_forward_solver_compute_v
 include("./JSWAP_CPU_3D_isotropic_forward_solver_compute_v_curvilinear.jl");
+include("./JSWAP_CPU_3D_isotropic_forward_solver_compute_v_bar_curvilinear.jl");
 include("./JSWAP_CPU_3D_forward_isotropic_curvilinear_solver.jl");
 ## function JSWAP_CPU_3D_isotropic_adjoint_solver and its dependencies
 # function JSWAP_CPU_3D_isotropic_forward_solver_compute_au_for_sigma

@@ -1,7 +1,7 @@
 ## dimensions
 data=JSWAP.readmat("./example.mat","data");
 # Time increment
-input2.dt=10.0^-3/3;
+input2.dt=10.0^-3;
 # dx
 input2.dx=data["dx"];
 # dy
@@ -9,7 +9,7 @@ input2.dy=data["dy"];
 # dz
 input2.dz=data["dz"];
 # number of time steps
-input2.nt=2400;
+input2.nt=300;
 # nx
 input2.nx=round(Int32,data["nx"]);
 # ny
@@ -24,6 +24,7 @@ input2.Kmax=data["Kmax"];
 input2.Y,input2.X,input2.Z=JSWAP.meshgrid((1:input2.nx)*input2.dx,(1:input2.ny)*input2.dy,(1:input2.nz)*input2.dz);
 ## material properties
 input2.lambda=data["lambda"];
+input2.lambda[:] .=1.6*10^10;
 input2.mu=data["mu"];
 input2.mu[:] .=0;
 input2.rho=data["rho"];
@@ -51,15 +52,15 @@ input2.s2[:] .=data["s2"];
 input2.s3=zeros(Int32,1,1);
 input2.s3[:] .=data["s3"];
 # point source
-freq=20;
+freq=200;
 input2.src1=zeros(input2.nt,1);
 input2.src2=zeros(input2.nt,1);
 input2.src3=zeros(input2.nt,1);
 input2.srcp=zeros(input2.nt,1);
 input2.src1[:]=0*rickerWave(freq,input2.dt,input2.nt,2);
 input2.src2[:]=0*rickerWave(freq,input2.dt,input2.nt,2);
-input2.src3[:]=0*rickerWave(freq,input2.dt,input2.nt,2);
-input2.srcp[:]=1*rickerWave(freq,input2.dt,input2.nt,2);
+input2.src3[:]=1*rickerWave(freq,input2.dt,input2.nt,2);
+input2.srcp[:]=0*rickerWave(freq,input2.dt,input2.nt,2);
 
 
 # receiver true location x
@@ -98,6 +99,6 @@ input2.path_wavefield=string(input2.path,"/wavefield");
 # path for recordings
 input2.path_rec=string(input2.path,"/rec");
 # plot interval
-input2.plot_interval=100;
+input2.plot_interval=50;
 # wavefield interval
 input2.wavefield_interval=0;

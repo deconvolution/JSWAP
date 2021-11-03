@@ -5,20 +5,20 @@ function JSWAP_CPU_3D_forward_isotropic_curvilinear_solver(input2)
     #global data
     global data
     # zero stress condition at the boundaries
-    
-    input2.lambda[1:5,:,:] .=0;
-    input2.lambda[end-4:end,:,:] .=0;
-    input2.lambda[:,1:5,:] .=0;
-    input2.lambda[:,end-4:end,:] .=0;
-    input2.lambda[:,:,1:5] .=0;
-    input2.lambda[:,:,end-4:end] .=0;
 
-    input2.mu[1:5,:,:] .=0;
-    input2.mu[end-4:end,:,:] .=0;
-    input2.mu[:,1:5,:] .=0;
-    input2.mu[:,end-4:end,:] .=0;
-    input2.mu[:,:,1:5] .=0;
-    input2.mu[:,:,end-4:end] .=0;
+    input2.lambda[1:7,:,:] .=0;
+    input2.lambda[end-6:end,:,:] .=0;
+    input2.lambda[:,1:7,:] .=0;
+    input2.lambda[:,end-6:end,:] .=0;
+    input2.lambda[:,:,1:7] .=0;
+    input2.lambda[:,:,end-6:end] .=0;
+
+    input2.mu[1:7,:,:] .=0;
+    input2.mu[end-6:end,:,:] .=0;
+    input2.mu[:,1:7,:] .=0;
+    input2.mu[:,end-6:end,:] .=0;
+    input2.mu[:,:,1:7] .=0;
+    input2.mu[:,:,end-6:end] .=0;
 
 
 
@@ -123,33 +123,74 @@ function JSWAP_CPU_3D_forward_isotropic_curvilinear_solver(input2)
     sigmas12=copy(v1);
     p=copy(v1);
 
-    v1_1_plus=copy(v1);
+    v1_1_minus=copy(v1);
     v1_2_minus=copy(v1);
     v1_3_minus=copy(v1);
     v2_1_minus=copy(v1);
-    v2_2_plus=copy(v1);
+    v2_2_minus=copy(v1);
     v2_3_minus=copy(v1);
     v3_1_minus=copy(v1);
     v3_2_minus=copy(v1);
-    v3_3_plus=copy(v1);
+    v3_3_minus=copy(v1);
 
     sigmas11_1_minus=copy(v1);
     sigmas22_2_minus=copy(v1);
     sigmas33_3_minus=copy(v1);
-    sigmas23_2_plus=copy(v1);
-    sigmas23_3_plus=copy(v1);
-    sigmas13_1_plus=copy(v1);
-    sigmas13_3_plus=copy(v1);
-    sigmas12_1_plus=copy(v1);
-    sigmas12_2_plus=copy(v1);
+    sigmas23_2_minus=copy(v1);
+    sigmas23_3_minus=copy(v1);
+    sigmas13_1_minus=copy(v1);
+    sigmas13_3_minus=copy(v1);
+    sigmas12_1_minus=copy(v1);
+    sigmas12_2_minus=copy(v1);
 
-    sigmas11_3_plus=copy(v1);
-    sigmas22_3_plus=copy(v1);
+    sigmas11_3_minus=copy(v1);
+    sigmas22_3_minus=copy(v1);
     sigmas12_3_minus=copy(v1);
 
     p_1_minus=copy(v1);
     p_2_minus=copy(v1);
     p_3_minus=copy(v1);
+
+    # wave vector bar
+    v1_bar=copy(v1);
+    v2_bar=copy(v1);
+    v3_bar=copy(v1);
+
+    sigmas11_bar=copy(v1);
+    sigmas22_bar=copy(v1);
+    sigmas33_bar=copy(v1);
+    sigmas23_bar=copy(v1);
+    sigmas13_bar=copy(v1);
+    sigmas12_bar=copy(v1);
+    p_bar=copy(v1);
+
+    v1_bar_1_plus=copy(v1);
+    v1_bar_2_plus=copy(v1);
+    v1_bar_3_plus=copy(v1);
+    v2_bar_1_plus=copy(v1);
+    v2_bar_2_plus=copy(v1);
+    v2_bar_3_plus=copy(v1);
+    v3_bar_1_plus=copy(v1);
+    v3_bar_2_plus=copy(v1);
+    v3_bar_3_plus=copy(v1);
+
+    sigmas11_bar_1_plus=copy(v1);
+    sigmas22_bar_2_plus=copy(v1);
+    sigmas33_bar_3_plus=copy(v1);
+    sigmas23_bar_2_plus=copy(v1);
+    sigmas23_bar_3_plus=copy(v1);
+    sigmas13_bar_1_plus=copy(v1);
+    sigmas12_bar_1_plus=copy(v1);
+    sigmas13_bar_3_plus=copy(v1);
+    sigmas12_bar_2_plus=copy(v1);
+
+    sigmas11_bar_3_plus=copy(v1);
+    sigmas22_bar_3_plus=copy(v1);
+    sigmas12_bar_3_plus=copy(v1);
+
+    p_bar_1_plus=copy(v1);
+    p_bar_2_plus=copy(v1);
+    p_bar_3_plus=copy(v1);
 
     dtt1=@zeros(input2.nx-IND_accuracy,input2.ny,input2.nz);
     dtt2=@zeros(input2.nx,input2.ny-IND_accuracy,input2.nz);
@@ -176,6 +217,28 @@ function JSWAP_CPU_3D_forward_isotropic_curvilinear_solver(input2)
     ax5_dt=copy(v1);
     ax6_dt=copy(v1);
     ax7_dt=copy(v1);
+
+    ax_bar=copy(v1);
+    ax2_bar=copy(v1);
+    ax3_bar=copy(v1);
+    ax4_bar=copy(v1);
+    ax5_bar=copy(v1);
+    ax6_bar=copy(v1);
+    ax7_bar=copy(v1);
+    Ax_bar=copy(v1);
+    Ax2_bar=copy(v1);
+    Ax3_bar=copy(v1);
+    Ax4_bar=copy(v1);
+    Ax5_bar=copy(v1);
+    Ax6_bar=copy(v1);
+    Ax7_bar=copy(v1);
+    ax_dt_bar=copy(v1);
+    ax2_dt_bar=copy(v1);
+    ax3_dt_bar=copy(v1);
+    ax4_dt_bar=copy(v1);
+    ax5_dt_bar=copy(v1);
+    ax6_dt_bar=copy(v1);
+    ax7_dt_bar=copy(v1);
 
     l=1;
     # save wavefield
@@ -208,13 +271,13 @@ function JSWAP_CPU_3D_forward_isotropic_curvilinear_solver(input2)
     Kmax_x=repeat(Kmax_x0,1,1,input2.nz);
     Kmax_y=repeat(Kmax_y0,1,1,input2.nz);
 
+
     Z_Kmax=input2.Z ./repeat(Kmax,1,1,input2.nz);
     Zmax_Kmax=repeat(maximum(input2.Z)./Kmax,1,1,input2.nz);
-
-    for l=1:input2.nt-1
-
+    for l=2:input2.nt-1
+        # compute bar
         @parallel Dx_inn(v1,dtt1);
-        @parallel (2:input2.ny-1,2:input2.nz-1) u_1_plus(dtt1,v1_1_plus);
+        @parallel (2:input2.ny-1,2:input2.nz-1) u_1_minus(dtt1,v1_1_minus);
 
         @parallel Dy_inn(v1,dtt2);
         @parallel (2:input2.nx-1,2:input2.nz-1) u_2_minus(dtt2,v1_2_minus);
@@ -226,7 +289,7 @@ function JSWAP_CPU_3D_forward_isotropic_curvilinear_solver(input2)
         @parallel (2:input2.ny-1,2:input2.nz-1) u_1_minus(dtt1,v2_1_minus);
 
         @parallel Dy_inn(v2,dtt2);
-        @parallel (2:input2.nx-1,2:input2.nz-1) u_2_plus(dtt2,v2_2_plus);
+        @parallel (2:input2.nx-1,2:input2.nz-1) u_2_minus(dtt2,v2_2_minus);
 
         @parallel Dz_inn(v2,dtt3);
         @parallel (2:input2.nx-1,2:input2.ny-1) u_3_minus(dtt3,v2_3_minus);
@@ -238,29 +301,126 @@ function JSWAP_CPU_3D_forward_isotropic_curvilinear_solver(input2)
         @parallel (2:input2.nx-1,2:input2.nz-1) u_2_minus(dtt2,v3_2_minus);
 
         @parallel Dz_inn(v3,dtt3);
-        @parallel (2:input2.nx-1,2:input2.ny-1) u_3_plus(dtt3,v3_3_plus);
+        @parallel (2:input2.nx-1,2:input2.ny-1) u_3_minus(dtt3,v3_3_minus);
 
-        @timeit ti "compute_sigma" @parallel JSWAP_CPU_3D_isotropic_forward_solver_compute_au_for_sigma_curvilinear(input2.dt,input2.dx,input2.dy,input2.dz,input2.inv_Qa,input2.lambda,input2.mu,
-            beta,
-            v1_1_plus,v1_2_minus,v1_3_minus,
-            v2_1_minus,v2_2_plus,v2_3_minus,
-            v3_1_minus,v3_2_minus,v3_3_plus,
-            sigmas11,sigmas22,sigmas33,sigmas23,sigmas13,sigmas12,p,
-            ax,ax2,ax3,ax4,ax5,ax6,ax7,
-            Ax,Ax2,Ax3,Ax4,Ax5,Ax6,Ax7,
-            ax_dt,ax2_dt,ax3_dt,ax4_dt,ax5_dt,ax6_dt,ax7_dt,
-            Kmax_x,Kmax_y,Z_Kmax,Zmax_Kmax);
+        @timeit ti "compute_sigma" @parallel JSWAP_CPU_3D_isotropic_forward_solver_compute_au_for_sigma_bar_curvilinear(input2.dt,input2.dx,input2.dy,input2.dz,input2.inv_Qa,input2.lambda,input2.mu,
+        beta,
+        v1_1_minus,v1_2_minus,v1_3_minus,
+        v2_1_minus,v2_2_minus,v2_3_minus,
+        v3_1_minus,v3_2_minus,v3_3_minus,
+        sigmas11_bar,sigmas22_bar,sigmas33_bar,sigmas23_bar,sigmas13_bar,sigmas12_bar,p_bar,
+        ax_bar,ax2_bar,ax3_bar,ax4_bar,ax5_bar,ax6_bar,ax7_bar,
+        Ax_bar,Ax2_bar,Ax3_bar,Ax4_bar,Ax5_bar,Ax6_bar,Ax7_bar,
+        ax_dt_bar,ax2_dt_bar,ax3_dt_bar,ax4_dt_bar,ax5_dt_bar,ax6_dt_bar,ax7_dt_bar,
+        Kmax_x,Kmax_y,Z_Kmax,Zmax_Kmax);
 
-        @timeit ti "compute_sigma" @parallel JSWAP_CPU_3D_isotropic_forward_solver_compute_sigma_curvilinear(input2.dt,input2.dx,input2.dy,input2.dz,input2.inv_Qa,input2.lambda,input2.mu,
-            beta,
-            v1_1_plus,v1_2_minus,v1_3_minus,
-            v2_1_minus,v2_2_plus,v2_3_minus,
-            v3_1_minus,v3_2_minus,v3_3_plus,
-            sigmas11,sigmas22,sigmas33,sigmas23,sigmas13,sigmas12,p,
-            ax,ax2,ax3,ax4,ax5,ax6,ax7,
-            Ax,Ax2,Ax3,Ax4,Ax5,Ax6,Ax7,
-            ax_dt,ax2_dt,ax3_dt,ax4_dt,ax5_dt,ax6_dt,ax7_dt,
-            Kmax_x,Kmax_y,Z_Kmax,Zmax_Kmax);
+        @timeit ti "compute_sigma" @parallel JSWAP_CPU_3D_isotropic_forward_solver_compute_sigma_bar_curvilinear(input2.dt,input2.dx,input2.dy,input2.dz,input2.inv_Qa,input2.lambda,input2.mu,
+        beta,
+        v1_1_minus,v1_2_minus,v1_3_minus,
+        v2_1_minus,v2_2_minus,v2_3_minus,
+        v3_1_minus,v3_2_minus,v3_3_minus,
+        sigmas11,sigmas22,sigmas33,sigmas23,sigmas13,sigmas12,p,
+        sigmas11_bar,sigmas22_bar,sigmas33_bar,sigmas23_bar,sigmas13_bar,sigmas12_bar,p_bar,
+        ax_bar,ax2_bar,ax3_bar,ax4_bar,ax5_bar,ax6_bar,ax7_bar,
+        Ax_bar,Ax2_bar,Ax3_bar,Ax4_bar,Ax5_bar,Ax6_bar,Ax7_bar,
+        ax_dt_bar,ax2_dt_bar,ax3_dt_bar,ax4_dt_bar,ax5_dt_bar,ax6_dt_bar,ax7_dt_bar,
+        Kmax_x,Kmax_y,Z_Kmax,Zmax_Kmax);
+
+        @parallel Dx_inn(sigmas11,dtt1);
+        @parallel (2:input2.ny-1,2:input2.nz-1) u_1_minus(dtt1,sigmas11_1_minus);
+
+        @parallel Dy_inn(sigmas22,dtt2);
+        @parallel (2:input2.nx-1,2:input2.nz-1) u_2_minus(dtt2,sigmas22_2_minus);
+
+        @parallel Dz_inn(sigmas33,dtt3);
+        @parallel (2:input2.nx-1,2:input2.ny-1) u_3_minus(dtt3,sigmas33_3_minus);
+
+        @parallel Dy_inn(sigmas23,dtt2);
+        @parallel (2:input2.nx-1,2:input2.nz-1) u_2_minus(dtt2,sigmas23_2_minus);
+        @parallel Dz_inn(sigmas23,dtt3);
+        @parallel (2:input2.nx-1,2:input2.ny-1) u_3_minus(dtt3,sigmas23_3_minus);
+
+        @parallel Dx_inn(sigmas13,dtt1);
+        @parallel (2:input2.ny-1,2:input2.nz-1) u_1_minus(dtt1,sigmas13_1_minus);
+        @parallel Dz_inn(sigmas13,dtt3);
+        @parallel (2:input2.nx-1,2:input2.ny-1) u_3_minus(dtt3,sigmas13_3_minus);
+
+        @parallel Dx_inn(sigmas12,dtt1);
+        @parallel (2:input2.ny-1,2:input2.nz-1) u_1_minus(dtt1,sigmas12_1_minus);
+        @parallel Dy_inn(sigmas12,dtt2);
+        @parallel (2:input2.nx-1,2:input2.nz-1) u_2_minus(dtt2,sigmas12_2_minus);
+
+        @parallel Dx_inn(p,dtt1);
+        @parallel (2:input2.ny-1,2:input2.nz-1) u_1_minus(dtt1,p_1_minus);
+        @parallel Dy_inn(p,dtt2);
+        @parallel (2:input2.nx-1,2:input2.nz-1) u_2_minus(dtt2,p_2_minus);
+        @parallel Dz_inn(p,dtt3);
+        @parallel (2:input2.nx-1,2:input2.ny-1) u_3_minus(dtt3,p_3_minus);
+
+        @timeit ti "compute_v" @parallel JSWAP_CPU_3D_isotropic_forward_solver_compute_v_bar_curvilinear(input2.dt,input2.dx,input2.dy,input2.dz,input2.rho,beta,
+        v1,v2,v3,
+        v1_bar,v2_bar,v3_bar,
+        sigmas11_1_minus,sigmas11_3_minus,
+        sigmas22_2_minus,sigmas22_3_minus,
+        sigmas33_3_minus,
+        sigmas23_2_minus,sigmas23_3_minus,
+        sigmas13_1_minus,sigmas13_3_minus,
+        sigmas12_1_minus,sigmas12_2_minus,sigmas12_3_minus,
+        p_1_minus,p_2_minus,p_3_minus,
+        Kmax_x,Kmax_y,Z_Kmax,Zmax_Kmax);
+
+        # compute non bar
+        @parallel Dx_inn(v1_bar,dtt1);
+        @parallel (2:input2.ny-1,2:input2.nz-1) u_1_plus(dtt1,v1_bar_1_plus);
+
+        @parallel Dy_inn(v1_bar,dtt2);
+        @parallel (2:input2.nx-1,2:input2.nz-1) u_2_plus(dtt2,v1_bar_2_plus);
+
+        @parallel Dz_inn(v1_bar,dtt3);
+        @parallel (2:input2.nx-1,2:input2.ny-1) u_3_plus(dtt3,v1_bar_3_plus);
+
+        @parallel Dx_inn(v2_bar,dtt1);
+        @parallel (2:input2.ny-1,2:input2.nz-1) u_1_plus(dtt1,v2_bar_1_plus);
+
+        @parallel Dy_inn(v2_bar,dtt2);
+        @parallel (2:input2.nx-1,2:input2.nz-1) u_2_plus(dtt2,v2_bar_2_plus);
+
+        @parallel Dz_inn(v2_bar,dtt3);
+        @parallel (2:input2.nx-1,2:input2.ny-1) u_3_plus(dtt3,v2_bar_3_plus);
+
+        @parallel Dx_inn(v3_bar,dtt1);
+        @parallel (2:input2.ny-1,2:input2.nz-1) u_1_plus(dtt1,v3_bar_1_plus);
+
+        @parallel Dy_inn(v3_bar,dtt2);
+        @parallel (2:input2.nx-1,2:input2.nz-1) u_2_plus(dtt2,v3_bar_2_plus);
+
+        @parallel Dz_inn(v3_bar,dtt3);
+        @parallel (2:input2.nx-1,2:input2.ny-1) u_3_plus(dtt3,v3_bar_3_plus);
+
+        @parallel JSWAP_CPU_3D_isotropic_forward_solver_compute_au_for_sigma_curvilinear(input2.dt,input2.dx,input2.dy,input2.dz,input2.inv_Qa,input2.lambda,input2.mu,
+        beta,
+        v1_bar_1_plus,v1_bar_2_plus,v1_bar_3_plus,
+        v2_bar_1_plus,v2_bar_2_plus,v2_bar_3_plus,
+        v3_bar_1_plus,v3_bar_2_plus,v3_bar_3_plus,
+        sigmas11_bar,sigmas22_bar,sigmas33_bar,sigmas13_bar,sigmas23_bar,sigmas12_bar,
+        sigmas11,sigmas22,sigmas33,sigmas23,sigmas13,sigmas12,p,
+        ax,ax2,ax3,ax4,ax5,ax6,ax7,
+        Ax,Ax2,Ax3,Ax4,Ax5,Ax6,Ax7,
+        ax_dt,ax2_dt,ax3_dt,ax4_dt,ax5_dt,ax6_dt,ax7_dt,
+        Kmax_x,Kmax_y,Z_Kmax,Zmax_Kmax);
+
+        @parallel JSWAP_CPU_3D_isotropic_forward_solver_compute_sigma_curvilinear(input2.dt,input2.dx,input2.dy,input2.dz,input2.inv_Qa,input2.lambda,input2.mu,
+        beta,
+        v1_bar_1_plus,v1_bar_2_plus,v1_bar_3_plus,
+        v2_bar_1_plus,v2_bar_2_plus,v2_bar_3_plus,
+        v3_bar_1_plus,v3_bar_2_plus,v3_bar_3_plus,
+        sigmas11_bar,sigmas22_bar,sigmas33_bar,sigmas13_bar,sigmas23_bar,sigmas12_bar,p_bar,
+        sigmas11,sigmas22,sigmas33,sigmas23,sigmas13,sigmas12,p,
+        ax,ax2,ax3,ax4,ax5,ax6,ax7,
+        Ax,Ax2,Ax3,Ax4,Ax5,Ax6,Ax7,
+        ax_dt,ax2_dt,ax3_dt,ax4_dt,ax5_dt,ax6_dt,ax7_dt,
+        Kmax_x,Kmax_y,Z_Kmax,Zmax_Kmax);
+
 
         # moment tensor source
         if isdefined(input2,:M33)
@@ -285,47 +445,48 @@ function JSWAP_CPU_3D_forward_isotropic_curvilinear_solver(input2)
             end
         end
 
-        @parallel Dx_inn(sigmas11,dtt1);
-        @parallel (2:input2.ny-1,2:input2.nz-1) u_1_minus(dtt1,sigmas11_1_minus);
+        @parallel Dx_inn(sigmas11_bar,dtt1);
+        @parallel (2:input2.ny-1,2:input2.nz-1) u_1_plus(dtt1,sigmas11_bar_1_plus);
 
-        @parallel Dy_inn(sigmas22,dtt2);
-        @parallel (2:input2.nx-1,2:input2.nz-1) u_2_minus(dtt2,sigmas22_2_minus);
+        @parallel Dy_inn(sigmas22_bar,dtt2);
+        @parallel (2:input2.nx-1,2:input2.nz-1) u_2_plus(dtt2,sigmas22_bar_2_plus);
 
-        @parallel Dz_inn(sigmas33,dtt3);
-        @parallel (2:input2.nx-1,2:input2.ny-1) u_3_minus(dtt3,sigmas33_3_minus);
+        @parallel Dz_inn(sigmas33_bar,dtt3);
+        @parallel (2:input2.nx-1,2:input2.ny-1) u_3_plus(dtt3,sigmas33_bar_3_plus);
 
-        @parallel Dy_inn(sigmas23,dtt2);
-        @parallel (2:input2.nx-1,2:input2.nz-1) u_2_plus(dtt2,sigmas23_2_plus);
-        @parallel Dz_inn(sigmas23,dtt3);
-        @parallel (2:input2.nx-1,2:input2.ny-1) u_3_plus(dtt3,sigmas23_3_plus);
+        @parallel Dy_inn(sigmas23_bar,dtt2);
+        @parallel (2:input2.nx-1,2:input2.nz-1) u_2_plus(dtt2,sigmas23_bar_2_plus);
+        @parallel Dz_inn(sigmas23_bar,dtt3);
+        @parallel (2:input2.nx-1,2:input2.ny-1) u_3_plus(dtt3,sigmas23_bar_3_plus);
 
-        @parallel Dx_inn(sigmas13,dtt1);
-        @parallel (2:input2.ny-1,2:input2.nz-1) u_1_plus(dtt1,sigmas13_1_plus);
-        @parallel Dz_inn(sigmas13,dtt3);
-        @parallel (2:input2.nx-1,2:input2.ny-1) u_3_plus(dtt3,sigmas13_3_plus);
+        @parallel Dx_inn(sigmas13_bar,dtt1);
+        @parallel (2:input2.ny-1,2:input2.nz-1) u_1_plus(dtt1,sigmas13_bar_1_plus);
+        @parallel Dz_inn(sigmas13_bar,dtt3);
+        @parallel (2:input2.nx-1,2:input2.ny-1) u_3_plus(dtt3,sigmas13_bar_3_plus);
 
-        @parallel Dx_inn(sigmas12,dtt1);
-        @parallel (2:input2.ny-1,2:input2.nz-1) u_1_plus(dtt1,sigmas12_1_plus);
-        @parallel Dy_inn(sigmas12,dtt2);
-        @parallel (2:input2.nx-1,2:input2.nz-1) u_2_plus(dtt2,sigmas12_2_plus);
+        @parallel Dx_inn(sigmas12_bar,dtt1);
+        @parallel (2:input2.ny-1,2:input2.nz-1) u_1_plus(dtt1,sigmas12_bar_1_plus);
+        @parallel Dy_inn(sigmas12_bar,dtt2);
+        @parallel (2:input2.nx-1,2:input2.nz-1) u_2_plus(dtt2,sigmas12_bar_2_plus);
 
-        @parallel Dx_inn(p,dtt1);
-        @parallel (2:input2.ny-1,2:input2.nz-1) u_1_minus(dtt1,p_1_minus);
-        @parallel Dy_inn(p,dtt2);
-        @parallel (2:input2.nx-1,2:input2.nz-1) u_2_minus(dtt2,p_2_minus);
-        @parallel Dz_inn(p,dtt3);
-        @parallel (2:input2.nx-1,2:input2.ny-1) u_3_minus(dtt3,p_3_minus);
+        @parallel Dx_inn(p_bar,dtt1);
+        @parallel (2:input2.ny-1,2:input2.nz-1) u_1_plus(dtt1,p_bar_1_plus);
+        @parallel Dy_inn(p_bar,dtt2);
+        @parallel (2:input2.nx-1,2:input2.nz-1) u_2_plus(dtt2,p_bar_2_plus);
+        @parallel Dz_inn(p_bar,dtt3);
+        @parallel (2:input2.nx-1,2:input2.ny-1) u_3_plus(dtt3,p_bar_3_plus);
 
-        @timeit ti "compute_v" @parallel JSWAP_CPU_3D_isotropic_forward_solver_compute_v_curvilinear(input2.dt,input2.dx,input2.dy,input2.dz,input2.rho,beta,
-            v1,v2,v3,
-            sigmas11_1_minus,sigmas11_3_plus,
-            sigmas22_2_minus,sigmas22_3_plus,
-            sigmas33_3_minus,
-            sigmas23_2_plus,sigmas23_3_plus,
-            sigmas13_1_plus,sigmas13_3_plus,
-            sigmas12_1_plus,sigmas12_2_plus,sigmas12_3_minus,
-            p_1_minus,p_2_minus,p_3_minus,
-            Kmax_x,Kmax_y,Z_Kmax,Zmax_Kmax);
+        @parallel JSWAP_CPU_3D_isotropic_forward_solver_compute_v_curvilinear(input2.dt,input2.dx,input2.dy,input2.dz,input2.rho,beta,
+        v1_bar,v2_bar,v3_bar,
+        v1,v2,v3,
+        sigmas11_bar_1_plus,sigmas11_bar_3_plus,
+        sigmas22_bar_2_plus,sigmas22_bar_3_plus,
+        sigmas33_bar_3_plus,
+        sigmas23_bar_2_plus,sigmas23_bar_3_plus,
+        sigmas13_bar_1_plus,sigmas13_bar_3_plus,
+        sigmas12_bar_1_plus,sigmas12_bar_2_plus,sigmas12_bar_3_plus,
+        p_bar_1_plus,p_bar_2_plus,p_bar_3_plus,
+        Kmax_x,Kmax_y,Z_Kmax,Zmax_Kmax);
 
         if isdefined(input2,:src3)
             if ns==1 && l<=size(input2.src3,1)
@@ -382,6 +543,8 @@ function JSWAP_CPU_3D_forward_isotropic_curvilinear_solver(input2)
                 vtkfile["v2"]=v2;
                 vtkfile["v3"]=v3;
                 vtkfile["p"]=p;
+                vtkfile["v3_bar"]=v3_bar;
+                vtkfile["p_bar"]=p_bar;
                 vtkfile["sigmas33"]=sigmas33;
                 vtkfile["lambda"]=input2.lambda;
                 vtkfile["mu"]=input2.mu;
@@ -414,5 +577,5 @@ function JSWAP_CPU_3D_forward_isotropic_curvilinear_solver(input2)
     if input2.path_pic!=nothing && input2.plot_interval!=0 && input2.path!=nothing
         vtk_save(pvd);
     end
-    return v1,v2,v3,R1,R2,R3,P
+    return v1,v2,v3,p,R1,R2,R3,P
 end
