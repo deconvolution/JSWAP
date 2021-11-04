@@ -148,6 +148,9 @@ function JSWAP_CPU_3D_forward_isotropic_curvilinear_solver(input2)
     sigmas11_3_minus=copy(v1);
     sigmas22_3_minus=copy(v1);
     sigmas12_3_plus=copy(v1);
+    sigmas12_3_minus=copy(v1);
+    sigmas23_3_minus=copy(v1);
+    sigmas13_3_minus=copy(v1);
 
     p_1_minus=copy(v1);
     p_2_minus=copy(v1);
@@ -246,7 +249,7 @@ function JSWAP_CPU_3D_forward_isotropic_curvilinear_solver(input2)
 
         @parallel Dz_inn(v1,dtt3);
         @parallel (2:input2.nx-1,2:input2.ny-1) u_3_plus(dtt3,v1_3_plus);
-
+        
         @parallel Dz_inn(v2,dtt3);
         @parallel (2:input2.nx-1,2:input2.ny-1) u_3_plus(dtt3,v2_3_plus);
 
@@ -326,22 +329,29 @@ function JSWAP_CPU_3D_forward_isotropic_curvilinear_solver(input2)
         @parallel (2:input2.nx-1,2:input2.nz-1) u_2_minus(dtt2,p_2_minus);
         @parallel Dz_inn(p,dtt3);
         @parallel (2:input2.nx-1,2:input2.ny-1) u_3_minus(dtt3,p_3_minus);
-        #=
+
         @parallel Dz_inn(sigmas11,dtt3);
-        @parallel (2:input2.nx-1,2:input2.ny-1) u_3_plus(dtt3,sigmas11_3_minus);
+        @parallel (2:input2.nx-1,2:input2.ny-1) u_3_minus(dtt3,sigmas11_3_minus);
         @parallel Dz_inn(sigmas22,dtt3);
-        @parallel (2:input2.nx-1,2:input2.ny-1) u_3_plus(dtt3,sigmas22_3_minus);
+        @parallel (2:input2.nx-1,2:input2.ny-1) u_3_minus(dtt3,sigmas22_3_minus);
         @parallel Dz_inn(sigmas12,dtt3);
         @parallel (2:input2.nx-1,2:input2.ny-1) u_3_plus(dtt3,sigmas12_3_plus);
-        =#
+        @parallel Dz_inn(sigmas12,dtt3);
+        @parallel (2:input2.nx-1,2:input2.ny-1) u_3_minus(dtt3,sigmas12_3_minus);
+        @parallel Dz_inn(sigmas23,dtt3);
+        @parallel (2:input2.nx-1,2:input2.ny-1) u_3_minus(dtt3,sigmas23_3_minus);
+        @parallel Dz_inn(sigmas13,dtt3);
+        @parallel (2:input2.nx-1,2:input2.ny-1) u_3_minus(dtt3,sigmas13_3_minus);
+
+
         @timeit ti "compute_v" @parallel JSWAP_CPU_3D_isotropic_forward_solver_compute_v_curvilinear(input2.dt,input2.dx,input2.dy,input2.dz,input2.rho,beta,
             v1,v2,v3,
             sigmas11_1_minus,sigmas11_3_minus,
             sigmas22_2_minus,sigmas22_3_minus,
             sigmas33_3_minus,
-            sigmas23_2_plus,sigmas23_3_plus,
-            sigmas13_1_plus,sigmas13_3_plus,
-            sigmas12_1_plus,sigmas12_2_plus,sigmas12_3_plus,
+            sigmas23_2_plus,sigmas23_3_plus,sigmas23_3_minus,
+            sigmas13_1_plus,sigmas13_3_plus,sigmas13_3_minus,
+            sigmas12_1_plus,sigmas12_2_plus,sigmas12_3_minus,sigmas12_3_plus,
             p_1_minus,p_2_minus,p_3_minus,
             Kmax_x,Kmax_y,Z_Kmax,Zmax_Kmax);
 

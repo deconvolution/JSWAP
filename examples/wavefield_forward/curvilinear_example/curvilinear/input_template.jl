@@ -1,7 +1,7 @@
 ## dimensions
 data=JSWAP.readmat("./example.mat","data");
 # Time increment
-input2.dt=10.0^-3/3;
+input2.dt=10.0^-3;
 # dx
 input2.dx=data["dx"];
 # dy
@@ -19,7 +19,7 @@ input2.nz=round(Int32,data["nz"]);
 
 # topography
 input2.Kmax=data["Kmax"];
-
+# input2.Kmax[:] .=900;
 # 3D true coordinate X, Y and Z
 input2.Y,input2.X,input2.Z=JSWAP.meshgrid((1:input2.nx)*input2.dx,(1:input2.ny)*input2.dy,(1:input2.nz)*input2.dz);
 ## material properties
@@ -50,15 +50,15 @@ input2.s2[:] .=data["s2"];
 input2.s3=zeros(Int32,1,1);
 input2.s3[:] .=data["s3"];
 # point source
-freq=20;
+freq=15;
 input2.src1=zeros(input2.nt,1);
 input2.src2=zeros(input2.nt,1);
 input2.src3=zeros(input2.nt,1);
 input2.srcp=zeros(input2.nt,1);
 input2.src1[:]=0*rickerWave(freq,input2.dt,input2.nt,2);
 input2.src2[:]=0*rickerWave(freq,input2.dt,input2.nt,2);
-input2.src3[:]=0*rickerWave(freq,input2.dt,input2.nt,2);
-input2.srcp[:]=1*rickerWave(freq,input2.dt,input2.nt,2);
+input2.src3[:]=1*rickerWave(freq,input2.dt,input2.nt,2);
+input2.srcp[:]=0*rickerWave(freq,input2.dt,input2.nt,2);
 
 
 # receiver true location x
@@ -81,10 +81,10 @@ input2.lp=20;
 # PML power
 input2.nPML=2;
 # PML theorecital coefficient
-input2.Rc=1;
+input2.Rc=.001;
 # set PML active
 # xminus,xplus,yminus,yplus,zminus,zplus
-input2.PML_active=[1 1 1 1 1 1];
+input2.PML_active=[1 1 1 1 1 0];
 ## plot
 # path for storage. This must be the master branch of the following pathes.
 input2.path=p3;
