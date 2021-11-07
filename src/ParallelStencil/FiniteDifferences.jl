@@ -217,9 +217,9 @@ Provides macros for 3-D finite differences computations. The dimensions x, y and
 To see a description of a macro type `?<macroname>` (including the `@`).
 """
 module FiniteDifferences3D
-export @d_xa, @d_ya, @d_za, @d_xi, @d_yi, @d_zi, @d2_xi, @d2_yi, @d2_zi,@d_xi_1,@d_yi_1,@d_zi_1,@d_xi_8,@d_yi_8,@d_zi_8,@d_xi_12,@d_yi_12,@d_zi_12
+export @d_xa, @d_ya, @d_za, @d_xi, @d_yi, @d_zi, @d2_xi, @d2_yi, @d2_zi,@d_xi_1,@d_yi_1,@d_zi_1,@d_xi_8,@d_yi_8,@d_zi_8,@d_xi_12,@d_yi_12,@d_zi_12,@d_xc_4,@d_yc_4,@d_zc_4
 export @all, @inn, @inn_x, @inn_y, @inn_z, @inn_xy, @inn_xz, @inn_yz
-export @av, @av_xa, @av_ya, @av_za, @av_xi, @av_yi, @av_zi, @av_xya, @av_xza, @av_yza, @av_xyi, @av_xzi, @av_yzi #, @av_xya2, @av_xza2, @av_yza2
+export @av, @av_xa, @av_ya, @av_za, @av_xi, @av_yi, @av_zi, @av_xya, @av_xza, @av_yza, @av_xyi, @av_xzi, @av_yzi
 export @maxloc, @minloc
 export @within
 

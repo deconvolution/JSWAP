@@ -50,7 +50,7 @@ input2.s2[:] .=data["s2"];
 input2.s3=zeros(Int32,1,1);
 input2.s3[:] .=data["s3"];
 # point source
-freq=8;
+freq=15;
 input2.src1=zeros(input2.nt,1);
 input2.src2=zeros(input2.nt,1);
 input2.src3=zeros(input2.nt,1);
