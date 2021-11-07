@@ -19,7 +19,7 @@ Computes v, subfunction of JSWAP_CPU_3D_isotropic_solver.
     @all(Zmax_Kmax) .*@all(sigmas13_3_plus)/dz)+
     @all(v1)-
     dt*@all(beta) .*@all(v1);
-    # sigmas12_3_minus?
+    # sigmas12_3_minus? sigmas12_3_plus causes instabilities
     @all(v2)=dt./@all(rho) .*(@all(sigmas12_1_plus)/dx-
     @all(Z_Kmax) .*@all(Kmax_x) .*@all(sigmas12_3_minus)/dz+
     (@all(sigmas22_2_minus)-@all(p_2_minus))/dy-

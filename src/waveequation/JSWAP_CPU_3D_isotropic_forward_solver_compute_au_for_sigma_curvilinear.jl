@@ -21,38 +21,44 @@ Compuites auxiliary variable used to compute sigma, subfunction of JSWAP_CPU_3D_
     @all(Ax6)=@all(ax6);
     @all(Ax7)=@all(ax7);
 
-
+    # sigmas11
     @all(ax)=4*@all(mu) .*(@all(v1_1_plus)/dx-
     @all(Z_Kmax) .*@all(Kmax_x) .*@all(v1_3_plus)/dz)+
     (-2*@all(mu)) .*(@all(v2_2_plus)/dy-
     @all(Z_Kmax) .*@all(Kmax_y) .*@all(v2_3_plus)/dz)+
     (-2*@all(mu)) .*@all(Zmax_Kmax) .*@all(v3_3_plus)/dz;
 
+    # sigmas22
     @all(ax2)=(-2*@all(mu)) .*(@all(v1_1_plus)/dx-
     @all(Z_Kmax) .*@all(Kmax_x) .*@all(v1_3_plus)/dz)+
     (4*@all(mu)) .* (@all(v2_2_plus)/dy-
     @all(Z_Kmax) .*@all(Kmax_y) .*@all(v2_3_plus)/dz)+
     (-2*@all(mu)) .* @all(Zmax_Kmax) .*@all(v3_3_plus)/dz;
 
+    # sigmas33
     @all(ax3)=(-2*@all(mu)) .*(@all(v1_1_plus)/dx-
     @all(Z_Kmax) .*@all(Kmax_x) .*@all(v1_3_plus)/dz)+
     (-2*@all(mu)) .*(@all(v2_2_plus)/dy-
     @all(Z_Kmax) .*@all(Kmax_y) .*@all(v2_3_plus)/dz)+
     (4*@all(mu)) .*@all(Zmax_Kmax) .*@all(v3_3_plus)/dz;
-    # ?
+
+    # sigmas12 ?
     @all(ax4)=@all(mu).*(@all(v2_1_minus)/dx-
     @all(Z_Kmax) .*@all(Kmax_x) .*@all(v2_3_plus)/dz)+
     @all(mu).*(@all(v1_2_minus)/dy-
     @all(Z_Kmax) .*@all(Kmax_y) .*@all(v1_3_plus)/dz);
 
+    # sigmas13
     @all(ax5)=@all(mu) .*(@all(v3_1_minus)/dx-
     @all(Z_Kmax) .*@all(Kmax_x) .*@all(v3_3_plus)/dz)+
     @all(mu) .*@all(Zmax_Kmax).*@all(v1_3_minus)/dz;
 
+    # sigmas23
     @all(ax6)=@all(mu).*(@all(v3_2_minus)/dy-
     @all(Z_Kmax) .*@all(Kmax_y) .*@all(v3_3_plus)/dz)+
     @all(mu) .*@all(Zmax_Kmax) .*@all(v2_3_minus)/dz;
 
+    # p
     @all(ax7)=(3*@all(lambda)+2*@all(mu)) .*(@all(v1_1_plus)/dx-
     @all(Z_Kmax) .*@all(Kmax_x) .*@all(v1_3_plus)/dz)+
     (3*@all(lambda)+2*@all(mu)) .*(@all(v2_2_plus)/dy-
