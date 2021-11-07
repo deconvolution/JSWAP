@@ -9,7 +9,7 @@ input2.dy=data["dy"];
 # dz
 input2.dz=data["dz"];
 # number of time steps
-input2.nt=2400;
+input2.nt=800;
 # nx
 input2.nx=round(Int32,data["nx"]);
 # ny
@@ -50,7 +50,7 @@ input2.s2[:] .=data["s2"];
 input2.s3=zeros(Int32,1,1);
 input2.s3[:] .=data["s3"];
 # point source
-freq=8;
+freq=20;
 input2.src1=zeros(input2.nt,1);
 input2.src2=zeros(input2.nt,1);
 input2.src3=zeros(input2.nt,1);
@@ -97,6 +97,6 @@ input2.path_wavefield=string(input2.path,"/wavefield");
 # path for recordings
 input2.path_rec=string(input2.path,"/rec");
 # plot interval
-input2.plot_interval=100;
+input2.plot_interval=50;
 # wavefield interval
 input2.wavefield_interval=0;
