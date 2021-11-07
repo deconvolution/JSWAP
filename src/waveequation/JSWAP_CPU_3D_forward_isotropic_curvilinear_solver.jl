@@ -272,6 +272,8 @@ function JSWAP_CPU_3D_forward_isotropic_curvilinear_solver(input2)
         @parallel Dz_c(v3,dtt3_c);
         @parallel (2:input2.nx-1,2:input2.ny-1) uc_3_plus(dtt3_c,v3_3_cur);
         =#
+
+
         v1_3_cur[:,:,k3]=(v1[:,:,(k3 .+1)]-v1[:,:,(k3 .-1)])/2;
         v2_3_cur[:,:,k3]=(v2[:,:,(k3 .+1)]-v2[:,:,(k3 .-1)])/2;
         v3_3_cur[:,:,k3]=(v3[:,:,(k3 .+1)]-v3[:,:,(k3 .-1)])/2;
@@ -374,13 +376,19 @@ function JSWAP_CPU_3D_forward_isotropic_curvilinear_solver(input2)
         @parallel (2:input2.nx-1,2:input2.ny-1) uc_3_plus(dtt3_c,p_3_cur);
         =#
 
+        # c
         sigmas11_3_cur[:,:,k3]=(sigmas11[:,:,(k3 .+1)]-sigmas11[:,:,(k3 .-1)])/2;
-        sigmas12_3_cur[:,:,k3]=(sigmas12[:,:,(k3 .+1)]-sigmas12[:,:,(k3 .-1)])/2;
-        sigmas13_3_cur[:,:,k3]=(sigmas13[:,:,(k3 .+1)]-sigmas13[:,:,(k3 .-1)])/2;
+        # ?
+        sigmas12_3_cur[:,:,k3]=(sigmas12[:,:,(k3 .+1)]-sigmas12[:,:,(k3 .-1)])/1;
+        # c
+        sigmas13_3_cur[:,:,k3]=(sigmas13[:,:,(k3 .+1)]-sigmas13[:,:,(k3 .-1)])/2
+        # c
         sigmas22_3_cur[:,:,k3]=(sigmas22[:,:,(k3 .+1)]-sigmas22[:,:,(k3 .-1)])/2;
+        # c
         sigmas23_3_cur[:,:,k3]=(sigmas23[:,:,(k3 .+1)]-sigmas23[:,:,(k3 .-1)])/2;
+        # c
         p_3_cur[:,:,k3]=(p[:,:,(k3 .+1)]-p[:,:,(k3 .-1)])/2;
-        
+
         @timeit ti "compute_v" @parallel JSWAP_CPU_3D_isotropic_forward_solver_compute_v_curvilinear(input2.dt,input2.dx,input2.dy,input2.dz,input2.rho,beta,
         v1,v2,v3,
         sigmas11_1_minus,
