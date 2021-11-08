@@ -42,7 +42,7 @@ Computes sigma, subfunction of JSWAP_CPU_3D_isotropic_solver.
     @all(ax6)+@all(inv_Qa) .*@all(ax6_dt))+
     @all(sigmas23)-
     dt*@all(beta).*@all(sigmas23);
-
+    
     @all(p)=-1/3*dt*(
     @all(ax7)+@all(inv_Qa) .*@all(ax7_dt))+
     @all(p)-

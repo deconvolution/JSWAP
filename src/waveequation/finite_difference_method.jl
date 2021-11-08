@@ -23,21 +23,21 @@ end
 d/dx, 4-point centre, subfunction of JSWAP_CPU_3D_isotropic_solver.
 "
 @parallel function Dx_c(in,out)
-    @inn(out)=@d_xc_4(in);
+    @inn(out)=.5*@d_xc_4(in);
     return nothing
 end
 "
 d/dy, 4-point centre, subfunction of JSWAP_CPU_3D_isotropic_solver.
 "
 @parallel function Dy_c(in,out)
-    @inn(out)=@d_yc_4(in);
+    @inn(out)=.5*@d_yc_4(in);
     return nothing
 end
 "
 d/dz, 4-point centre, subfunction of JSWAP_CPU_3D_isotropic_solver.
 "
 @parallel function Dz_c(in,out)
-    @inn(out)=@d_zc_4(in);
+    @inn(out)=.5*@d_zc_4(in);
     return nothing
 end
 

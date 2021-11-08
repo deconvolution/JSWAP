@@ -30,6 +30,7 @@ Compuites auxiliary variable used to compute sigma, subfunction of JSWAP_CPU_3D_
     (-2*@all(mu)) .*@all(Zmax_Kmax) .*@all(v3_3_plus)/dz;
 
     # sigmas22
+
     @all(ax2)=(-2*@all(mu)) .*(@all(v1_1_plus)/dx-
     @all(Z_Kmax) .*@all(Kmax_x) .*@all(v1_3_cur)/dz)+
     (4*@all(mu)) .* (@all(v2_2_plus)/dy-
@@ -44,6 +45,7 @@ Compuites auxiliary variable used to compute sigma, subfunction of JSWAP_CPU_3D_
     (4*@all(mu)) .*@all(Zmax_Kmax) .*@all(v3_3_plus)/dz;
 
     # sigmas12
+
     @all(ax4)=@all(mu).*(@all(v2_1_minus)/dx-
     @all(Z_Kmax) .*@all(Kmax_x) .*@all(v2_3_cur)/dz)+
     @all(mu).*(@all(v1_2_minus)/dy-
@@ -55,6 +57,7 @@ Compuites auxiliary variable used to compute sigma, subfunction of JSWAP_CPU_3D_
     @all(mu) .*@all(Zmax_Kmax).*@all(v1_3_minus)/dz;
 
     # sigmas23
+
     @all(ax6)=@all(mu).*(@all(v3_2_minus)/dy-
     @all(Z_Kmax) .*@all(Kmax_y) .*@all(v3_3_cur)/dz)+
     @all(mu) .*@all(Zmax_Kmax) .*@all(v2_3_minus)/dz;
