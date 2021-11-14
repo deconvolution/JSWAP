@@ -9,7 +9,7 @@ input2.dy=data["dy"];
 # dz
 input2.dz=data["dz"];
 # number of time steps
-input2.nt=500;
+input2.nt=400;
 # nx
 input2.nx=round(Int32,data["nx"]);
 # ny
@@ -21,7 +21,11 @@ input2.nz=round(Int32,data["nz"]);
 input2.Kmax=data["Kmax"];
 # input2.Kmax[:] .=900;
 # 3D true coordinate X, Y and Z
-input2.Y,input2.X,input2.Z=JSWAP.meshgrid((1:input2.nx)*input2.dx,(1:input2.ny)*input2.dy,(1:input2.nz)*input2.dz);
+input2.X=data["X"];
+input2.Y=data["Y"];
+input2.Z=data["Z"];
+
+input2.K=data["K"];
 ## material properties
 input2.lambda=data["lambda"];
 input2.mu=data["mu"];
@@ -50,7 +54,7 @@ input2.s2[:] .=data["s2"];
 input2.s3=zeros(Int32,1,1);
 input2.s3[:] .=data["s3"];
 # point source
-freq=15;
+freq=10;
 input2.src1=zeros(input2.nt,1);
 input2.src2=zeros(input2.nt,1);
 input2.src3=zeros(input2.nt,1);
@@ -77,11 +81,11 @@ input2.s2t=input2.s2*input2.dx;
 input2.s3t=input2.s3*input2.dx;
 ## PML
 # PML layers
-input2.lp=20;
+input2.lp=5;
 # PML power
 input2.nPML=2;
 # PML theorecital coefficient
-input2.Rc=.001;
+input2.Rc=1;
 # set PML active
 # xminus,xplus,yminus,yplus,zminus,zplus
 input2.PML_active=[1 1 1 1 1 0];

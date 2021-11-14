@@ -109,60 +109,69 @@ function JSWAP_CPU_3D_forward_isotropic_curvilinear_solver(input2)
         Ms13_t[1:end-1,:]=diff(Ms13,dims=1)/input2.dt;
         Ms12_t[1:end-1,:]=diff(Ms12,dims=1)/input2.dt;
     end
-
+    dx=input2.dx;
+    dy=input2.dy;
+    dz=input2.dz;
     # wave vector
-    v1=@zeros(input2.nx,input2.ny,input2.nz);
-    v2=copy(v1);
-    v3=copy(v1);
+    v1_iph_j_k=@zeros(input2.nx,input2.ny,input2.nz);
+    v2_i_jph_k=copy(v1_iph_j_k);
+    v3_i_j_kph=copy(v1_iph_j_k);
 
-    sigmas11=copy(v1);
-    sigmas22=copy(v1);
-    sigmas33=copy(v1);
-    sigmas23=copy(v1);
-    sigmas13=copy(v1);
-    sigmas12=copy(v1);
-    p=copy(v1);
+    sigmas11_i_j_k=copy(v1_iph_j_k);
+    sigmas22_i_j_k=copy(v1_iph_j_k);
+    sigmas33_i_j_k=copy(v1_iph_j_k);
+    sigmas23_i_jph_kph=copy(v1_iph_j_k);
+    sigmas13_iph_j_kph=copy(v1_iph_j_k);
+    sigmas12_iph_jph_k=copy(v1_iph_j_k);
+    p_i_j_k=copy(v1_iph_j_k);
 
-    v1_1_plus=copy(v1);
-    v1_2_minus=copy(v1);
-    v1_3_minus=copy(v1);
-    v2_1_minus=copy(v1);
-    v2_2_plus=copy(v1);
-    v2_3_minus=copy(v1);
-    v3_1_minus=copy(v1);
-    v3_2_minus=copy(v1);
-    v3_3_plus=copy(v1);
+    # derivatives
+    v1_iph_j_k_1=copy(v1_iph_j_k);
+    v1_iph_jp1_k_2=copy(v1_iph_j_k);
+    v1_ip1_jph_kph_3=copy(v1_iph_j_k);
+    v2_ip1_jph_k_1=copy(v1_iph_j_k);
+    v2_i_jph_k_2=copy(v1_iph_j_k);
+    v2_i_jph_kp1_3=copy(v1_iph_j_k);
+    v3_ip1_jph_kph_3=copy(v1_iph_j_k);
+    v3_i_jp1_kph_2=copy(v1_iph_j_k);
+    v3_i_j_kph_3=copy(v1_iph_j_k);
 
-    sigmas11_1_minus=copy(v1);
-    sigmas22_2_minus=copy(v1);
-    sigmas33_3_minus=copy(v1);
-    sigmas23_2_plus=copy(v1);
-    sigmas23_3_plus=copy(v1);
-    sigmas13_1_plus=copy(v1);
-    sigmas13_3_plus=copy(v1);
-    sigmas12_1_plus=copy(v1);
-    sigmas12_2_plus=copy(v1);
+    sigmas11_ip1_j_k_1=copy(v1_iph_j_k);
+    sigmas22_i_jp1_k_2=copy(v1_iph_j_k);
+    sigmas33_i_j_kp1_3=copy(v1_iph_j_k);
+    sigmas23_i_jph_kph_2=copy(v1_iph_j_k);
+    sigmas23_i_jph_kph_3=copy(v1_iph_j_k);
+    sigmas13_iph_j_k_1=copy(v1_iph_j_k);
+    sigmas13_iph_j_kph_3=copy(v1_iph_j_k);
+    sigmas12_iph_jph_k_1=copy(v1_iph_j_k);
+    sigmas12_iph_jph_k_2=copy(v1_iph_j_k);
 
-    sigmas11_3_minus=copy(v1);
-    sigmas22_3_minus=copy(v1);
-    sigmas12_3_plus=copy(v1);
-    sigmas12_3_minus=copy(v1);
-    sigmas23_3_minus=copy(v1);
-    sigmas13_3_minus=copy(v1);
+    sigmas11_3_minus=copy(v1_iph_j_k);
+    sigmas22_3_minus=copy(v1_iph_j_k);
+    sigmas12_3_plus=copy(v1_iph_j_k);
+    sigmas12_3_minus=copy(v1_iph_j_k);
+    sigmas23_3_minus=copy(v1_iph_j_k);
+    sigmas13_3_minus=copy(v1_iph_j_k);
 
-    p_1_minus=copy(v1);
-    p_2_minus=copy(v1);
-    p_3_minus=copy(v1);
+    p_ip1_j_k_1=copy(v1_iph_j_k);
+    p_i_jp1_k_2=copy(v1_iph_j_k);
+    p_i_j_kp1_3=copy(v1_iph_j_k);
+    # for curvilinear
+    v1_3_sigmas11=copy(v1_iph_j_k);
+    v2_3_sigmas11=copy(v1_iph_j_k);
+    v3_3_sigmas23=copy(v1_iph_j_k);
+    v3_3_sigmas13=copy(v1_iph_j_k);
+    v2_3_sigmas12=copy(v1_iph_j_k);
+    v1_3_sigmas12=copy(v1_iph_j_k);
 
-    sigmas11_3_cur=copy(v1);
-    sigmas12_3_cur=copy(v1);
-    sigmas13_3_cur=copy(v1);
-    sigmas22_3_cur=copy(v1);
-    sigmas23_3_cur=copy(v1);
-    p_3_cur=copy(v1);
-    v1_3_cur=copy(v1);
-    v2_3_cur=copy(v1);
-    v3_3_cur=copy(v1);
+    sigmas11_1_v1=copy(v1_iph_j_k);
+    p_1_v1=copy(v1_iph_j_k);
+    sigmas12_3_v1=copy(v1_iph_j_k);
+    sigmas12_3_v2=copy(v1_iph_j_k);
+    sigmas22_3_v2=copy(v1_iph_j_k);
+    p_3_v2=copy(v1_iph_j_k);
+    sigmas13_3_v3=copy(v1_iph_j_k);
+    sigmas23_3_v3=copy(v1_iph_j_k);
 
     k1=3:input2.nx-2;
     k2=3:input2.ny-2;
@@ -174,27 +183,27 @@ function JSWAP_CPU_3D_forward_isotropic_curvilinear_solver(input2)
 
     dtt3_c=@zeros(input2.nx,input2.ny,input2.nz-IND_accuracy_c);
 
-    ax=copy(v1);
-    ax2=copy(v1);
-    ax3=copy(v1);
-    ax4=copy(v1);
-    ax5=copy(v1);
-    ax6=copy(v1);
-    ax7=copy(v1);
-    Ax=copy(v1);
-    Ax2=copy(v1);
-    Ax3=copy(v1);
-    Ax4=copy(v1);
-    Ax5=copy(v1);
-    Ax6=copy(v1);
-    Ax7=copy(v1);
-    ax_dt=copy(v1);
-    ax2_dt=copy(v1);
-    ax3_dt=copy(v1);
-    ax4_dt=copy(v1);
-    ax5_dt=copy(v1);
-    ax6_dt=copy(v1);
-    ax7_dt=copy(v1);
+    ax=copy(v1_iph_j_k);
+    ax2=copy(v1_iph_j_k);
+    ax3=copy(v1_iph_j_k);
+    ax4=copy(v1_iph_j_k);
+    ax5=copy(v1_iph_j_k);
+    ax6=copy(v1_iph_j_k);
+    ax7=copy(v1_iph_j_k);
+    Ax=copy(v1_iph_j_k);
+    Ax2=copy(v1_iph_j_k);
+    Ax3=copy(v1_iph_j_k);
+    Ax4=copy(v1_iph_j_k);
+    Ax5=copy(v1_iph_j_k);
+    Ax6=copy(v1_iph_j_k);
+    Ax7=copy(v1_iph_j_k);
+    ax_dt=copy(v1_iph_j_k);
+    ax2_dt=copy(v1_iph_j_k);
+    ax3_dt=copy(v1_iph_j_k);
+    ax4_dt=copy(v1_iph_j_k);
+    ax5_dt=copy(v1_iph_j_k);
+    ax6_dt=copy(v1_iph_j_k);
+    ax7_dt=copy(v1_iph_j_k);
 
     l=1;
     # save wavefield
@@ -231,59 +240,73 @@ function JSWAP_CPU_3D_forward_isotropic_curvilinear_solver(input2)
     (1:input2.nz)*input2.dz);
     Z_Kmax=Z./repeat(Kmax,1,1,input2.nz);
     Zmax_Kmax=repeat(maximum(Z)./Kmax,1,1,input2.nz);
+    K=Z .*1 ./Zmax_Kmax;
 
     for l=1:input2.nt-1
 
-        @parallel Dx_inn(v1,dtt1);
-        @parallel (2:input2.ny-1,2:input2.nz-1) u_1_plus(dtt1,v1_1_plus);
+        @parallel Dx_inn(v1_iph_j_k,dtt1);
+        @parallel (2:input2.ny-1,2:input2.nz-1) u_1_plus(dtt1,v1_iph_j_k_1);
 
-        @parallel Dy_inn(v1,dtt2);
-        @parallel (2:input2.nx-1,2:input2.nz-1) u_2_minus(dtt2,v1_2_minus);
+        @parallel Dy_inn(v1_iph_j_k,dtt2);
+        @parallel (2:input2.nx-1,2:input2.nz-1) u_2_minus(dtt2,v1_iph_jp1_k_2);
 
-        @parallel Dz_inn(v1,dtt3);
-        @parallel (2:input2.nx-1,2:input2.ny-1) u_3_minus(dtt3,v1_3_minus);
+        @parallel Dz_inn(v1_iph_j_k,dtt3);
+        @parallel (2:input2.nx-1,2:input2.ny-1) u_3_minus(dtt3,v1_ip1_jph_kph_3);
 
-        @parallel Dx_inn(v2,dtt1);
-        @parallel (2:input2.ny-1,2:input2.nz-1) u_1_minus(dtt1,v2_1_minus);
+        @parallel Dx_inn(v2_i_jph_k,dtt1);
+        @parallel (2:input2.ny-1,2:input2.nz-1) u_1_minus(dtt1,v2_ip1_jph_k_1);
 
-        @parallel Dy_inn(v2,dtt2);
-        @parallel (2:input2.nx-1,2:input2.nz-1) u_2_plus(dtt2,v2_2_plus);
+        @parallel Dy_inn(v2_i_jph_k,dtt2);
+        @parallel (2:input2.nx-1,2:input2.nz-1) u_2_plus(dtt2,v2_i_jph_k_2);
 
-        @parallel Dz_inn(v2,dtt3);
-        @parallel (2:input2.nx-1,2:input2.ny-1) u_3_minus(dtt3,v2_3_minus);
+        @parallel Dz_inn(v2_i_jph_k,dtt3);
+        @parallel (2:input2.nx-1,2:input2.ny-1) u_3_minus(dtt3,v2_i_jph_kp1_3);
 
-        @parallel Dx_inn(v3,dtt1);
-        @parallel (2:input2.ny-1,2:input2.nz-1) u_1_minus(dtt1,v3_1_minus);
+        @parallel Dx_inn(v3_i_j_kph,dtt1);
+        @parallel (2:input2.ny-1,2:input2.nz-1) u_1_minus(dtt1,v3_ip1_jph_kph_3);
 
-        @parallel Dy_inn(v3,dtt2);
-        @parallel (2:input2.nx-1,2:input2.nz-1) u_2_minus(dtt2,v3_2_minus);
+        @parallel Dy_inn(v3_i_j_kph,dtt2);
+        @parallel (2:input2.nx-1,2:input2.nz-1) u_2_minus(dtt2,v3_i_jp1_kph_2);
 
-        @parallel Dz_inn(v3,dtt3);
-        @parallel (2:input2.nx-1,2:input2.ny-1) u_3_plus(dtt3,v3_3_plus);
+        @parallel Dz_inn(v3_i_j_kph,dtt3);
+        @parallel (2:input2.nx-1,2:input2.ny-1) u_3_plus(dtt3,v3_i_j_kph_3);
 
-        # compute curvilinear derivatives
+        # for curvilinear
+        v1_3_sigmas11[k1,k2,k3]=(v1_iph_j_k[k1,k2,(k3 .+1)]+v1_iph_j_k[(k1 .-1),k2,(k3 .+1)]-
+        v1_iph_j_k[k1,k2,(k3 .-1)]-v1_iph_j_k[(k1 .-1),k2,(k3 .-1)])/4;
 
-        @parallel Dz_c(v1,dtt3_c);
-        @parallel (2:input2.nx-1,2:input2.ny-1) uc_3_plus(dtt3_c,v1_3_cur);
+        v2_3_sigmas11[k1,k2,k3]=(v2_i_jph_k[k1,k2,(k3 .+1)]+v2_i_jph_k[k1,(k2 .-1),(k3 .+1)]-
+        v2_i_jph_k[k1,k2,(k3 .-1)]-v2_i_jph_k[k1,(k2 .-1),(k3 .-1)])/4;
 
-        @parallel Dz_c(v2,dtt3_c);
-        @parallel (2:input2.nx-1,2:input2.ny-1) uc_3_plus(dtt3_c,v2_3_cur);
+        v3_3_sigmas23[k1,k2,k3]=(v3_i_j_kph[k1,(k2 .+1),(k3 .+1)]+v3_i_j_kph[k1,k2,(k3 .+1)]-
+        v3_i_j_kph[k1,(k2 .+1),(k3 .-1)]-v3_i_j_kph[k1,k2,(k3 .-1)])/4;
 
-        @parallel Dz_c(v3,dtt3_c);
-        @parallel (2:input2.nx-1,2:input2.ny-1) uc_3_plus(dtt3_c,v3_3_cur);
+        v3_3_sigmas13[k1,k2,k3]=(v3_i_j_kph[(k1 .+1),k2,(k3 .+1)]+v3_i_j_kph[k1,k2,(k3 .+1)]-
+        v3_i_j_kph[(k1 .+1),k2,(k3 .-1)]-v3_i_j_kph[k1,k2,(k3 .-1)])/4;
 
-        #=
-        v1_3_cur[:,:,k3]=(v1[:,:,(k3 .+1)]-v1[:,:,(k3 .-1)])/2;
-        v2_3_cur[:,:,k3]=(v2[:,:,(k3 .+1)]-v2[:,:,(k3 .-1)])/2;
-        v3_3_cur[:,:,k3]=(v3[:,:,(k3 .+1)]-v3[:,:,(k3 .-1)])/2;
-        =#
+        v2_3_sigmas12[k1,k2,k3]=(v2_i_jph_k[(k1 .+1),k2,(k3 .+1)]+v2_i_jph_k[k1,k2,(k3 .+1)]-
+        v2_i_jph_k[(k1 .+1),k2,(k3 .-1)]-v2_i_jph_k[k1,k2,(k3 .-1)])/4;
+
+        v1_3_sigmas12[k1,k2,k3]=(v1_iph_j_k[k1,(k2 .+1),k3]+v1_iph_j_k[k1,k2,(k3 .+1)]-
+        v1_iph_j_k[k1,k2,(k3 .-1)]-v1_iph_j_k[k1,(k2 .+1),(k3 .-1)])/4;
+
         @timeit ti "compute_sigma" @parallel JSWAP_CPU_3D_isotropic_forward_solver_compute_au_for_sigma_curvilinear(input2.dt,input2.dx,input2.dy,input2.dz,input2.inv_Qa,input2.lambda,input2.mu,
         beta,
-        v1_1_plus,v1_2_minus,v1_3_minus,
-        v2_1_minus,v2_2_plus,v2_3_minus,
-        v3_1_minus,v3_2_minus,v3_3_plus,
-        v1_3_cur,v2_3_cur,v3_3_cur,
-        sigmas11,sigmas22,sigmas33,sigmas23,sigmas13,sigmas12,p,
+        v1_iph_j_k_1,v1_iph_jp1_k_2,v1_ip1_jph_kph_3,
+        v2_ip1_jph_k_1,v2_i_jph_k_2,v2_i_jph_kp1_3,
+        v3_ip1_jph_kph_3,v3_i_jp1_kph_2,v3_i_j_kph_3,
+        v1_3_sigmas11,
+        v2_3_sigmas11,
+        v3_3_sigmas23,
+        v3_3_sigmas13,
+        v2_3_sigmas12,
+        v1_3_sigmas12,
+        sigmas11_i_j_k,
+        sigmas22_i_j_k,
+        sigmas33_i_j_k,
+        sigmas23_i_jph_kph,
+        sigmas13_iph_j_kph,
+        sigmas12_iph_jph_k,
         ax,ax2,ax3,ax4,ax5,ax6,ax7,
         Ax,Ax2,Ax3,Ax4,Ax5,Ax6,Ax7,
         ax_dt,ax2_dt,ax3_dt,ax4_dt,ax5_dt,ax6_dt,ax7_dt,
@@ -291,10 +314,13 @@ function JSWAP_CPU_3D_forward_isotropic_curvilinear_solver(input2)
 
         @timeit ti "compute_sigma" @parallel JSWAP_CPU_3D_isotropic_forward_solver_compute_sigma_curvilinear(input2.dt,input2.dx,input2.dy,input2.dz,input2.inv_Qa,input2.lambda,input2.mu,
         beta,
-        v1_1_plus,v1_2_minus,v1_3_minus,
-        v2_1_minus,v2_2_plus,v2_3_minus,
-        v3_1_minus,v3_2_minus,v3_3_plus,
-        sigmas11,sigmas22,sigmas33,sigmas23,sigmas13,sigmas12,p,
+        sigmas11_i_j_k,
+        sigmas22_i_j_k,
+        sigmas33_i_j_k,
+        sigmas23_i_jph_kph,
+        sigmas13_iph_j_kph,
+        sigmas12_iph_jph_k,
+        p_i_j_k,
         ax,ax2,ax3,ax4,ax5,ax6,ax7,
         Ax,Ax2,Ax3,Ax4,Ax5,Ax6,Ax7,
         ax_dt,ax2_dt,ax3_dt,ax4_dt,ax5_dt,ax6_dt,ax7_dt,
@@ -303,145 +329,143 @@ function JSWAP_CPU_3D_forward_isotropic_curvilinear_solver(input2)
         # moment tensor source
         if isdefined(input2,:M33)
             if ns==1 && l<=size(Ms33_t,1)
-                sigmas11[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas11[CartesianIndex.(input2.s1,input2.s2,input2.s3)]-@ones(1,1)*input2.dt/input2.dx/input2.dy/input2.dz*Ms11_t[l];
-                sigmas22[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas22[CartesianIndex.(input2.s1,input2.s2,input2.s3)]-@ones(1,1)*input2.dt/input2.dx/input2.dy/input2.dz*Ms22_t[l];
-                sigmas33[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas33[CartesianIndex.(input2.s1,input2.s2,input2.s3)]-@ones(1,1)*input2.dt/input2.dx/input2.dy/input2.dz*Ms33_t[l];
-                sigmas23[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas23[CartesianIndex.(input2.s1,input2.s2,input2.s3)]-@ones(1,1)*input2.dt/input2.dx/input2.dy/input2.dz*Ms23_t[l];
-                sigmas13[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas13[CartesianIndex.(input2.s1,input2.s2,input2.s3)]-@ones(1,1)*input2.dt/input2.dx/input2.dy/input2.dz*Ms13_t[l];
-                sigmas12[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas12[CartesianIndex.(input2.s1,input2.s2,input2.s3)]-@ones(1,1)*input2.dt/input2.dx/input2.dy/input2.dz*Ms12_t[l];
-                p[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=p[CartesianIndex.(input2.s1,input2.s2,input2.s3)]-@ones(1,1)*input2.dt/input2.dx/input2.dy/input2.dz*Mp_t[l];
+                sigmas11_i_j_k[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas11_i_j_k[CartesianIndex.(input2.s1,input2.s2,input2.s3)]-@ones(1,1)*input2.dt/input2.dx/input2.dy/input2.dz*Ms11_t[l];
+                sigmas22_i_j_k[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas22_i_j_k[CartesianIndex.(input2.s1,input2.s2,input2.s3)]-@ones(1,1)*input2.dt/input2.dx/input2.dy/input2.dz*Ms22_t[l];
+                sigmas33_i_j_k[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas33_i_j_k[CartesianIndex.(input2.s1,input2.s2,input2.s3)]-@ones(1,1)*input2.dt/input2.dx/input2.dy/input2.dz*Ms33_t[l];
+                sigmas23_i_jph_kph[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas23_i_jph_kph[CartesianIndex.(input2.s1,input2.s2,input2.s3)]-@ones(1,1)*input2.dt/input2.dx/input2.dy/input2.dz*Ms23_t[l];
+                sigmas13_iph_j_kph[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas13_iph_j_k[CartesianIndex.(input2.s1,input2.s2,input2.s3)]-@ones(1,1)*input2.dt/input2.dx/input2.dy/input2.dz*Ms13_t[l];
+                sigmas12_iph_jph_k[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas12_iph_jph_k[CartesianIndex.(input2.s1,input2.s2,input2.s3)]-@ones(1,1)*input2.dt/input2.dx/input2.dy/input2.dz*Ms12_t[l];
+                p_i_j_k[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=p_i_j_k[CartesianIndex.(input2.s1,input2.s2,input2.s3)]-@ones(1,1)*input2.dt/input2.dx/input2.dy/input2.dz*Mp_t[l];
             end
 
             if ns>=2 && l<=size(Ms33_t,1)
-                sigmas11[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas11[CartesianIndex.(input2.s1,input2.s2,input2.s3)]-input2.dt/input2.dx/input2.dy/input2.dz*Ms11_t[l,:]';
-                sigmas22[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas22[CartesianIndex.(input2.s1,input2.s2,input2.s3)]-input2.dt/input2.dx/input2.dy/input2.dz*Ms22_t[l,:]';
-                sigmas33[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas33[CartesianIndex.(input2.s1,input2.s2,input2.s3)]-input2.dt/input2.dx/input2.dy/input2.dz*Ms33_t[l,:]';
-                sigmas23[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas23[CartesianIndex.(input2.s1,input2.s2,input2.s3)]-input2.dt/input2.dx/input2.dy/input2.dz*Ms23_t[l,:]';
-                sigmas13[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas13[CartesianIndex.(input2.s1,input2.s2,input2.s3)]-input2.dt/input2.dx/input2.dy/input2.dz*Ms13_t[l,:]';
-                sigmas12[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas12[CartesianIndex.(input2.s1,input2.s2,input2.s3)]-input2.dt/input2.dx/input2.dy/input2.dz*Ms12_t[l,:]';
-                p[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=p[CartesianIndex.(input2.s1,input2.s2,input2.s3)]-input2.dt/input2.dx/input2.dy/input2.dz*Mp_t[l,:]';
+                sigmas11_i_j_k[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas11_i_j_k[CartesianIndex.(input2.s1,input2.s2,input2.s3)]-input2.dt/input2.dx/input2.dy/input2.dz*Ms11_t[l,:]';
+                sigmas22_i_j_k[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas22_i_j_k[CartesianIndex.(input2.s1,input2.s2,input2.s3)]-input2.dt/input2.dx/input2.dy/input2.dz*Ms22_t[l,:]';
+                sigmas33_i_j_k[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas33_i_j_k[CartesianIndex.(input2.s1,input2.s2,input2.s3)]-input2.dt/input2.dx/input2.dy/input2.dz*Ms33_t[l,:]';
+                sigmas23_i_jph_kph[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas23_i_jph_kph[CartesianIndex.(input2.s1,input2.s2,input2.s3)]-input2.dt/input2.dx/input2.dy/input2.dz*Ms23_t[l,:]';
+                sigmas13_iph_j_kph[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas13_iph_j_k[CartesianIndex.(input2.s1,input2.s2,input2.s3)]-input2.dt/input2.dx/input2.dy/input2.dz*Ms13_t[l,:]';
+                sigmas12_iph_jph_k[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas12_iph_jph_k[CartesianIndex.(input2.s1,input2.s2,input2.s3)]-input2.dt/input2.dx/input2.dy/input2.dz*Ms12_t[l,:]';
+                p_i_j_k[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=p_i_j_k[CartesianIndex.(input2.s1,input2.s2,input2.s3)]-input2.dt/input2.dx/input2.dy/input2.dz*Mp_t[l,:]';
             end
         end
 
-        @parallel Dx_inn(sigmas11,dtt1);
-        @parallel (2:input2.ny-1,2:input2.nz-1) u_1_minus(dtt1,sigmas11_1_minus);
+        @parallel Dx_inn(sigmas11_i_j_k,dtt1);
+        @parallel (2:input2.ny-1,2:input2.nz-1) u_1_minus(dtt1,sigmas11_ip1_j_k_1);
 
-        @parallel Dy_inn(sigmas22,dtt2);
-        @parallel (2:input2.nx-1,2:input2.nz-1) u_2_minus(dtt2,sigmas22_2_minus);
+        @parallel Dy_inn(sigmas22_i_j_k,dtt2);
+        @parallel (2:input2.nx-1,2:input2.nz-1) u_2_minus(dtt2,sigmas22_i_jp1_k_2);
 
-        @parallel Dz_inn(sigmas33,dtt3);
-        @parallel (2:input2.nx-1,2:input2.ny-1) u_3_minus(dtt3,sigmas33_3_minus);
+        @parallel Dz_inn(sigmas33_i_j_k,dtt3);
+        @parallel (2:input2.nx-1,2:input2.ny-1) u_3_minus(dtt3,sigmas33_i_j_kp1_3);
 
-        @parallel Dy_inn(sigmas23,dtt2);
-        @parallel (2:input2.nx-1,2:input2.nz-1) u_2_plus(dtt2,sigmas23_2_plus);
-        @parallel Dz_inn(sigmas23,dtt3);
-        @parallel (2:input2.nx-1,2:input2.ny-1) u_3_plus(dtt3,sigmas23_3_plus);
+        @parallel Dy_inn(sigmas23_i_jph_kph,dtt2);
+        @parallel (2:input2.nx-1,2:input2.nz-1) u_2_plus(dtt2,sigmas23_i_jph_kph_2);
+        @parallel Dz_inn(sigmas23_i_jph_kph,dtt3);
+        @parallel (2:input2.nx-1,2:input2.ny-1) u_3_plus(dtt3,sigmas23_i_jph_kph_3);
 
-        @parallel Dx_inn(sigmas13,dtt1);
-        @parallel (2:input2.ny-1,2:input2.nz-1) u_1_plus(dtt1,sigmas13_1_plus);
-        @parallel Dz_inn(sigmas13,dtt3);
-        @parallel (2:input2.nx-1,2:input2.ny-1) u_3_plus(dtt3,sigmas13_3_plus);
+        @parallel Dx_inn(sigmas13_iph_j_kph,dtt1);
+        @parallel (2:input2.ny-1,2:input2.nz-1) u_1_plus(dtt1,sigmas13_iph_j_k_1);
+        @parallel Dz_inn(sigmas13_iph_j_kph,dtt3);
+        @parallel (2:input2.nx-1,2:input2.ny-1) u_3_plus(dtt3,sigmas13_iph_j_kph_3);
 
-        @parallel Dx_inn(sigmas12,dtt1);
-        @parallel (2:input2.ny-1,2:input2.nz-1) u_1_plus(dtt1,sigmas12_1_plus);
-        @parallel Dy_inn(sigmas12,dtt2);
-        @parallel (2:input2.nx-1,2:input2.nz-1) u_2_plus(dtt2,sigmas12_2_plus);
+        @parallel Dx_inn(sigmas12_iph_jph_k,dtt1);
+        @parallel (2:input2.ny-1,2:input2.nz-1) u_1_plus(dtt1,sigmas12_iph_jph_k_1);
+        @parallel Dy_inn(sigmas12_iph_jph_k,dtt2);
+        @parallel (2:input2.nx-1,2:input2.nz-1) u_2_plus(dtt2,sigmas12_iph_jph_k_2);
 
-        @parallel Dx_inn(p,dtt1);
-        @parallel (2:input2.ny-1,2:input2.nz-1) u_1_minus(dtt1,p_1_minus);
-        @parallel Dy_inn(p,dtt2);
-        @parallel (2:input2.nx-1,2:input2.nz-1) u_2_minus(dtt2,p_2_minus);
-        @parallel Dz_inn(p,dtt3);
-        @parallel (2:input2.nx-1,2:input2.ny-1) u_3_minus(dtt3,p_3_minus);
+        @parallel Dx_inn(p_i_j_k,dtt1);
+        @parallel (2:input2.ny-1,2:input2.nz-1) u_1_minus(dtt1,p_ip1_j_k_1);
+        @parallel Dy_inn(p_i_j_k,dtt2);
+        @parallel (2:input2.nx-1,2:input2.nz-1) u_2_minus(dtt2,p_i_jp1_k_2);
+        @parallel Dz_inn(p_i_j_k,dtt3);
+        @parallel (2:input2.nx-1,2:input2.ny-1) u_3_minus(dtt3,p_i_j_kp1_3);
 
         # compute curvilinear derivatives
-        @parallel Dz_c(sigmas11,dtt3_c);
-        @parallel (2:input2.nx-1,2:input2.ny-1) uc_3_plus(dtt3_c,sigmas11_3_cur);
+        sigmas11_1_v1[k1,k2,k3]=(sigmas11_i_j_k[(k1 .+1),k2,(k3 .+1)]+sigmas11_i_j_k[k1,k2,(k3 .+1)]-
+        sigmas11_i_j_k[(k1 .+1),k2,(k3 .-1)]-sigmas11_i_j_k[k1,k2,(k3 .-1)])/4;
 
-        @parallel Dz_c(sigmas12,dtt3_c);
-        @parallel (2:input2.nx-1,2:input2.ny-1) uc_3_plus(dtt3_c,sigmas12_3_cur);
+        p_1_v1[k1,k2,k3]=(p_i_j_k[(k1 .+1),k2,(k3 .+1)]+p_i_j_k[k1,k2,(k3 .+1)]-
+        p_i_j_k[(k1 .+1),k2,(k3 .-1)]-p_i_j_k[k1,k2,(k3 .-1)])/4;
 
-        @parallel Dz_c(sigmas13,dtt3_c);
-        @parallel (2:input2.nx-1,2:input2.ny-1) uc_3_plus(dtt3_c,sigmas13_3_cur);
+        sigmas12_3_v1[k1,k2,k3]=(sigmas12_iph_jph_k[k1,k2,(k3 .+1)]+sigmas12_iph_jph_k[k1,(k2 .-1),(k3 .+1)]-
+        sigmas12_iph_jph_k[k1,k2,(k3 .-1)]-sigmas12_iph_jph_k[k1,(k2 .-1),(k3 .-1)])/4;
 
-        @parallel Dz_c(sigmas22,dtt3_c);
-        @parallel (2:input2.nx-1,2:input2.ny-1) uc_3_plus(dtt3_c,sigmas22_3_cur);
+        sigmas12_3_v2[k1,k2,k3]=(sigmas12_iph_jph_k[k1,k2,(k3 .+1)]+sigmas12_iph_jph_k[(k1 .-1),k2,(k3 .+1)]-
+        sigmas12_iph_jph_k[k1,k2,(k3 .-1)]-sigmas12_iph_jph_k[(k1 .-1),k2,(k3 .-1)])/4;
 
-        @parallel Dz_c(sigmas23,dtt3_c);
-        @parallel (2:input2.nx-1,2:input2.ny-1) uc_3_plus(dtt3_c,sigmas23_3_cur);
+        sigmas22_3_v2[k1,k2,k3]=(sigmas22_i_j_k[k1,(k2 .+1),(k3 .+1)]+sigmas22_i_j_k[k1,k2,(k3 .+1)]-
+        sigmas22_i_j_k[k1,(k2 .+1),(k3 .-1)]-sigmas22_i_j_k[k1,k2,(k3 .-1)])/4;
 
-        @parallel Dz_c(p,dtt3_c);
-        @parallel (2:input2.nx-1,2:input2.ny-1) uc_3_plus(dtt3_c,p_3_cur);
+        p_3_v2[k1,k2,k3]=(p_i_j_k[k1,(k2 .+1),(k3 .+1)]+p_i_j_k[k1,k2,(k3 .+1)]-
+        p_i_j_k[k1,(k2 .+1),(k3 .-1)]-p_i_j_k[k1,k2,(k3 .-1)])/4;
 
-        #=
-        # c
-        sigmas11_3_cur[:,:,k3]=(sigmas11[:,:,(k3 .+1)]-sigmas11[:,:,(k3 .-1)])/2;
-        # ?
-        sigmas12_3_cur[:,:,k3]=(sigmas12[:,:,(k3 .+1)]-sigmas12[:,:,(k3 .-1)])/2;
-        # c
-        sigmas13_3_cur[:,:,k3]=(sigmas13[:,:,(k3 .+1)]-sigmas13[:,:,(k3 .-1)])/2
-        # c
-        sigmas22_3_cur[:,:,k3]=(sigmas22[:,:,(k3 .+1)]-sigmas22[:,:,(k3 .-1)])/2;
-        # c
-        sigmas23_3_cur[:,:,k3]=(sigmas23[:,:,(k3 .+1)]-sigmas23[:,:,(k3 .-1)])/2;
-        # c
-        p_3_cur[:,:,k3]=(p[:,:,(k3 .+1)]-p[:,:,(k3 .-1)])/2;
-        =#
+        sigmas13_3_v3[k1,k2,k3]=(sigmas13_iph_j_kph[k1,k2,(k3 .+1)]+sigmas13_iph_j_kph[(k1 .-1),k2,(k3 .+1)]-
+        sigmas13_iph_j_kph[k1,k2,(k3 .-1)]-sigmas13_iph_j_kph[(k1 .-1),k2,(k3 .-1)])/4;
+
+        sigmas23_3_v3[k1,k2,k3]=(sigmas23_i_jph_kph[k1,k2,(k3 .+1)]+sigmas23_i_jph_kph[k1,(k2 .-1),(k3 .+1)]-
+        sigmas23_i_jph_kph[k1,k2,(k3 .-1)]-sigmas23_i_jph_kph[k1,(k2 .-1),(k3 .-1)])/4;
 
         @timeit ti "compute_v" @parallel JSWAP_CPU_3D_isotropic_forward_solver_compute_v_curvilinear(input2.dt,input2.dx,input2.dy,input2.dz,input2.rho,beta,
-        v1,v2,v3,
-        sigmas11_1_minus,
-        sigmas22_2_minus,
-        sigmas33_3_minus,
-        sigmas23_2_plus,sigmas23_3_plus,
-        sigmas13_1_plus,sigmas13_3_plus,
-        sigmas12_1_plus,sigmas12_2_plus,
-        p_1_minus,p_2_minus,p_3_minus,
-        sigmas11_3_cur,sigmas12_3_cur,sigmas13_3_cur,sigmas22_3_cur,sigmas23_3_cur,p_3_cur,
+        v1_iph_j_k,v2_i_jph_k,v3_i_j_kph,
+        sigmas11_ip1_j_k_1,
+        sigmas22_i_jp1_k_2,
+        sigmas33_i_j_kp1_3,
+        sigmas23_i_jph_kph_2,sigmas23_i_jph_kph_3,
+        sigmas13_iph_j_k_1,sigmas13_iph_j_kph_3,
+        sigmas12_iph_jph_k_1,sigmas12_iph_jph_k_2,
+        p_ip1_j_k_1,p_i_jp1_k_2,p_i_j_kp1_3,
+        sigmas11_1_v1,
+        p_1_v1,
+        sigmas12_3_v1,
+        sigmas12_3_v2,
+        sigmas22_3_v2,
+        p_3_v2,
+        sigmas13_3_v3,
+        sigmas23_3_v3,
         Kmax_x,Kmax_y,Z_Kmax,Zmax_Kmax);
 
         if isdefined(input2,:src3)
             if ns==1 && l<=size(input2.src3,1)
-                v1[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=v1[CartesianIndex.(input2.s1,input2.s2,input2.s3)]+1 ./input2.rho[CartesianIndex.(input2.s1,input2.s2,input2.s3)] .*input2.src1[l];
-                v2[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=v2[CartesianIndex.(input2.s1,input2.s2,input2.s3)]+1 ./input2.rho[CartesianIndex.(input2.s1,input2.s2,input2.s3)] .*input2.src2[l];
-                v3[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=v3[CartesianIndex.(input2.s1,input2.s2,input2.s3)]+1 ./input2.rho[CartesianIndex.(input2.s1,input2.s2,input2.s3)] .*input2.src3[l];
-                p[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=p[CartesianIndex.(input2.s1,input2.s2,input2.s3)]+@ones(1,1) .*input2.srcp[l];
+                v1_iph_j_k[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=v1_iph_j_k[CartesianIndex.(input2.s1,input2.s2,input2.s3)]+1 ./input2.rho[CartesianIndex.(input2.s1,input2.s2,input2.s3)] .*input2.src1[l];
+                v2_i_jph_k[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=v2_i_jph_k[CartesianIndex.(input2.s1,input2.s2,input2.s3)]+1 ./input2.rho[CartesianIndex.(input2.s1,input2.s2,input2.s3)] .*input2.src2[l];
+                v3_i_j_kph[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=v3_i_j_kph[CartesianIndex.(input2.s1,input2.s2,input2.s3)]+1 ./input2.rho[CartesianIndex.(input2.s1,input2.s2,input2.s3)] .*input2.src3[l];
+                p_i_j_k[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=p_i_j_k[CartesianIndex.(input2.s1,input2.s2,input2.s3)]+@ones(1,1) .*input2.srcp[l];
             end
             if ns>=2 && l<=size(input2.src3,1)
-                v1[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=v1[CartesianIndex.(input2.s1,input2.s2,input2.s3)]+1 ./input2.rho[CartesianIndex.(input2.s1,input2.s2,input2.s3)] .*input2.src1[l,:]';
-                v2[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=v2[CartesianIndex.(input2.s1,input2.s2,input2.s3)]+1 ./input2.rho[CartesianIndex.(input2.s1,input2.s2,input2.s3)] .*input2.src2[l,:]';
-                v3[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=v3[CartesianIndex.(input2.s1,input2.s2,input2.s3)]+1 ./input2.rho[CartesianIndex.(input2.s1,input2.s2,input2.s3)] .*input2.src3[l,:]';
-                p[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=p[CartesianIndex.(input2.s1,input2.s2,input2.s3)]+@ones(1,ns) .*input2.srcp[l,:]';
+                v1_iph_j_k[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=v1_iph_j_k[CartesianIndex.(input2.s1,input2.s2,input2.s3)]+1 ./input2.rho[CartesianIndex.(input2.s1,input2.s2,input2.s3)] .*input2.src1[l,:]';
+                v2_i_jph_k[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=v2_i_jph_k[CartesianIndex.(input2.s1,input2.s2,input2.s3)]+1 ./input2.rho[CartesianIndex.(input2.s1,input2.s2,input2.s3)] .*input2.src2[l,:]';
+                v3_i_j_kph[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=v3_i_j_kph[CartesianIndex.(input2.s1,input2.s2,input2.s3)]+1 ./input2.rho[CartesianIndex.(input2.s1,input2.s2,input2.s3)] .*input2.src3[l,:]';
+                p_i_j_k[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=p_i_j_k[CartesianIndex.(input2.s1,input2.s2,input2.s3)]+@ones(1,ns) .*input2.srcp[l,:]';
             end
         end
 
         # assign recordings
-        @timeit ti "receiver" R1[l+1,:]=reshape(v1[CartesianIndex.(input2.r1,input2.r2,input2.r3)],length(input2.r3),);
-        @timeit ti "receiver" R2[l+1,:]=reshape(v2[CartesianIndex.(input2.r1,input2.r2,input2.r3)],length(input2.r3),);
-        @timeit ti "receiver" R3[l+1,:]=reshape(v3[CartesianIndex.(input2.r1,input2.r2,input2.r3)],length(input2.r3),);
-        @timeit ti "receiver" P[l+1,:]=reshape(p[CartesianIndex.(input2.r1,input2.r2,input2.r3)],length(input2.r3),);
+        @timeit ti "receiver" R1[l+1,:]=reshape(v1_iph_j_k[CartesianIndex.(input2.r1,input2.r2,input2.r3)],length(input2.r3),);
+        @timeit ti "receiver" R2[l+1,:]=reshape(v2_i_jph_k[CartesianIndex.(input2.r1,input2.r2,input2.r3)],length(input2.r3),);
+        @timeit ti "receiver" R3[l+1,:]=reshape(v3_i_j_kph[CartesianIndex.(input2.r1,input2.r2,input2.r3)],length(input2.r3),);
+        @timeit ti "receiver" P[l+1,:]=reshape(p_i_j_k[CartesianIndex.(input2.r1,input2.r2,input2.r3)],length(input2.r3),);
         # save wavefield
         if input2.path_wavefield!=nothing && input2.wavefield_interval!=0 && input2.path!=nothing
             if mod(l,input2.wavefield_interval)==0
-                data=v1;
+                data=v1_iph_j_k;
                 write2mat(string(input2.path_wavefield,"/v1_",n_wavefield,".mat"),data);
-                data=v2;
+                data=v2_i_jph_k;
                 write2mat(string(input2.path_wavefield,"/v2_",n_wavefield,".mat"),data);
-                data=v3;
+                data=v3_i_j_kph;
                 write2mat(string(input2.path_wavefield,"/v3_",n_wavefield,".mat"),data);
-                data=sigmas11;
+                data=sigmas11_i_j_k;
                 write2mat(string(input2.path_wavefield,"/sigmas11_",n_wavefield,".mat"),data);
-                data=sigmas22;
+                data=sigmas22_i_j_k;
                 write2mat(string(input2.path_wavefield,"/sigmas22_",n_wavefield,".mat"),data);
-                data=sigmas33;
+                data=sigmas33_i_j_k;
                 write2mat(string(input2.path_wavefield,"/sigmas33_",n_wavefield,".mat"),data);
-                data=sigmas23;
+                data=sigmas23_i_jph_kph;
                 write2mat(string(input2.path_wavefield,"/sigmas23_",n_wavefield,".mat"),data);
-                data=sigmas13;
+                data=sigmas13_iph_j_kph;
                 write2mat(string(input2.path_wavefield,"/sigmas13_",n_wavefield,".mat"),data);
-                data=sigmas12;
+                data=sigmas12_iph_jph_k;
                 write2mat(string(input2.path_wavefield,"/sigmas12_",n_wavefield,".mat"),data);
-                data=p;
+                data=p_i_j_k;
                 write2mat(string(input2.path_wavefield,"/p_",n_wavefield,".mat"),data);
                 n_wavefield=n_wavefield+1;
             end
@@ -450,12 +474,12 @@ function JSWAP_CPU_3D_forward_isotropic_curvilinear_solver(input2)
         # plot
         if input2.path_pic!=nothing && input2.plot_interval!=0 && input2.path!=nothing
             if mod(l,input2.plot_interval)==0 || l==input2.nt-1
-                vtkfile = vtk_grid(string(input2.path_pic,"/wavefield_pic_",n_picture),input2.X,input2.Y,input2.Z);
-                vtkfile["v1"]=v1;
-                vtkfile["v2"]=v2;
-                vtkfile["v3"]=v3;
-                vtkfile["p"]=p;
-                vtkfile["sigmas33"]=sigmas33;
+                vtkfile = vtk_grid(string(input2.path_pic,"/wavefield_pic_",n_picture),input2.X,input2.Y,input2.K);
+                vtkfile["v1"]=v1_iph_j_k;
+                vtkfile["v2"]=v2_i_jph_k;
+                vtkfile["v3"]=v3_i_j_kph;
+                vtkfile["p"]=p_i_j_k;
+                vtkfile["sigmas33"]=sigmas33_i_j_k;
                 vtkfile["lambda"]=input2.lambda;
                 vtkfile["mu"]=input2.mu;
                 vtkfile["rho"]=input2.rho;
@@ -487,5 +511,5 @@ function JSWAP_CPU_3D_forward_isotropic_curvilinear_solver(input2)
     if input2.path_pic!=nothing && input2.plot_interval!=0 && input2.path!=nothing
         vtk_save(pvd);
     end
-    return v1,v2,v3,R1,R2,R3,P
+    return v1_iph_j_k,v2_i_jph_k,v3_i_j_kph,R1,R2,R3,P
 end

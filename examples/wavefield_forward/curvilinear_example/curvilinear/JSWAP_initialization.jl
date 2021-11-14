@@ -14,6 +14,8 @@ mutable struct input3
     X
     Y
     Z
+    K
+    Kmax
     lambda
     mu
     rho
@@ -46,7 +48,6 @@ mutable struct input3
     path_model
     path_wavefield
     path_rec
-    Kmax
 end
 input2=input3(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
