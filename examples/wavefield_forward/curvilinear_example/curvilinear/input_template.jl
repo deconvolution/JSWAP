@@ -9,7 +9,7 @@ input2.dy=data["dy"];
 # dz
 input2.dz=data["dz"];
 # number of time steps
-input2.nt=400;
+input2.nt=2000;
 # nx
 input2.nx=round(Int32,data["nx"]);
 # ny
@@ -23,8 +23,6 @@ input2.Kmax=data["Kmax"];
 # 3D true coordinate X, Y and Z
 input2.X=data["X"];
 input2.Y=data["Y"];
-input2.Z=data["Z"];
-
 input2.K=data["K"];
 ## material properties
 input2.lambda=data["lambda"];
@@ -81,11 +79,11 @@ input2.s2t=input2.s2*input2.dx;
 input2.s3t=input2.s3*input2.dx;
 ## PML
 # PML layers
-input2.lp=5;
+input2.lp=20;
 # PML power
 input2.nPML=2;
-# PML theorecital coefficient
-input2.Rc=1;
+# PML theoretical reflection coefficient
+input2.Rc=.001;
 # set PML active
 # xminus,xplus,yminus,yplus,zminus,zplus
 input2.PML_active=[1 1 1 1 1 0];

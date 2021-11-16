@@ -13,7 +13,6 @@ mutable struct input3
     nz
     X
     Y
-    Z
     K
     Kmax
     lambda
@@ -49,5 +48,5 @@ mutable struct input3
     path_wavefield
     path_rec
 end
-input2=input3(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+input2=input3(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);

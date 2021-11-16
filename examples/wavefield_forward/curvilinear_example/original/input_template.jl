@@ -1,5 +1,5 @@
 ## dimensions
-data=JSWAP.readmat("./example.mat","data");
+data=JSWAP.readmat("./example2.mat","data");
 # Time increment
 input2.dt=10.0^-3;
 # dx
@@ -9,7 +9,7 @@ input2.dy=data["dy"];
 # dz
 input2.dz=data["dz"];
 # number of time steps
-input2.nt=1000;
+input2.nt=2000;
 # nx
 input2.nx=round(Int32,data["nx"]);
 # ny
@@ -45,20 +45,16 @@ input2.s2[:] .=data["s2"];
 # source grid location z
 input2.s3=zeros(Int32,1,1);
 input2.s3[:] .=data["s3"];
-# moment tensor source
-input2.M11=zeros(input2.nt,1);
-input2.M22=zeros(input2.nt,1);
-input2.M33=zeros(input2.nt,1);
-input2.M23=zeros(input2.nt,1);
-input2.M13=zeros(input2.nt,1);
-input2.M12=zeros(input2.nt,1);
-freq=15;
-input2.M11[:]=1*rickerWave(freq,input2.dt,input2.nt,2);
-input2.M22[:]=-1*rickerWave(freq,input2.dt,input2.nt,2);
-input2.M33[:]=0*rickerWave(freq,input2.dt,input2.nt,2);
-input2.M23[:]=0*rickerWave(freq,input2.dt,input2.nt,2);
-input2.M13[:]=0*rickerWave(freq,input2.dt,input2.nt,2);
-input2.M12[:]=0*rickerWave(freq,input2.dt,input2.nt,2);
+# point source
+freq=10;
+input2.src1=zeros(input2.nt,1);
+input2.src2=zeros(input2.nt,1);
+input2.src3=zeros(input2.nt,1);
+input2.srcp=zeros(input2.nt,1);
+input2.src1[:]=1*rickerWave(freq,input2.dt,input2.nt,2);
+input2.src2[:]=0*rickerWave(freq,input2.dt,input2.nt,2);
+input2.src3[:]=0*rickerWave(freq,input2.dt,input2.nt,2);
+input2.srcp[:]=0*rickerWave(freq,input2.dt,input2.nt,2);
 
 # receiver true location x
 input2.r1t=input2.r1*input2.dx;
@@ -83,7 +79,7 @@ input2.nPML=2;
 input2.Rc=.001;
 # set PML active
 # xminus,xplus,yminus,yplus,zminus,zplus
-input2.PML_active=[1 1 1 1 1 1];
+input2.PML_active=[1 1 1 1 1 0];
 ## plot
 # path for storage. This must be the master branch of the following pathes.
 input2.path=p3;

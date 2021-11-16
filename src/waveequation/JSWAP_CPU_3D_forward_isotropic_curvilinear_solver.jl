@@ -51,7 +51,7 @@ function JSWAP_CPU_3D_forward_isotropic_curvilinear_solver(input2)
         if isdir(input2.path_model)==0
             mkdir(input2.path_model);
         end
-        vtkfile = vtk_grid(string(input2.path_model,"/material_properties"),input2.X,input2.Y,input2.Z);
+        vtkfile = vtk_grid(string(input2.path_model,"/material_properties"),input2.X,input2.Y,input2.K);
         vtkfile["lambda"]=input2.lambda;
         vtkfile["mu"]=input2.mu;
         vtkfile["rho"]=input2.rho;
@@ -240,7 +240,7 @@ function JSWAP_CPU_3D_forward_isotropic_curvilinear_solver(input2)
     (1:input2.nz)*input2.dz);
     Z_Kmax=Z./repeat(Kmax,1,1,input2.nz);
     Zmax_Kmax=repeat(maximum(Z)./Kmax,1,1,input2.nz);
-    K=Z .*1 ./Zmax_Kmax;
+    K=input2.K;
 
     for l=1:input2.nt-1
 
@@ -474,7 +474,7 @@ function JSWAP_CPU_3D_forward_isotropic_curvilinear_solver(input2)
         # plot
         if input2.path_pic!=nothing && input2.plot_interval!=0 && input2.path!=nothing
             if mod(l,input2.plot_interval)==0 || l==input2.nt-1
-                vtkfile = vtk_grid(string(input2.path_pic,"/wavefield_pic_",n_picture),input2.X,input2.Y,input2.K);
+                vtkfile = vtk_grid(string(input2.path_pic,"/wavefield_pic_",n_picture),input2.X,input2.Y,K);
                 vtkfile["v1"]=v1_iph_j_k;
                 vtkfile["v2"]=v2_i_jph_k;
                 vtkfile["v3"]=v3_i_j_kph;
