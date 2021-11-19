@@ -1,4 +1,4 @@
-This is forked from https://github.com/omlins/ParallelStencil.jl. Some functions are modified to better fit my own computational demands, e.g., higher-order approximation for the first-order derivative.
+This is cloned from https://github.com/omlins/ParallelStencil.jl. Some functions are modified to better fit my own computational demands, e.g., 8th-order approximation for the first-order derivative.
 
 <h1> <img src="docs/logo/logo_ParallelStencil.png" alt="ParallelStencil.jl" width="50"> ParallelStencil.jl </h1>
 
