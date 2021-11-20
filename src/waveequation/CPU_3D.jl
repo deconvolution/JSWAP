@@ -4,7 +4,7 @@
 module CPU_3D
 export isotropic_forward_solver,isotropic_adjoint_solver,PML_configuration,ParallelStencil
 ## Using ParallelStencil
-include("../ParallelStencil/ParallelStencil.jl");
+include("../ParallelStencil/src/ParallelStencil.jl");
 ## utilities
 include("..//utilities/utilities.jl");
 ## using packages

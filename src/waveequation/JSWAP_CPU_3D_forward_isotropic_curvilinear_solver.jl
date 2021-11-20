@@ -243,33 +243,43 @@ function JSWAP_CPU_3D_forward_isotropic_curvilinear_solver(input2)
     K=input2.K;
 
     for l=1:input2.nt-1
+        # plus: 6:5
+        # minus: 5:6
+        #@parallel Dx_inn(v1_iph_j_k,dtt1);
+        #@parallel (2:input2.ny-1,2:input2.nz-1) u_1_plus(dtt1,v1_iph_j_k_1);
+        @parallel Dx_12(v1_iph_j_k,v1_iph_j_k_1,6,5,0,0,0,0);
 
-        @parallel Dx_inn(v1_iph_j_k,dtt1);
-        @parallel (2:input2.ny-1,2:input2.nz-1) u_1_plus(dtt1,v1_iph_j_k_1);
+        #@parallel Dy_inn(v1_iph_j_k,dtt2);
+        #@parallel (2:input2.nx-1,2:input2.nz-1) u_2_minus(dtt2,v1_iph_jp1_k_2);
+        @parallel Dy_12(v1_iph_j_k,v1_iph_jp1_k_2,0,0,5,6,0,0);
 
-        @parallel Dy_inn(v1_iph_j_k,dtt2);
-        @parallel (2:input2.nx-1,2:input2.nz-1) u_2_minus(dtt2,v1_iph_jp1_k_2);
+        #@parallel Dz_inn(v1_iph_j_k,dtt3);
+        #@parallel (2:input2.nx-1,2:input2.ny-1) u_3_minus(dtt3,v1_ip1_jph_kph_3);
+        @parallel Dz_12(v1_iph_j_k,v1_ip1_jph_kph_3,0,0,0,0,5,6);
 
-        @parallel Dz_inn(v1_iph_j_k,dtt3);
-        @parallel (2:input2.nx-1,2:input2.ny-1) u_3_minus(dtt3,v1_ip1_jph_kph_3);
+        #@parallel Dx_inn(v2_i_jph_k,dtt1);
+        #@parallel (2:input2.ny-1,2:input2.nz-1) u_1_minus(dtt1,v2_ip1_jph_k_1);
+        @parallel Dx_12(v2_i_jph_k,v2_ip1_jph_k_1,5,6,0,0,0,0);
 
-        @parallel Dx_inn(v2_i_jph_k,dtt1);
-        @parallel (2:input2.ny-1,2:input2.nz-1) u_1_minus(dtt1,v2_ip1_jph_k_1);
+        # @parallel Dy_inn(v2_i_jph_k,dtt2);
+        # @parallel (2:input2.nx-1,2:input2.nz-1) u_2_plus(dtt2,v2_i_jph_k_2);
+        @parallel Dy_12(v2_i_jph_k,v2_i_jph_k_2,0,0,6,5,0,0);
 
-        @parallel Dy_inn(v2_i_jph_k,dtt2);
-        @parallel (2:input2.nx-1,2:input2.nz-1) u_2_plus(dtt2,v2_i_jph_k_2);
+        #@parallel Dz_inn(v2_i_jph_k,dtt3);
+        #@parallel (2:input2.nx-1,2:input2.ny-1) u_3_minus(dtt3,v2_i_jph_kp1_3);
+        @parallel Dz_12(v2_i_jph_k,v2_i_jph_kp1_3,0,0,0,0,5,6);
 
-        @parallel Dz_inn(v2_i_jph_k,dtt3);
-        @parallel (2:input2.nx-1,2:input2.ny-1) u_3_minus(dtt3,v2_i_jph_kp1_3);
+        #@parallel Dx_inn(v3_i_j_kph,dtt1);
+        #@parallel (2:input2.ny-1,2:input2.nz-1) u_1_minus(dtt1,v3_ip1_jph_kph_3);
+        @parallel Dx_12(v3_i_j_kph,v3_ip1_jph_kph_3,5,6,0,0,0,0);
 
-        @parallel Dx_inn(v3_i_j_kph,dtt1);
-        @parallel (2:input2.ny-1,2:input2.nz-1) u_1_minus(dtt1,v3_ip1_jph_kph_3);
+        #@parallel Dy_inn(v3_i_j_kph,dtt2);
+        #@parallel (2:input2.nx-1,2:input2.nz-1) u_2_minus(dtt2,v3_i_jp1_kph_2);
+        @parallel Dy_12(v3_i_j_kph,v3_i_jp1_kph_2,0,0,5,6,0,0);
 
-        @parallel Dy_inn(v3_i_j_kph,dtt2);
-        @parallel (2:input2.nx-1,2:input2.nz-1) u_2_minus(dtt2,v3_i_jp1_kph_2);
-
-        @parallel Dz_inn(v3_i_j_kph,dtt3);
-        @parallel (2:input2.nx-1,2:input2.ny-1) u_3_plus(dtt3,v3_i_j_kph_3);
+        #@parallel Dz_inn(v3_i_j_kph,dtt3);
+        #@parallel (2:input2.nx-1,2:input2.ny-1) u_3_plus(dtt3,v3_i_j_kph_3);
+        @parallel Dz_12(v3_i_j_kph,v3_i_j_kph_3,0,0,0,0,6,5);
 
         # for curvilinear
         v1_3_sigmas11[k1,k2,k3]=(v1_iph_j_k[k1,k2,(k3 .+1)]+v1_iph_j_k[(k1 .-1),k2,(k3 .+1)]-
@@ -349,36 +359,48 @@ function JSWAP_CPU_3D_forward_isotropic_curvilinear_solver(input2)
             end
         end
 
-        @parallel Dx_inn(sigmas11_i_j_k,dtt1);
-        @parallel (2:input2.ny-1,2:input2.nz-1) u_1_minus(dtt1,sigmas11_ip1_j_k_1);
+        #@parallel Dx_inn(sigmas11_i_j_k,dtt1);
+        #@parallel (2:input2.ny-1,2:input2.nz-1) u_1_minus(dtt1,sigmas11_ip1_j_k_1);
+        @parallel Dx_12(sigmas11_i_j_k,sigmas11_ip1_j_k_1,5,6,0,0,0,0);
 
-        @parallel Dy_inn(sigmas22_i_j_k,dtt2);
-        @parallel (2:input2.nx-1,2:input2.nz-1) u_2_minus(dtt2,sigmas22_i_jp1_k_2);
+        #@parallel Dy_inn(sigmas22_i_j_k,dtt2);
+        #@parallel (2:input2.nx-1,2:input2.nz-1) u_2_minus(dtt2,sigmas22_i_jp1_k_2);
+        @parallel Dy_12(sigmas22_i_j_k,sigmas22_i_jp1_k_2,0,0,5,6,0,0);
 
-        @parallel Dz_inn(sigmas33_i_j_k,dtt3);
-        @parallel (2:input2.nx-1,2:input2.ny-1) u_3_minus(dtt3,sigmas33_i_j_kp1_3);
+        #@parallel Dz_inn(sigmas33_i_j_k,dtt3);
+        #@parallel (2:input2.nx-1,2:input2.ny-1) u_3_minus(dtt3,sigmas33_i_j_kp1_3);
+        @parallel Dz_12(sigmas33_i_j_k,sigmas33_i_j_kp1_3,0,0,0,0,5,6);
 
-        @parallel Dy_inn(sigmas23_i_jph_kph,dtt2);
-        @parallel (2:input2.nx-1,2:input2.nz-1) u_2_plus(dtt2,sigmas23_i_jph_kph_2);
-        @parallel Dz_inn(sigmas23_i_jph_kph,dtt3);
-        @parallel (2:input2.nx-1,2:input2.ny-1) u_3_plus(dtt3,sigmas23_i_jph_kph_3);
+        #@parallel Dy_inn(sigmas23_i_jph_kph,dtt2);
+        #@parallel (2:input2.nx-1,2:input2.nz-1) u_2_plus(dtt2,sigmas23_i_jph_kph_2);
+        @parallel Dy_12(sigmas23_i_jph_kph,sigmas23_i_jph_kph_2,0,0,6,5,0,0);
+        #@parallel Dz_inn(sigmas23_i_jph_kph,dtt3);
+        #@parallel (2:input2.nx-1,2:input2.ny-1) u_3_plus(dtt3,sigmas23_i_jph_kph_3);
+        @parallel Dz_12(sigmas23_i_jph_kph,sigmas23_i_jph_kph_3,0,0,0,0,6,5);
 
-        @parallel Dx_inn(sigmas13_iph_j_kph,dtt1);
-        @parallel (2:input2.ny-1,2:input2.nz-1) u_1_plus(dtt1,sigmas13_iph_j_k_1);
-        @parallel Dz_inn(sigmas13_iph_j_kph,dtt3);
-        @parallel (2:input2.nx-1,2:input2.ny-1) u_3_plus(dtt3,sigmas13_iph_j_kph_3);
+        #@parallel Dx_inn(sigmas13_iph_j_kph,dtt1);
+        #@parallel (2:input2.ny-1,2:input2.nz-1) u_1_plus(dtt1,sigmas13_iph_j_k_1);
+        @parallel Dx_12(sigmas13_iph_j_kph,sigmas13_iph_j_k_1,6,5,0,0,0,0);
+        #@parallel Dz_inn(sigmas13_iph_j_kph,dtt3);
+        #@parallel (2:input2.nx-1,2:input2.ny-1) u_3_plus(dtt3,sigmas13_iph_j_kph_3);
+        @parallel Dz_12(sigmas13_iph_j_kph,sigmas13_iph_j_kph_3,0,0,0,0,6,5);
 
-        @parallel Dx_inn(sigmas12_iph_jph_k,dtt1);
-        @parallel (2:input2.ny-1,2:input2.nz-1) u_1_plus(dtt1,sigmas12_iph_jph_k_1);
-        @parallel Dy_inn(sigmas12_iph_jph_k,dtt2);
-        @parallel (2:input2.nx-1,2:input2.nz-1) u_2_plus(dtt2,sigmas12_iph_jph_k_2);
+        #@parallel Dx_inn(sigmas12_iph_jph_k,dtt1);
+        #@parallel (2:input2.ny-1,2:input2.nz-1) u_1_plus(dtt1,sigmas12_iph_jph_k_1);
+        @parallel Dx_12(sigmas12_iph_jph_k,sigmas12_iph_jph_k_1,6,5,0,0,0,0);
+        #@parallel Dy_inn(sigmas12_iph_jph_k,dtt2);
+        #@parallel (2:input2.nx-1,2:input2.nz-1) u_2_plus(dtt2,sigmas12_iph_jph_k_2);
+        @parallel Dy_12(sigmas12_iph_jph_k,sigmas12_iph_jph_k_2,0,0,6,5,0,0);
 
-        @parallel Dx_inn(p_i_j_k,dtt1);
-        @parallel (2:input2.ny-1,2:input2.nz-1) u_1_minus(dtt1,p_ip1_j_k_1);
-        @parallel Dy_inn(p_i_j_k,dtt2);
-        @parallel (2:input2.nx-1,2:input2.nz-1) u_2_minus(dtt2,p_i_jp1_k_2);
-        @parallel Dz_inn(p_i_j_k,dtt3);
-        @parallel (2:input2.nx-1,2:input2.ny-1) u_3_minus(dtt3,p_i_j_kp1_3);
+        #@parallel Dx_inn(p_i_j_k,dtt1);
+        #@parallel (2:input2.ny-1,2:input2.nz-1) u_1_minus(dtt1,p_ip1_j_k_1);
+        @parallel Dx_12(p_i_j_k,p_ip1_j_k_1,5,6,0,0,0,0);
+        #@parallel Dy_inn(p_i_j_k,dtt2);
+        #@parallel (2:input2.nx-1,2:input2.nz-1) u_2_minus(dtt2,p_i_jp1_k_2);
+        @parallel Dy_12(p_i_j_k,p_i_jp1_k_2,0,0,5,6,0,0);
+        #@parallel Dz_inn(p_i_j_k,dtt3);
+        #@parallel (2:input2.nx-1,2:input2.ny-1) u_3_minus(dtt3,p_i_j_kp1_3);
+        @parallel Dz_12(p_i_j_k,p_i_j_kp1_3,0,0,0,0,5,6);
 
         # compute curvilinear derivatives
         sigmas11_1_v1[k1,k2,k3]=(sigmas11_i_j_k[(k1 .+1),k2,(k3 .+1)]+sigmas11_i_j_k[k1,k2,(k3 .+1)]-
