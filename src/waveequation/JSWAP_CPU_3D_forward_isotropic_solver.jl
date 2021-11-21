@@ -1,7 +1,7 @@
 "
 CPU 3D isotropic forward solver
 "
-function JSWAP_CPU_3D_forward_isotropic_curvilinear_solver(input2)
+function JSWAP_CPU_3D_forward_isotropic_solver(input2)
     #global data
     global data
     # zero stress condition at the boundaries
@@ -51,7 +51,7 @@ function JSWAP_CPU_3D_forward_isotropic_curvilinear_solver(input2)
         if isdir(input2.path_model)==0
             mkdir(input2.path_model);
         end
-        vtkfile = vtk_grid(string(input2.path_model,"/material_properties"),input2.X,input2.Y,input2.K);
+        vtkfile = vtk_grid(string(input2.path_model,"/material_properties"),input2.X,input2.Y,input2.Z);
         vtkfile["lambda"]=input2.lambda;
         vtkfile["mu"]=input2.mu;
         vtkfile["rho"]=input2.rho;
@@ -217,21 +217,6 @@ function JSWAP_CPU_3D_forward_isotropic_curvilinear_solver(input2)
     end
 
     pro_bar=Progress(input2.nt,1,"forward_simulation...",50);
-    #
-    Kmax=(input2.Kmax);
-    Kmax_x0=@zeros(input2.nx,input2.ny);
-    Kmax_y0=copy(Kmax_x0);
-
-    Kmax_x0[1:end-1,:]=(Kmax[2:end,:]-Kmax[1:end-1,:])/input2.dx;
-    Kmax_y0[:,1:end-1]=(Kmax[:,2:end]-Kmax[:,1:end-1])/input2.dy;
-    Kmax_x=repeat(Kmax_x0,1,1,input2.nz);
-    Kmax_y=repeat(Kmax_y0,1,1,input2.nz);
-    # simulation coordinate
-    Y,X,Z=meshgrid((1:input2.ny)*input2.dy,(1:input2.nx)*input2.dx,
-    (1:input2.nz)*input2.dz);
-    Z_Kmax=Z./repeat(Kmax,1,1,input2.nz);
-    Zmax_Kmax=repeat(maximum(Z)./Kmax,1,1,input2.nz);
-    K=input2.K;
 
     for l=1:input2.nt-1
         # plus: 6:5
@@ -272,7 +257,7 @@ function JSWAP_CPU_3D_forward_isotropic_curvilinear_solver(input2)
         #@parallel (2:input2.nx-1,2:input2.ny-1) u_3_plus(dtt3,v3_i_j_kph_3);
         @parallel Dz_12(v3_i_j_kph,v3_i_j_kph_3,0,0,0,0,6,5);
 
-        @timeit ti "compute_sigma" @parallel JSWAP_CPU_3D_isotropic_forward_solver_compute_au_for_sigma_curvilinear(input2.dt,input2.dx,input2.dy,input2.dz,input2.inv_Qa,input2.lambda,input2.mu,
+        @timeit ti "compute_sigma" @parallel JSWAP_CPU_3D_isotropic_forward_solver_compute_au_for_sigma(input2.dt,input2.dx,input2.dy,input2.dz,input2.inv_Qa,input2.lambda,input2.mu,
         beta,
         v1_iph_j_k_1,v1_iph_jp1_k_2,v1_ip1_jph_kph_3,
         v2_ip1_jph_k_1,v2_i_jph_k_2,v2_i_jph_kp1_3,
@@ -285,10 +270,9 @@ function JSWAP_CPU_3D_forward_isotropic_curvilinear_solver(input2)
         sigmas12_iph_jph_k,
         ax,ax2,ax3,ax4,ax5,ax6,ax7,
         Ax,Ax2,Ax3,Ax4,Ax5,Ax6,Ax7,
-        ax_dt,ax2_dt,ax3_dt,ax4_dt,ax5_dt,ax6_dt,ax7_dt,
-        Kmax_x,Kmax_y,Z_Kmax,Zmax_Kmax);
+        ax_dt,ax2_dt,ax3_dt,ax4_dt,ax5_dt,ax6_dt,ax7_dt);
 
-        @timeit ti "compute_sigma" @parallel JSWAP_CPU_3D_isotropic_forward_solver_compute_sigma_curvilinear(input2.dt,input2.dx,input2.dy,input2.dz,input2.inv_Qa,input2.lambda,input2.mu,
+        @timeit ti "compute_sigma" @parallel JSWAP_CPU_3D_isotropic_forward_solver_compute_sigma(input2.dt,input2.dx,input2.dy,input2.dz,input2.inv_Qa,input2.lambda,input2.mu,
         beta,
         sigmas11_i_j_k,
         sigmas22_i_j_k,
@@ -299,8 +283,7 @@ function JSWAP_CPU_3D_forward_isotropic_curvilinear_solver(input2)
         p_i_j_k,
         ax,ax2,ax3,ax4,ax5,ax6,ax7,
         Ax,Ax2,Ax3,Ax4,Ax5,Ax6,Ax7,
-        ax_dt,ax2_dt,ax3_dt,ax4_dt,ax5_dt,ax6_dt,ax7_dt,
-        Kmax_x,Kmax_y,Z_Kmax,Zmax_Kmax);
+        ax_dt,ax2_dt,ax3_dt,ax4_dt,ax5_dt,ax6_dt,ax7_dt);
 
         # moment tensor source
         if isdefined(input2,:M33)
@@ -369,7 +352,7 @@ function JSWAP_CPU_3D_forward_isotropic_curvilinear_solver(input2)
         @parallel Dz_12(p_i_j_k,p_i_j_kp1_3,0,0,0,0,5,6);
 
 
-        @timeit ti "compute_v" @parallel JSWAP_CPU_3D_isotropic_forward_solver_compute_v_curvilinear(input2.dt,input2.dx,input2.dy,input2.dz,input2.rho,beta,
+        @timeit ti "compute_v" @parallel JSWAP_CPU_3D_isotropic_forward_solver_compute_v(input2.dt,input2.dx,input2.dy,input2.dz,input2.rho,beta,
         v1_iph_j_k,v2_i_jph_k,v3_i_j_kph,
         sigmas11_ip1_j_k_1,
         sigmas22_i_jp1_k_2,
@@ -377,8 +360,7 @@ function JSWAP_CPU_3D_forward_isotropic_curvilinear_solver(input2)
         sigmas23_i_jph_kph_2,sigmas23_i_jph_kph_3,
         sigmas13_iph_j_k_1,sigmas13_iph_j_kph_3,
         sigmas12_iph_jph_k_1,sigmas12_iph_jph_k_2,
-        p_ip1_j_k_1,p_i_jp1_k_2,p_i_j_kp1_3,
-        Kmax_x,Kmax_y,Z_Kmax,Zmax_Kmax);
+        p_ip1_j_k_1,p_i_jp1_k_2,p_i_j_kp1_3);
 
         if isdefined(input2,:src3)
             if ns==1 && l<=size(input2.src3,1)
@@ -430,7 +412,7 @@ function JSWAP_CPU_3D_forward_isotropic_curvilinear_solver(input2)
         # plot
         if input2.path_pic!=nothing && input2.plot_interval!=0 && input2.path!=nothing
             if mod(l,input2.plot_interval)==0 || l==input2.nt-1
-                vtkfile = vtk_grid(string(input2.path_pic,"/wavefield_pic_",n_picture),input2.X,input2.Y,K);
+                vtkfile = vtk_grid(string(input2.path_pic,"/wavefield_pic_",n_picture),input2.X,input2.Y,input2.Z);
                 vtkfile["v1"]=v1_iph_j_k;
                 vtkfile["v2"]=v2_i_jph_k;
                 vtkfile["v3"]=v3_i_j_kph;

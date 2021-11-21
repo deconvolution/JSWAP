@@ -2,7 +2,7 @@
 Compuites auxiliary variable used to compute sigma, subfunction of JSWAP_CPU_3D_isotropic_solver.
 "
 
-@parallel function JSWAP_CPU_3D_isotropic_forward_solver_compute_au_for_sigma_curvilinear(dt,dx,dy,dz,inv_Qa,lambda,mu,
+@parallel function JSWAP_CPU_3D_isotropic_forward_solver_compute_au_for_sigma(dt,dx,dy,dz,inv_Qa,lambda,mu,
     beta,
     v1_iph_j_k_1,v1_iph_jp1_k_2,v1_ip1_jph_kph_3,
     v2_ip1_jph_k_1,v2_i_jph_k_2,v2_i_jph_kp1_3,
@@ -15,8 +15,7 @@ Compuites auxiliary variable used to compute sigma, subfunction of JSWAP_CPU_3D_
     sigmas12_iph_jph_k,
     ax,ax2,ax3,ax4,ax5,ax6,ax7,
     Ax,Ax2,Ax3,Ax4,Ax5,Ax6,Ax7,
-    ax_dt,ax2_dt,ax3_dt,ax4_dt,ax5_dt,ax6_dt,ax7_dt,
-    Kmax_x,Kmax_y,Z_Kmax,Zmax_Kmax)
+    ax_dt,ax2_dt,ax3_dt,ax4_dt,ax5_dt,ax6_dt,ax7_dt)
 
     @all(Ax)=@all(ax);
     @all(Ax2)=@all(ax2);

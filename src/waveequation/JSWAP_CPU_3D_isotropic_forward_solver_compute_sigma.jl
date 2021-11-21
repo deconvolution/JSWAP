@@ -2,7 +2,7 @@
 Comp_i_j_kutes sigma, subfunction of JSWAp_i_j_k_Cp_i_j_kU_3D_isotrop_i_j_kic_solver.
 "
 
-@parallel function JSWAP_CPU_3D_isotropic_forward_solver_compute_sigma_curvilinear(dt,dx,dy,dz,inv_Qa,lambda,mu,
+@parallel function JSWAP_CPU_3D_isotropic_forward_solver_compute_sigma(dt,dx,dy,dz,inv_Qa,lambda,mu,
     beta,
     sigmas11_i_j_k,
     sigmas22_i_j_k,
@@ -13,8 +13,7 @@ Comp_i_j_kutes sigma, subfunction of JSWAp_i_j_k_Cp_i_j_kU_3D_isotrop_i_j_kic_so
     p_i_j_k,
     ax,ax2,ax3,ax4,ax5,ax6,ax7,
     Ax,Ax2,Ax3,Ax4,Ax5,Ax6,Ax7,
-    ax_dt,ax2_dt,ax3_dt,ax4_dt,ax5_dt,ax6_dt,ax7_dt,
-    Kmax_x,Kmax_y,Z_Kmax,Zmax_Kmax)
+    ax_dt,ax2_dt,ax3_dt,ax4_dt,ax5_dt,ax6_dt,ax7_dt)
 
     @all(sigmas11_i_j_k)=1/3*dt*(
     @all(ax)+@all(inv_Qa) .*@all(ax_dt))+

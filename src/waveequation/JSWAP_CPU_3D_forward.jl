@@ -48,5 +48,3 @@ include("./JSWAP_CPU_3D_isotropic_forward_solver_compute_sigma.jl");
 # function JSWAP_CPU_3D_isotropic_forward_solver_compute_v
 include("./JSWAP_CPU_3D_isotropic_forward_solver_compute_v.jl");
 include("./JSWAP_CPU_3D_forward_isotropic_solver.jl");
-## function JSWAP_CPU_3D_forward_solver
-include("./JSWAP_CPU_3D_forward_solver.jl");
