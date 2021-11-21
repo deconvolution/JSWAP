@@ -66,3 +66,17 @@ macro   dz_12(A::Symbol)
     63/2883584*($A[$ix,$iy,$iz_12+6]-$A[$ix,$iy,$iz_12-5])
     ));
 end
+## for curvilinear
+ix_1=:($ix+1);
+iy_1=:($iy+1);
+iz_1=:($iz+1);
+
+macro   cur1(A::Symbol)
+    esc(:( ($A[$ix_1,$iy ,$iz_1+1 ] + $A[$ix_1-1  ,$iy ,$iz_1-1 ] -
+    $A[$ix_1,$iy ,$iz_1+1 ] - $A[$ix_1-1  ,$iy ,$iz_1-1 ])/4 ))
+end
+
+macro   cur3(A::Symbol)
+    esc(:( ($A[$ix,$iy_1 ,$iz_1+1 ] + $A[$ix  ,$iy_1-1 ,$iz_1-1 ] -
+    $A[$ix,$iy_1 ,$iz_1+1 ] - $A[$ix  ,$iy_1-1 ,$iz_1-1 ])/4 ))
+end

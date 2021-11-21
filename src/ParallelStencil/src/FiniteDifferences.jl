@@ -236,7 +236,7 @@ export @maxloc, @minloc
 export @within
 
 # for higher order accuracy
-export @dx_1,@dy_1,@dz_1,@dx_8,@dy_8,@dz_8,@dx_12,@dy_12,@dz_12,@pick
+export @dx_1,@dy_1,@dz_1,@dx_8,@dy_8,@dz_8,@dx_12,@dy_12,@dz_12,@pick,@cur1,@cur3
 
 @doc "`@d_xa(A)`: Compute differences between adjacent elements of `A` along the dimension x." :(@d_xa)
 @doc "`@d_ya(A)`: Compute differences between adjacent elements of `A` along the dimension y." :(@d_ya)

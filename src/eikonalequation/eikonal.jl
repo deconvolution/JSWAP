@@ -4,7 +4,7 @@
 module eikonal
 export acoustic_eikonal_forward
 ## Using ParallelStencil
-include("../ParallelStencil/ParallelStencil.jl");
+include("../ParallelStencil/src/ParallelStencil.jl");
 ## utilities
 include("..//utilities/utilities.jl");
 ## using packages

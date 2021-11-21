@@ -1,51 +1,55 @@
 "
-Computes sigma, subfunction of JSWAP_CPU_3D_isotropic_solver.
+Comp_i_j_kutes sigma, subfunction of JSWAp_i_j_k_Cp_i_j_kU_3D_isotrop_i_j_kic_solver.
 "
 
-@parallel function JSWAP_CPU_3D_isotropic_forward_solver_compute_sigma(dt,dx,dy,dz,inv_Qa,lambda,mu,
+@parallel function JSWAP_CPU_3D_isotropic_forward_solver_compute_sigma_curvilinear(dt,dx,dy,dz,inv_Qa,lambda,mu,
     beta,
-    v1_1_plus,v1_2_minus,v1_3_minus,
-    v2_1_minus,v2_2_plus,v2_3_minus,
-    v3_1_minus,v3_2_minus,v3_3_plus,
-    sigmas11,sigmas22,sigmas33,sigmas23,sigmas13,sigmas12,p,
+    sigmas11_i_j_k,
+    sigmas22_i_j_k,
+    sigmas33_i_j_k,
+    sigmas23_i_jph_kph,
+    sigmas13_iph_j_kph,
+    sigmas12_iph_jph_k,
+    p_i_j_k,
     ax,ax2,ax3,ax4,ax5,ax6,ax7,
     Ax,Ax2,Ax3,Ax4,Ax5,Ax6,Ax7,
-    ax_dt,ax2_dt,ax3_dt,ax4_dt,ax5_dt,ax6_dt,ax7_dt)
-    
-    @all(sigmas11)=1/3*dt*(
+    ax_dt,ax2_dt,ax3_dt,ax4_dt,ax5_dt,ax6_dt,ax7_dt,
+    Kmax_x,Kmax_y,Z_Kmax,Zmax_Kmax)
+
+    @all(sigmas11_i_j_k)=1/3*dt*(
     @all(ax)+@all(inv_Qa) .*@all(ax_dt))+
-    @all(sigmas11)-
-    dt*@all(beta).*@all(sigmas11);
+    @all(sigmas11_i_j_k)-
+    dt*@all(beta).*@all(sigmas11_i_j_k);
 
-    @all(sigmas22)=1/3*dt*(
+    @all(sigmas22_i_j_k)=1/3*dt*(
     @all(ax2)+@all(inv_Qa) .*@all(ax2_dt))+
-    @all(sigmas22)-
-    dt*@all(beta).*@all(sigmas22);
+    @all(sigmas22_i_j_k)-
+    dt*@all(beta).*@all(sigmas22_i_j_k);
 
-    @all(sigmas33)=1/3*dt*(
+    @all(sigmas33_i_j_k)=1/3*dt*(
     @all(ax3)+@all(inv_Qa) .*@all(ax3_dt))+
-    @all(sigmas33)-
-    dt*@all(beta).*@all(sigmas33);
+    @all(sigmas33_i_j_k)-
+    dt*@all(beta).*@all(sigmas33_i_j_k);
 
-    @all(sigmas12)=dt*(
+    @all(sigmas12_iph_jph_k)=dt*(
     @all(ax4)+@all(inv_Qa) .*@all(ax4_dt))+
-    @all(sigmas12)-
-    dt*@all(beta).*@all(sigmas12);
+    @all(sigmas12_iph_jph_k)-
+    dt*@all(beta).*@all(sigmas12_iph_jph_k);
 
-    @all(sigmas13)=dt*(
+    @all(sigmas13_iph_j_kph)=dt*(
     @all(ax5)+@all(inv_Qa) .*@all(ax5_dt))+
-    @all(sigmas13)-
-    dt*@all(beta).*@all(sigmas13);
+    @all(sigmas13_iph_j_kph)-
+    dt*@all(beta).*@all(sigmas13_iph_j_kph);
 
-    @all(sigmas23)=dt*(
+    @all(sigmas23_i_jph_kph)=dt*(
     @all(ax6)+@all(inv_Qa) .*@all(ax6_dt))+
-    @all(sigmas23)-
-    dt*@all(beta).*@all(sigmas23);
+    @all(sigmas23_i_jph_kph)-
+    dt*@all(beta).*@all(sigmas23_i_jph_kph);
 
-    @all(p)=-1/3*dt*(
+    @all(p_i_j_k)=-1/3*dt*(
     @all(ax7)+@all(inv_Qa) .*@all(ax7_dt))+
-    @all(p)-
-    dt*@all(beta).*@all(p);
+    @all(p_i_j_k)-
+    dt*@all(beta).*@all(p_i_j_k);
 
     return nothing
 end

@@ -164,24 +164,14 @@ function JSWAP_CPU_3D_forward_isotropic_curvilinear_solver(input2)
     v2_3_sigmas12=copy(v1_iph_j_k);
     v1_3_sigmas12=copy(v1_iph_j_k);
 
-    sigmas11_1_v1=copy(v1_iph_j_k);
-    p_1_v1=copy(v1_iph_j_k);
+    sigmas11_3_v1=copy(v1_iph_j_k);
+    p_3_v1=copy(v1_iph_j_k);
     sigmas12_3_v1=copy(v1_iph_j_k);
     sigmas12_3_v2=copy(v1_iph_j_k);
     sigmas22_3_v2=copy(v1_iph_j_k);
     p_3_v2=copy(v1_iph_j_k);
     sigmas13_3_v3=copy(v1_iph_j_k);
     sigmas23_3_v3=copy(v1_iph_j_k);
-
-    k1=3:input2.nx-2;
-    k2=3:input2.ny-2;
-    k3=3:input2.nz-2;
-
-    dtt1=@zeros(input2.nx-IND_accuracy,input2.ny,input2.nz);
-    dtt2=@zeros(input2.nx,input2.ny-IND_accuracy,input2.nz);
-    dtt3=@zeros(input2.nx,input2.ny,input2.nz-IND_accuracy);
-
-    dtt3_c=@zeros(input2.nx,input2.ny,input2.nz-IND_accuracy_c);
 
     ax=copy(v1_iph_j_k);
     ax2=copy(v1_iph_j_k);
@@ -282,23 +272,29 @@ function JSWAP_CPU_3D_forward_isotropic_curvilinear_solver(input2)
         @parallel Dz_12(v3_i_j_kph,v3_i_j_kph_3,0,0,0,0,6,5);
 
         # for curvilinear
-        v1_3_sigmas11[k1,k2,k3]=(v1_iph_j_k[k1,k2,(k3 .+1)]+v1_iph_j_k[(k1 .-1),k2,(k3 .+1)]-
-        v1_iph_j_k[k1,k2,(k3 .-1)]-v1_iph_j_k[(k1 .-1),k2,(k3 .-1)])/4;
+        #v1_3_sigmas11[k1,k2,k3]=(v1_iph_j_k[k1,k2,(k3 .+1)]+v1_iph_j_k[(k1 .-1),k2,(k3 .+1)]-
+        #v1_iph_j_k[k1,k2,(k3 .-1)]-v1_iph_j_k[(k1 .-1),k2,(k3 .-1)])/4;
+        @parallel CUR1(v1_iph_j_k,v1_3_sigmas11,1,1,0,0,2,1);
 
-        v2_3_sigmas11[k1,k2,k3]=(v2_i_jph_k[k1,k2,(k3 .+1)]+v2_i_jph_k[k1,(k2 .-1),(k3 .+1)]-
-        v2_i_jph_k[k1,k2,(k3 .-1)]-v2_i_jph_k[k1,(k2 .-1),(k3 .-1)])/4;
+        #v2_3_sigmas11[k1,k2,k3]=(v2_i_jph_k[k1,k2,(k3 .+1)]+v2_i_jph_k[k1,(k2 .-1),(k3 .+1)]-
+        #v2_i_jph_k[k1,k2,(k3 .-1)]-v2_i_jph_k[k1,(k2 .-1),(k3 .-1)])/4;
+        @parallel CUR3(v2_i_jph_k,v2_3_sigmas11,0,0,1,1,2,1);
 
-        v3_3_sigmas23[k1,k2,k3]=(v3_i_j_kph[k1,(k2 .+1),(k3 .+1)]+v3_i_j_kph[k1,k2,(k3 .+1)]-
-        v3_i_j_kph[k1,(k2 .+1),(k3 .-1)]-v3_i_j_kph[k1,k2,(k3 .-1)])/4;
+        #v3_3_sigmas23[k1,k2,k3]=(v3_i_j_kph[k1,(k2 .+1),(k3 .+1)]+v3_i_j_kph[k1,k2,(k3 .+1)]-
+        #v3_i_j_kph[k1,(k2 .+1),(k3 .-1)]-v3_i_j_kph[k1,k2,(k3 .-1)])/4;
+        @parallel CUR3(v3_i_j_kph,v3_3_sigmas23,0,0,2,0,2,1);
 
-        v3_3_sigmas13[k1,k2,k3]=(v3_i_j_kph[(k1 .+1),k2,(k3 .+1)]+v3_i_j_kph[k1,k2,(k3 .+1)]-
-        v3_i_j_kph[(k1 .+1),k2,(k3 .-1)]-v3_i_j_kph[k1,k2,(k3 .-1)])/4;
+        #v3_3_sigmas13[k1,k2,k3]=(v3_i_j_kph[(k1 .+1),k2,(k3 .+1)]+v3_i_j_kph[k1,k2,(k3 .+1)]-
+        #v3_i_j_kph[(k1 .+1),k2,(k3 .-1)]-v3_i_j_kph[k1,k2,(k3 .-1)])/4;
+        @parallel CUR1(v3_i_j_kph,v3_3_sigmas13,2,0,0,0,2,1);
 
-        v2_3_sigmas12[k1,k2,k3]=(v2_i_jph_k[(k1 .+1),k2,(k3 .+1)]+v2_i_jph_k[k1,k2,(k3 .+1)]-
-        v2_i_jph_k[(k1 .+1),k2,(k3 .-1)]-v2_i_jph_k[k1,k2,(k3 .-1)])/4;
+        #v2_3_sigmas12[k1,k2,k3]=(v2_i_jph_k[(k1 .+1),k2,(k3 .+1)]+v2_i_jph_k[k1,k2,(k3 .+1)]-
+        #v2_i_jph_k[(k1 .+1),k2,(k3 .-1)]-v2_i_jph_k[k1,k2,(k3 .-1)])/4;
+        @parallel CUR1(v2_i_jph_k,v2_3_sigmas12,2,0,0,0,2,1);
 
-        v1_3_sigmas12[k1,k2,k3]=(v1_iph_j_k[k1,(k2 .+1),k3]+v1_iph_j_k[k1,k2,(k3 .+1)]-
-        v1_iph_j_k[k1,k2,(k3 .-1)]-v1_iph_j_k[k1,(k2 .+1),(k3 .-1)])/4;
+        #v1_3_sigmas12[k1,k2,k3]=(v1_iph_j_k[k1,(k2 .+1),k3]+v1_iph_j_k[k1,k2,(k3 .+1)]-
+        #v1_iph_j_k[k1,k2,(k3 .-1)]-v1_iph_j_k[k1,(k2 .+1),(k3 .-1)])/4;
+        @parallel CUR3(v1_iph_j_k,v1_3_sigmas12,0,0,2,0,2,1);
 
         @timeit ti "compute_sigma" @parallel JSWAP_CPU_3D_isotropic_forward_solver_compute_au_for_sigma_curvilinear(input2.dt,input2.dx,input2.dy,input2.dz,input2.inv_Qa,input2.lambda,input2.mu,
         beta,
@@ -403,29 +399,37 @@ function JSWAP_CPU_3D_forward_isotropic_curvilinear_solver(input2)
         @parallel Dz_12(p_i_j_k,p_i_j_kp1_3,0,0,0,0,5,6);
 
         # compute curvilinear derivatives
-        sigmas11_1_v1[k1,k2,k3]=(sigmas11_i_j_k[(k1 .+1),k2,(k3 .+1)]+sigmas11_i_j_k[k1,k2,(k3 .+1)]-
-        sigmas11_i_j_k[(k1 .+1),k2,(k3 .-1)]-sigmas11_i_j_k[k1,k2,(k3 .-1)])/4;
+        #sigmas11_3_v1[k1,k2,k3]=(sigmas11_i_j_k[(k1 .+1),k2,(k3 .+1)]+sigmas11_i_j_k[k1,k2,(k3 .+1)]-
+        #sigmas11_i_j_k[(k1 .+1),k2,(k3 .-1)]-sigmas11_i_j_k[k1,k2,(k3 .-1)])/4;
+        @parallel CUR1(sigmas11_i_j_k,sigmas11_3_v1,2,0,0,0,2,1);
 
-        p_1_v1[k1,k2,k3]=(p_i_j_k[(k1 .+1),k2,(k3 .+1)]+p_i_j_k[k1,k2,(k3 .+1)]-
-        p_i_j_k[(k1 .+1),k2,(k3 .-1)]-p_i_j_k[k1,k2,(k3 .-1)])/4;
+        #p_3_v1[k1,k2,k3]=(p_i_j_k[(k1 .+1),k2,(k3 .+1)]+p_i_j_k[k1,k2,(k3 .+1)]-
+        #p_i_j_k[(k1 .+1),k2,(k3 .-1)]-p_i_j_k[k1,k2,(k3 .-1)])/4;
+        @parallel CUR1(p_i_j_k,p_3_v1,2,0,0,0,2,1);
 
-        sigmas12_3_v1[k1,k2,k3]=(sigmas12_iph_jph_k[k1,k2,(k3 .+1)]+sigmas12_iph_jph_k[k1,(k2 .-1),(k3 .+1)]-
-        sigmas12_iph_jph_k[k1,k2,(k3 .-1)]-sigmas12_iph_jph_k[k1,(k2 .-1),(k3 .-1)])/4;
+        #sigmas12_3_v1[k1,k2,k3]=(sigmas12_iph_jph_k[k1,k2,(k3 .+1)]+sigmas12_iph_jph_k[k1,(k2 .-1),(k3 .+1)]-
+        #sigmas12_iph_jph_k[k1,k2,(k3 .-1)]-sigmas12_iph_jph_k[k1,(k2 .-1),(k3 .-1)])/4;
+        @parallel CUR3(sigmas12_iph_jph_k,sigmas12_3_v1,0,0,1,1,2,1);
 
-        sigmas12_3_v2[k1,k2,k3]=(sigmas12_iph_jph_k[k1,k2,(k3 .+1)]+sigmas12_iph_jph_k[(k1 .-1),k2,(k3 .+1)]-
-        sigmas12_iph_jph_k[k1,k2,(k3 .-1)]-sigmas12_iph_jph_k[(k1 .-1),k2,(k3 .-1)])/4;
+        #sigmas12_3_v2[k1,k2,k3]=(sigmas12_iph_jph_k[k1,k2,(k3 .+1)]+sigmas12_iph_jph_k[(k1 .-1),k2,(k3 .+1)]-
+        #sigmas12_iph_jph_k[k1,k2,(k3 .-1)]-sigmas12_iph_jph_k[(k1 .-1),k2,(k3 .-1)])/4;
+        @parallel CUR1(sigmas12_iph_jph_k,sigmas12_3_v2,1,1,0,0,2,1);
 
-        sigmas22_3_v2[k1,k2,k3]=(sigmas22_i_j_k[k1,(k2 .+1),(k3 .+1)]+sigmas22_i_j_k[k1,k2,(k3 .+1)]-
-        sigmas22_i_j_k[k1,(k2 .+1),(k3 .-1)]-sigmas22_i_j_k[k1,k2,(k3 .-1)])/4;
+        #sigmas22_3_v2[k1,k2,k3]=(sigmas22_i_j_k[k1,(k2 .+1),(k3 .+1)]+sigmas22_i_j_k[k1,k2,(k3 .+1)]-
+        #sigmas22_i_j_k[k1,(k2 .+1),(k3 .-1)]-sigmas22_i_j_k[k1,k2,(k3 .-1)])/4;
+        @parallel CUR3(sigmas22_i_j_k,sigmas22_3_v2,0,0,2,0,2,1);
 
-        p_3_v2[k1,k2,k3]=(p_i_j_k[k1,(k2 .+1),(k3 .+1)]+p_i_j_k[k1,k2,(k3 .+1)]-
-        p_i_j_k[k1,(k2 .+1),(k3 .-1)]-p_i_j_k[k1,k2,(k3 .-1)])/4;
+        #p_3_v2[k1,k2,k3]=(p_i_j_k[k1,(k2 .+1),(k3 .+1)]+p_i_j_k[k1,k2,(k3 .+1)]-
+        #p_i_j_k[k1,(k2 .+1),(k3 .-1)]-p_i_j_k[k1,k2,(k3 .-1)])/4;
+        @parallel CUR3(p_i_j_k,p_3_v2,0,0,2,0,2,1);
 
-        sigmas13_3_v3[k1,k2,k3]=(sigmas13_iph_j_kph[k1,k2,(k3 .+1)]+sigmas13_iph_j_kph[(k1 .-1),k2,(k3 .+1)]-
-        sigmas13_iph_j_kph[k1,k2,(k3 .-1)]-sigmas13_iph_j_kph[(k1 .-1),k2,(k3 .-1)])/4;
+        #sigmas13_3_v3[k1,k2,k3]=(sigmas13_iph_j_kph[k1,k2,(k3 .+1)]+sigmas13_iph_j_kph[(k1 .-1),k2,(k3 .+1)]-
+        #sigmas13_iph_j_kph[k1,k2,(k3 .-1)]-sigmas13_iph_j_kph[(k1 .-1),k2,(k3 .-1)])/4;
+        @parallel CUR1(sigmas13_iph_j_kph,sigmas13_3_v3,1,1,0,0,2,1);
 
-        sigmas23_3_v3[k1,k2,k3]=(sigmas23_i_jph_kph[k1,k2,(k3 .+1)]+sigmas23_i_jph_kph[k1,(k2 .-1),(k3 .+1)]-
-        sigmas23_i_jph_kph[k1,k2,(k3 .-1)]-sigmas23_i_jph_kph[k1,(k2 .-1),(k3 .-1)])/4;
+        #sigmas23_3_v3[k1,k2,k3]=(sigmas23_i_jph_kph[k1,k2,(k3 .+1)]+sigmas23_i_jph_kph[k1,(k2 .-1),(k3 .+1)]-
+        #sigmas23_i_jph_kph[k1,k2,(k3 .-1)]-sigmas23_i_jph_kph[k1,(k2 .-1),(k3 .-1)])/4;
+        @parallel CUR3(sigmas23_i_jph_kph,sigmas23_3_v3,0,0,1,1,2,1);
 
         @timeit ti "compute_v" @parallel JSWAP_CPU_3D_isotropic_forward_solver_compute_v_curvilinear(input2.dt,input2.dx,input2.dy,input2.dz,input2.rho,beta,
         v1_iph_j_k,v2_i_jph_k,v3_i_j_kph,
@@ -436,8 +440,8 @@ function JSWAP_CPU_3D_forward_isotropic_curvilinear_solver(input2)
         sigmas13_iph_j_k_1,sigmas13_iph_j_kph_3,
         sigmas12_iph_jph_k_1,sigmas12_iph_jph_k_2,
         p_ip1_j_k_1,p_i_jp1_k_2,p_i_j_kp1_3,
-        sigmas11_1_v1,
-        p_1_v1,
+        sigmas11_3_v1,
+        p_3_v1,
         sigmas12_3_v1,
         sigmas12_3_v2,
         sigmas22_3_v2,

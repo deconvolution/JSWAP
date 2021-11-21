@@ -10,8 +10,8 @@ Computes v, subfunction of JSWAP_CPU_3D_isotropic_solver.
     sigmas13_iph_j_k_1,sigmas13_iph_j_kph_3,
     sigmas12_iph_jph_k_1,sigmas12_iph_jph_k_2,
     p_ip1_j_k_1,p_i_jp1_k_2,p_i_j_kp1_3,
-    sigmas11_1_v1,
-    p_1_v1,
+    sigmas11_3_v1,
+    p_3_v1,
     sigmas12_3_v1,
     sigmas12_3_v2,
     sigmas22_3_v2,
@@ -21,7 +21,7 @@ Computes v, subfunction of JSWAP_CPU_3D_isotropic_solver.
     Kmax_x,Kmax_y,Z_Kmax,Zmax_Kmax)
 
     @all(v1_iph_j_k)=dt./@all(rho) .*((@all(sigmas11_ip1_j_k_1)-@all(p_ip1_j_k_1))/dx-
-    @all(Z_Kmax) .* @all(Kmax_x) .*(@all(sigmas11_1_v1)-@all(p_1_v1))/dz+
+    @all(Z_Kmax) .* @all(Kmax_x) .*(@all(sigmas11_3_v1)-@all(p_3_v1))/dz+
     @all(sigmas12_iph_jph_k_2)/dy-
     @all(Z_Kmax) .*@all(Kmax_y) .*@all(sigmas12_3_v1)/dz+
     @all(Zmax_Kmax) .*@all(sigmas13_iph_j_kph_3)/dz)+

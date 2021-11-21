@@ -21,3 +21,13 @@ d/dz, 12-point, subfunction of JSWAP_CPU_3D_isotropic_solver.
     @pick(out,xs,xs2,ys,ys2,zs,zs2)=@dz_12(in);
     return nothing
 end
+## for curvilinear
+@parallel function CUR1(in,out,xs,xs2,ys,ys2,zs,zs2)
+    @pick(out,xs,xs2,ys,ys2,zs,zs2)=@cur1(in);
+    return nothing
+end
+
+@parallel function CUR3(in,out,xs,xs2,ys,ys2,zs,zs2)
+    @pick(out,xs,xs2,ys,ys2,zs,zs2)=@cur3(in);
+    return nothing
+end
