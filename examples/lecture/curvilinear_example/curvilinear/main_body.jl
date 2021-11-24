@@ -1,5 +1,5 @@
 ## Initialization of JSWAP
-include("JSWAP_initialization.jl");
+include("./JSWAP_initialization.jl");
 ## create folder for saving
 p2= @__FILE__;
 p3=chop(p2,head=0,tail=3);
@@ -7,11 +7,11 @@ if isdir(p3)==0
     mkdir(p3);
 end
 ## Specify where the input file is
-path_to_input=["./input_test.jl"];
+path_to_input=["./input_template.jl"];
 ## Run solvers
 I=1;
 include(path_to_input[I]);
-v1,v2,v3,R1,R2,R3,P=JSWAP.CPU_3D.JSWAP_CPU_3D_forward_isotropic_solver(nt=input2.nt,
+JSWAP.CPU_3D.JSWAP_CPU_3D_forward_isotropic_curvilinear_solver(nt=input2.nt,
 nx=input2.nx,
 ny=input2.ny,
 nz=input2.nz,
@@ -21,7 +21,8 @@ dy=input2.dy,
 dz=input2.dz,
 X=input2.X,
 Y=input2.Y,
-Z=input2.Z,
+K=input2.K,
+Kmax=input2.Kmax,
 lambda=input2.lambda,
 mu=input2.mu,
 rho=input2.rho,
@@ -39,8 +40,8 @@ r1t=input2.r1t,
 r2t=input2.r2t,
 r3t=input2.r3t,
 path=input2.path,
-wavefield_interval=input2.wavefield_interval,
-plot_interval=input2.plot_interval,
+wavefield_interval=nothing,
+plot_interval=nothing,
 src1=input2.src1,
 src2=input2.src2,
 src3=input2.src3,
