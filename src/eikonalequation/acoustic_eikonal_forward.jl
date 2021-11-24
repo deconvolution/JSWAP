@@ -1,5 +1,5 @@
-function acoustic_eikonal_forward(nx,ny,nz,h,v,s1,s2,s3,s1t,s2t,s3t,r1,r2,r3,
-    r1t,r2t,r3t,X,Y,Z,path,write_rec)
+function acoustic_eikonal_forward(;nx,ny,nz,h,v,s1,s2,s3,T0,s1t,s2t,s3t,r1,r2,r3,
+    r1t,r2t,r3t,X,Y,Z,path,write_t=0)
     global data;
     ## create path
     if path!=nothing
@@ -12,7 +12,7 @@ function acoustic_eikonal_forward(nx,ny,nz,h,v,s1,s2,s3,s1t,s2t,s3t,r1,r2,r3,
     CSV.write(string(path,"/source location.csv"),DataFrame([s1t' s2t' s3t'],:auto));
 
     T=ones(nx,ny,nz)*3.1415926*10^12;
-    T[s1,s2,s3] .=0;
+    T[s1,s2,s3]=0;
 
     ## compute distance to the source
     Y1col,X1col,Z1col=meshgrid(2:ny-1,2:nx-1,2:nz-1);
@@ -54,15 +54,17 @@ function acoustic_eikonal_forward(nx,ny,nz,h,v,s1,s2,s3,s1t,s2t,s3t,r1,r2,r3,
     T[:,:,1]=T[:,:,2];
     T[:,:,end]=T[:,:,end-1];
     ## save to vtk
-    vtkfile=vtk_grid(string(path,"/traveltime_visualization"),X,Y,Z);
-    vtkfile["v"]=v;
-    vtkfile["T"]=T;
-    vtk_save(vtkfile);
+    if write_t==1
+        vtkfile=vtk_grid(string(path,"/traveltime_visualization"),X,Y,Z);
+        vtkfile["v"]=v;
+        vtkfile["T"]=T;
+        vtk_save(vtkfile);
+    end
     ## assign receivers
     T_obs=T[CartesianIndex.(r1,r2,r3)];
     ## save receivers
     data=T_obs;
-    if write_rec==1
+    if write_t==1
         write2mat(string(path,"/recording.mat"),data);
     end
     return T,T_obs

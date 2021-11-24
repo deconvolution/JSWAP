@@ -31,10 +31,10 @@ input2.v=tt["vp"];
 input2.v[input2.v .==0] .=340;
 
 input2.path="./source_1";
-tt=readdir("./data/receiver/crati_traveltime_input/");
+tt=readdir("./crati_traveltime_input/");
 
 for I=1:size(tt,1)
-    tt2=JSWAP.readmat(string("./data/receiver/crati_traveltime_input/",tt[I]),"data");
+    tt2=JSWAP.readmat(string("./crati_traveltime_input/",tt[I]),"data");
     input2.R_true=push!(input2.R_true,tt2["Rp"][:,4]);
     input2.s1=push!(input2.s1,round.(Int32,tt2["S"][:,1]));
     input2.s2=push!(input2.s2,round.(Int32,tt2["S"][:,2]));

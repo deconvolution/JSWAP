@@ -28,7 +28,14 @@ A[8,8,8]=1;
 A_x=@zeros(15,15,15);
 A_y=@zeros(15,15,15);
 A_z=@zeros(15,15,15);
-
+B=copy(A);
 @parallel Dx_12(A,A_x,6,5,0,0,0,0);
 @parallel Dy_12(A,A_y,0,0,6,5,0,0);
 @parallel Dz_12(A,A_z,0,0,0,0,6,5);
+
+@parallel function Dx_1(in,out,xs,xs2,ys,ys2,zs,zs2)
+    @pick(out,xs,xs2,ys,ys2,zs,zs2)=@dx_1(in);
+    return nothing;
+end
+
+@parallel Dx_1(A,B,1,1,0,0,0,0);
