@@ -65,8 +65,6 @@ input2.r1t=input2.r1*input2.dx;
 input2.r2t=input2.r2*input2.dy;
 # receiver true location z
 input2.r3t=input2.r3*input2.dz;
-# activate receivers
-input2.Rm=ones(length(input2.r3),4);
 # source true location x
 input2.s1t=input2.s1*input2.dx;
 # source true location y
@@ -97,4 +95,4 @@ input2.path_rec=string(input2.path,"/rec");
 # plot interval
 input2.plot_interval=100;
 # wavefield interval
-input2.wavefield_interval=0;
+input2.wavefield_interval=nothing;
