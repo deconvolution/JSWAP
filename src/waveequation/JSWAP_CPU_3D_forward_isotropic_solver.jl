@@ -292,7 +292,7 @@ function JSWAP_CPU_3D_forward_isotropic_solver(input2)
                 sigmas22_i_j_k[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas22_i_j_k[CartesianIndex.(input2.s1,input2.s2,input2.s3)]-@ones(1,1)*input2.dt/input2.dx/input2.dy/input2.dz*Ms22_t[l];
                 sigmas33_i_j_k[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas33_i_j_k[CartesianIndex.(input2.s1,input2.s2,input2.s3)]-@ones(1,1)*input2.dt/input2.dx/input2.dy/input2.dz*Ms33_t[l];
                 sigmas23_i_jph_kph[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas23_i_jph_kph[CartesianIndex.(input2.s1,input2.s2,input2.s3)]-@ones(1,1)*input2.dt/input2.dx/input2.dy/input2.dz*Ms23_t[l];
-                sigmas13_iph_j_kph[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas13_iph_j_k[CartesianIndex.(input2.s1,input2.s2,input2.s3)]-@ones(1,1)*input2.dt/input2.dx/input2.dy/input2.dz*Ms13_t[l];
+                sigmas13_iph_j_kph[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas13_iph_j_kph[CartesianIndex.(input2.s1,input2.s2,input2.s3)]-@ones(1,1)*input2.dt/input2.dx/input2.dy/input2.dz*Ms13_t[l];
                 sigmas12_iph_jph_k[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas12_iph_jph_k[CartesianIndex.(input2.s1,input2.s2,input2.s3)]-@ones(1,1)*input2.dt/input2.dx/input2.dy/input2.dz*Ms12_t[l];
                 p_i_j_k[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=p_i_j_k[CartesianIndex.(input2.s1,input2.s2,input2.s3)]-@ones(1,1)*input2.dt/input2.dx/input2.dy/input2.dz*Mp_t[l];
             end
@@ -302,7 +302,7 @@ function JSWAP_CPU_3D_forward_isotropic_solver(input2)
                 sigmas22_i_j_k[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas22_i_j_k[CartesianIndex.(input2.s1,input2.s2,input2.s3)]-input2.dt/input2.dx/input2.dy/input2.dz*Ms22_t[l,:]';
                 sigmas33_i_j_k[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas33_i_j_k[CartesianIndex.(input2.s1,input2.s2,input2.s3)]-input2.dt/input2.dx/input2.dy/input2.dz*Ms33_t[l,:]';
                 sigmas23_i_jph_kph[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas23_i_jph_kph[CartesianIndex.(input2.s1,input2.s2,input2.s3)]-input2.dt/input2.dx/input2.dy/input2.dz*Ms23_t[l,:]';
-                sigmas13_iph_j_kph[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas13_iph_j_k[CartesianIndex.(input2.s1,input2.s2,input2.s3)]-input2.dt/input2.dx/input2.dy/input2.dz*Ms13_t[l,:]';
+                sigmas13_iph_j_kph[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas13_iph_j_kph[CartesianIndex.(input2.s1,input2.s2,input2.s3)]-input2.dt/input2.dx/input2.dy/input2.dz*Ms13_t[l,:]';
                 sigmas12_iph_jph_k[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=sigmas12_iph_jph_k[CartesianIndex.(input2.s1,input2.s2,input2.s3)]-input2.dt/input2.dx/input2.dy/input2.dz*Ms12_t[l,:]';
                 p_i_j_k[CartesianIndex.(input2.s1,input2.s2,input2.s3)]=p_i_j_k[CartesianIndex.(input2.s1,input2.s2,input2.s3)]-input2.dt/input2.dx/input2.dy/input2.dz*Mp_t[l,:]';
             end
