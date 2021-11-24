@@ -88,6 +88,6 @@ input2.path_wavefield=string(input2.path,"/wavefield");
 # path for recordings
 input2.path_rec=string(input2.path,"/rec");
 # plot interval
-input2.plot_interval=100;
+input2.plot_interval=nothing;
 # wavefield interval
-input2.wavefield_interval=0;
+input2.wavefield_interval=nothing;

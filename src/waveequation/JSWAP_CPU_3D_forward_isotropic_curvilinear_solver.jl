@@ -11,7 +11,8 @@ function JSWAP_CPU_3D_forward_isotropic_curvilinear_solver(;nt,
     dz,
     X,
     Y,
-    Z,
+    K,
+    Kmax,
     lambda,
     mu,
     rho,
@@ -261,7 +262,6 @@ function JSWAP_CPU_3D_forward_isotropic_curvilinear_solver(;nt,
 
     pro_bar=Progress(nt,1,"forward_simulation...",50);
     #
-    Kmax=(Kmax);
     Kmax_x0=@zeros(nx,ny);
     Kmax_y0=copy(Kmax_x0);
 
@@ -274,7 +274,6 @@ function JSWAP_CPU_3D_forward_isotropic_curvilinear_solver(;nt,
     (1:nz)*dz);
     Z_Kmax=Z./repeat(Kmax,1,1,nz);
     Zmax_Kmax=repeat(maximum(Z)./Kmax,1,1,nz);
-    K=K;
 
     for l=1:nt-1
         # plus: 6:5
