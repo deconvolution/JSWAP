@@ -12,7 +12,7 @@ function acoustic_eikonal_forward(;nx,ny,nz,h,v,s1,s2,s3,T0,s1t,s2t,s3t,r1,r2,r3
     CSV.write(string(path,"/source location.csv"),DataFrame([s1t' s2t' s3t'],:auto));
 
     T=ones(nx,ny,nz)*3.1415926*10^12;
-    T[s1,s2,s3]=0;
+    T[CartesianIndex.(s1,s2,s3)] .=0;
 
     ## compute distance to the source
     Y1col,X1col,Z1col=meshgrid(2:ny-1,2:nx-1,2:nz-1);

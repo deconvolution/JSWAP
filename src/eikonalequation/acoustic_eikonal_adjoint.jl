@@ -12,6 +12,10 @@ function acoustic_eikonal_adjoint(;nx,ny,nz,h,T,r1,r2,r3,s1,s2,s3,R_cal,R_true)
     @parallel Dy_1(T,Ty,0,0,1,1,0,0);
     @parallel Dz_1(T,Tz,0,0,0,0,1,1);
 
+    #Tx[1:end-1,:,:]=T[2:end,:,:]-T[1:end-1,:,:];
+    #Ty[:,1:end-1,:]=T[:,2:end,:]-T[:,1:end-1,:];
+    #Tz[:,:,1:end-1]=T[:,:,2:end]-T[:,:,1:end-1];
+
     a1_plus=(Tx+abs.(Tx))/h/2;
     a1_minus=(Tx-abs.(Tx))/h/2;
     a2_plus=(Ty+abs.(Ty))/h/2;
