@@ -9,7 +9,7 @@ input2.dy=data["dy"];
 # dz
 input2.dz=data["dz"];
 # number of time steps
-input2.nt=3000;
+input2.nt=1000;
 # nx
 input2.nx=round(Int32,data["nx"]);
 # ny
@@ -52,7 +52,7 @@ input2.s2[:] .=data["s2"];
 input2.s3=zeros(Int32,1,1);
 input2.s3[:] .=data["s3"];
 # point source
-freq=10;
+freq=18;
 input2.src1=zeros(input2.nt,1);
 input2.src2=zeros(input2.nt,1);
 input2.src3=zeros(input2.nt,1);
@@ -79,11 +79,11 @@ input2.s2t=input2.s2*input2.dx;
 input2.s3t=input2.s3*input2.dx;
 ## PML
 # PML layers
-input2.lp=20;
+input2.lp=10;
 # PML power
 input2.nPML=2;
 # PML theoretical reflection coefficient
-input2.Rc=.001;
+input2.Rc=.1;
 # set PML active
 # xminus,xplus,yminus,yplus,zminus,zplus
 input2.PML_active=[1 1 1 1 1 0];
@@ -99,6 +99,6 @@ input2.path_wavefield=string(input2.path,"/wavefield");
 # path for recordings
 input2.path_rec=string(input2.path,"/rec");
 # plot interval
-input2.plot_interval=100;
+input2.plot_interval=200;
 # wavefield interval
 input2.wavefield_interval=0;

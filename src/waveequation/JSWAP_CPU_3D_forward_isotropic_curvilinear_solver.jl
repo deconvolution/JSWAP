@@ -129,7 +129,7 @@ function JSWAP_CPU_3D_forward_isotropic_curvilinear_solver(;nt,
     P=@zeros(nt,length(r3));
 
     # decompose moment tensor
-    if isdefined(input2,:M33)
+    if M11!=nothing
         Mp=-1/3*(M11+M22+M33);
         Ms11=M11+Mp;
         Ms22=M22+Mp;
