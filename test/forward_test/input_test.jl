@@ -77,7 +77,7 @@ Rc=.01;
 # xminus,xplus,yminus,yplus,zminus,zplus
 PML_active=[1 1 1 1 1 1];
 ## plot
-path=p3;
+path=nothing;
 # plot interval
 plot_interval=nothing;
 # wavefield interval
