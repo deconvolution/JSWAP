@@ -62,7 +62,11 @@ function JSWAP_CPU_3D_forward_isotropic_solver(;nt,
     mu[:,end-4:end,:] .=0;
     mu[:,:,1:5] .=0;
     mu[:,:,end-4:end] .=0;
-    
+
+    nx=floor(Int64,nx);
+    ny=floor(Int64,ny);
+    nz=floor(Int64,nz);
+
     d0=Dates.now();
 
     # source number
@@ -406,7 +410,7 @@ function JSWAP_CPU_3D_forward_isotropic_solver(;nt,
         sigmas12_iph_jph_k_1,sigmas12_iph_jph_k_2,
         p_ip1_j_k_1,p_i_jp1_k_2,p_i_j_kp1_3);
 
-        if src3!=nothing
+        if src1!=nothing
             if ns==1 && l<=size(src3,1)
                 v1_iph_j_k[CartesianIndex.(s1,s2,s3)]=v1_iph_j_k[CartesianIndex.(s1,s2,s3)]+1 ./rho[CartesianIndex.(s1,s2,s3)] .*src1[l];
                 v2_i_jph_k[CartesianIndex.(s1,s2,s3)]=v2_i_jph_k[CartesianIndex.(s1,s2,s3)]+1 ./rho[CartesianIndex.(s1,s2,s3)] .*src2[l];

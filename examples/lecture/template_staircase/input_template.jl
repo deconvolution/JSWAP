@@ -2,64 +2,67 @@
 # Time increment
 dt=10.0^-3;
 # dx
-dx=10.0;
+dx=80;
 # dy
-dy=10.0;
+dy=80;
 # dz
-dz=10.0;
+dz=90;
 # number of time steps
-nt=30;
+nt=1000;
 # nx
-nx=50;
+nx=floor(Int64,data["nx"]);
 # ny
-ny=50;
+ny=floor(Int64,data["ny"]);
 # nz
-nz=50;
+nz=floor(Int64,data["nz"]);
 # 3D true coordinate X, Y and Z
-Y,X,Z=JSWAP.meshgrid(1:500,1:500,1:500);
+X=data["X"];
+Y=data["Y"];
+Z=data["Z"];
 ## material properties
-lambda=ones(50,50,50)*10^9*1.0;
-mu=ones(50,50,50)*10^9*1.0;
-rho=ones(50,50,50)*1000.0;
-inv_Qa=ones(50,50,50)*10.0^-4;
+lambda=data["lambda"];
+mu=data["mu"];
+rho=data["rho"];
+inv_Qa=ones(nx,ny,nz)*0.0;
 ## receiver and source configuration.
 "
 The type of r1,r2,r3,s1,s2 and s3 should not be changed.
 "
 # receiver grid location x
-r1=zeros(Int64,1,2);
-r1[:]=[20 30];
+r1=zeros(Int64,1,1);
+r1[:] .=data["r1"];
 # receiver grid location y
-r2=zeros(Int64,1,2);
-r2[:]=[20 30];
+r2=zeros(Int64,1,1);
+r2[:] .=data["r2"];
 # receiver grid location z
-r3=zeros(Int64,1,2);
-r3 .=15;
+r3=zeros(Int64,1,1);
+r3[:] .=data["r3"];
 # source grid location x
 s1=zeros(Int64,1,1);
-s1[:] .=30;
+s1[:] .=data["s1"];
 # source grid location y
 s2=zeros(Int64,1,1);
-s2[:] .=30;
+s2[:] .=data["s2"];
 # source grid location z
 s3=zeros(Int64,1,1);
-s3[:] .=30;
-# source signal x
+s3[:] .=data["s3"];
+# Directional source
 src1=zeros(nt,1);
-# source signal y
 src2=zeros(nt,1);
-# source signal z
-src3=reshape(rickerWave(20.0,10.0^-3*1.0,30,2),nt,1);
-# source signal pressure
+src3=zeros(nt,1);
 srcp=zeros(nt,1);
+freq=20;
+src1[:]=0*rickerWave(freq,dt,nt,2);
+src2[:]=0*rickerWave(freq,dt,nt,2);
+src3[:]=1*rickerWave(freq,dt,nt,2);
+srcp[:]=0*rickerWave(freq,dt,nt,2);
+
 # receiver true location x
 r1t=r1*dx;
 # receiver true location y
 r2t=r2*dy;
 # receiver true location z
 r3t=r3*dz;
-# activate receivers
-Rm=ones(length(r3),4);
 # source true location x
 s1t=s1*dx;
 # source true location y
@@ -72,13 +75,14 @@ lp=10;
 # PML power
 nPML=2;
 # PML theorecital coefficient
-Rc=.01;
+Rc=.1;
 # set PML active
 # xminus,xplus,yminus,yplus,zminus,zplus
-PML_active=[1 1 1 1 1 1];
+PML_active=[1 1 1 1 1 0];
 ## plot
+# path for storage. This must be the master branch of the following pathes.
 path=p3;
 # plot interval
-plot_interval=nothing;
+plot_interval=100;
 # wavefield interval
 wavefield_interval=nothing;

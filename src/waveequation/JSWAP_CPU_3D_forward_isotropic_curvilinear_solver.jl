@@ -64,6 +64,10 @@ function JSWAP_CPU_3D_forward_isotropic_curvilinear_solver(;nt,
     mu[:,:,1:5] .=0;
     mu[:,:,end-4:end] .=0;
 
+    nx=floor(Int64,nx);
+    ny=floor(Int64,ny);
+    nz=floor(Int64,nz);
+    
     d0=Dates.now();
 
     # source number
