@@ -37,13 +37,13 @@ r3=zeros(Int32,1,5);
 r3[:] =[10 10 10 10 10];
 # source grid location x
 s1=zeros(Int32,1,1);
-s1[:] .=30;
+s1[:] .=50;
 # source grid location y
 s2=zeros(Int32,1,1);
-s2[:] .=30;
+s2[:] .=50;
 # source grid location z
 s3=zeros(Int32,1,1);
-s3[:] .=70;
+s3[:] .=40;
 # Directional source
 src1=zeros(nt,1);
 src2=zeros(nt,1);

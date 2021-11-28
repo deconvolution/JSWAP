@@ -1,4 +1,3 @@
-
 ## read material properties
 data=JSWAP.readmat("./example.mat","data");
 ## dimensions
@@ -55,24 +54,30 @@ src1=zeros(nt,1);
 src2=zeros(nt,1);
 src3=zeros(nt,1);
 srcp=zeros(nt,1);
-freq=20;
+freq=15;
 src1[:]=0*rickerWave(freq,dt,nt,2);
 src2[:]=0*rickerWave(freq,dt,nt,2);
 src3[:]=1*rickerWave(freq,dt,nt,2);
 srcp[:]=0*rickerWave(freq,dt,nt,2);
 
+r1t=zeros(Int64,1,1);
+r2t=zeros(Int64,1,1);
+r3t=zeros(Int64,1,1);
+s1t=zeros(Int64,1,1);
+s2t=zeros(Int64,1,1);
+s3t=zeros(Int64,1,1);
 # receiver true location x
-r1t=r1*dx;
+r1t[:] .=data["r1t"];
 # receiver true location y
-r2t=r2*dy;
+r2t[:] .=data["r2t"];
 # receiver true location z
-r3t=r3*dz;
+r3t[:] .=data["r3t"];
 # source true location x
-s1t=s1*dx;
+s1t[:] .=data["s1t"];
 # source true location y
-s2t=s2*dx;
+s2t[:] .=data["s2t"];
 # source true location z
-s3t=s3*dx;
+s3t[:] .=data["s3t"];
 ## PML
 # PML layers
 lp=10;
