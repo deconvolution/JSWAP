@@ -1,3 +1,6 @@
+"
+acoustic eikonal adjoint solver
+"
 function acoustic_eikonal_adjoint(;nx,ny,nz,h,T,r1,r2,r3,s1,s2,s3,R_cal,R_true)
     ## calculate misfit
     lambda=zeros(nx,ny,nz);

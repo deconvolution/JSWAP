@@ -21,6 +21,7 @@ nz=floor(Int64,data["nz"]);
 X=data["X"];
 Y=data["Y"];
 K=data["K"];
+# topography Kmax(x,y)
 Kmax=data["Kmax"];
 ## material properties
 lambda=data["lambda"];
@@ -54,10 +55,16 @@ src1=zeros(nt,1);
 src2=zeros(nt,1);
 src3=zeros(nt,1);
 srcp=zeros(nt,1);
+# source
+# frequency
 freq=15;
+# source signal at direction 1
 src1[:]=0*rickerWave(freq,dt,nt,2);
+# source signal at direction 2
 src2[:]=0*rickerWave(freq,dt,nt,2);
+# source signal at direction 3
 src3[:]=1*rickerWave(freq,dt,nt,2);
+# pressure source
 srcp[:]=0*rickerWave(freq,dt,nt,2);
 
 r1t=zeros(Int64,1,1);
@@ -84,7 +91,7 @@ lp=10;
 # PML power
 nPML=2;
 # PML theorecital coefficient
-Rc=.001;
+Rc=.1;
 # set PML active
 # xminus,xplus,yminus,yplus,zminus,zplus
 PML_active=[1 1 1 1 1 0];

@@ -1,3 +1,6 @@
+"
+acoustic eikonal equation solver
+"
 function acoustic_eikonal_forward(;nx,ny,nz,h,v,s1,s2,s3,T0,s1t,s2t,s3t,r1,r2,r3,
     r1t,r2t,r3t,X,Y,Z,path,write_t=0)
     global data;

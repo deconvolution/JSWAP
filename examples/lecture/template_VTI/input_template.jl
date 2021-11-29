@@ -64,11 +64,11 @@ s2[:] .=51;
 # source grid location z
 s3=zeros(Int32,1,1);
 s3[:] .=51;
-# source signal x
+# source signal 1
 src1=zeros(nt,1);
-# source signal y
+# source signal 2
 src2=zeros(nt,1);
-# source signal z
+# source signal 3
 src3=reshape(rickerWave(10,10^-3*1.0,1000,2),nt,1)*1;
 # source signal pressure
 srcp=reshape(rickerWave(10,10^-3*1.0,1000,2),nt,1)*0;
@@ -78,8 +78,6 @@ r1t=r1*dx;
 r2t=r2*dy;
 # receiver true location z
 r3t=r3*dz;
-# activate receivers
-Rm=ones(length(r3),4);
 # source true location x
 s1t=s1*dx;
 # source true location y
