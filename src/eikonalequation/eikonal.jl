@@ -23,6 +23,4 @@ include("./acoustic_eikonal_forward.jl");
 ## acoustic traveltime adjoint
 include("./finite_difference_method.jl");
 include("./acoustic_eikonal_adjoint.jl");
-##
-include("./inversion_procedure.jl");
 end
