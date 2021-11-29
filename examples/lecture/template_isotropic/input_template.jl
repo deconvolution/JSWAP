@@ -20,6 +20,8 @@ Y,X,Z=JSWAP.meshgrid((1:ny)*dy,(1:nx)*dx,(1:nz)*dz);
 ## material properties
 lambda=ones(80,80,90)*10^9*1.0;
 mu=ones(80,80,90)*10^9*1.0;
+lambda[:,:,40:end] .=10^9*2;
+mu[:,:,40:end] .=10^9*2;
 rho=ones(80,80,90)*1000.0;
 inv_Qa=ones(80,80,90)*0.0;
 ## receiver and source configuration.

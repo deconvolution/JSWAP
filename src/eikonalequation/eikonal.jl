@@ -9,7 +9,7 @@ include("../ParallelStencil/src/ParallelStencil.jl");
 include("..//utilities/utilities.jl");
 ## using packages
 using Random,MAT,Plots,Dates,TimerOutputs,WriteVTK,ProgressMeter,DataFrames,CSV,
-FileIO,MATLAB,.ParallelStencil,.ParallelStencil.FiniteDifferences3D
+FileIO,.ParallelStencil,.ParallelStencil.FiniteDifferences3D #Matlab
 ## Use CPU for ParallelStencil
 const USE_GPU=false
 @static if USE_GPU
