@@ -2,7 +2,7 @@
 ## using packages
 export meshgrid,write2mat,readmat,rickerWave,LinearAlgebra
 ## import packages
-using Random,MAT,Plots,Dates,TimerOutputs,WriteVTK,ProgressMeter,DataFrames,CSV,LinearAlgebra
+using Random,Plots,Dates,TimerOutputs,WriteVTK,ProgressMeter,DataFrames,CSV,LinearAlgebra
 ##
 "
 Same with meshgrid in Matlab

@@ -4,7 +4,7 @@ ny=80;
 nz=80;
 h=100;
 # grid true location
-Y,X,Z=meshgrid(h:h:h*ny,h:h:h*nx,h:h:h*nz);
+Y,X,Z=JSWAP.meshgrid(h:h:h*ny,h:h:h*nx,h:h:h*nz);
 # velocity
 v=zeros(nx,ny,nz);
 v[:] .=5000;
