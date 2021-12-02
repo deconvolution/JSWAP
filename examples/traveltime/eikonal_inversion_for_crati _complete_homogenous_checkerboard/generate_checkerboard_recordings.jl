@@ -31,7 +31,32 @@ v=6800*mv;
 vtkfile=JSWAP.vtk_grid("checkerboard_model",X,Y,Z);
 vtkfile["v"]=v;
 JSWAP.vtk_save(vtkfile);
-
+mutable struct data2
+    X
+    Y
+    Z
+    nx
+    ny
+    nz
+    dx
+    dy
+    dz
+    vp
+end
+data=data2(0,0,0,0,0,0,0,0,0,0);
+data.X=X;
+data.Y=Y;
+data.Z=Z;
+data.nx=nx;
+data.ny=ny;
+data.nz=nz;
+data.dx=h;
+data.dy=h;
+data.dz=h;
+data.vp=v;
+file=JSWAP.matopen("./checkerboard_model.mat","w");
+write(file, "data", data);
+close(file);
 
 zero_Z=findmin(abs.(Z[1, 1, :]));
 
