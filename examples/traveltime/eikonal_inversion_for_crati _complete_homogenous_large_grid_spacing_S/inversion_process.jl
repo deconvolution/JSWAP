@@ -1,9 +1,9 @@
 ## import packages
-using JSWAP,MATLAB,FileIO
+using JSWAP,MATLAB
 ## inversion paramemters
-n_iteration=200;
-max_gradient=300;
-fu=20;
+n_iteration=50;
+max_gradient=200;
+fu=3;
 
 R_true=Vector{Vector{Float64}}();
 s1=Vector{Vector{Int64}}();
@@ -31,20 +31,22 @@ dx=h;
 dy=h;
 dz=h;
 v=tt["vp"];
-v[:] .=6300;
+v[:] .=3389;
 
 tt=readdir("./crati_traveltime_input/");
 file_name=tt;
 for I=1:size(tt,1)
     global R_true,s1,s2,s3,r1,r2,r3;
     tt2=JSWAP.readmat(string("./crati_traveltime_input/",tt[I]),"data");
-    R_true=push!(R_true,tt2["Rp"][:,4]);
-    s1=push!(s1,round.(Int64,tt2["S"][:,1]));
-    s2=push!(s2,round.(Int64,tt2["S"][:,2]));
-    s3=push!(s3,round.(Int64,tt2["S"][:,3]));
-    r1=push!(r1,round.(Int64,tt2["Rp"][:,1]));
-    r2=push!(r2,round.(Int64,tt2["Rp"][:,2]));
-    r3=push!(r3,round.(Int64,tt2["Rp"][:,3]));
+    if size(tt2["Rs"],1)!=0
+        R_true=push!(R_true,tt2["Rs"][:,4]);
+        s1=push!(s1,round.(Int64,tt2["S"][:,1]));
+        s2=push!(s2,round.(Int64,tt2["S"][:,2]));
+        s3=push!(s3,round.(Int64,tt2["S"][:,3]));
+        r1=push!(r1,round.(Int64,tt2["Rs"][:,1]));
+        r2=push!(r2,round.(Int64,tt2["Rs"][:,2]));
+        r3=push!(r3,round.(Int64,tt2["Rs"][:,3]));
+    end
 end
 ## receiver and source configuration.
 "
@@ -99,26 +101,18 @@ mutable struct data2
     vp
 end
 data=data2(0,0,0,0,0,0,0,0,0,0);
-
+td=0;
 for l=1:n_iteration
-    global v,n_decrease_fu,alp,max_gradient,fu
-    # adjust max_gradient and fu
-    #=
-    if mod(l,5)==0 && l!=1
-        fu=fu-1;
-    end
-    if mod(l,15)==0 && l!=1
-        max_gradient=max_gradient/2;
-    end
-    =#
+    global v,n_decrease_fu,alp,max_gradient,fu,td;
+
     DV=zeros(nx,ny,nz);
     E=zeros(size(s1,1),1);
 
-    M=[0:30:size(s1,1);size(s1,1)];
+    M=[0:50:size(s1,1);size(s1,1)];
 
     for m=1:size(M,1)-1
         Threads.@threads for I=(M[m]+1):M[m+1]
-            global R_true;
+            global R_true,td;
             input_s1=zeros(Int64,1,1);
             input_s2=zeros(Int64,1,1);
             input_s3=zeros(Int64,1,1);
@@ -177,13 +171,33 @@ for l=1:n_iteration
     """
     if l>=2
         if s_E[l]>s_E[l-1]
-            fu=fu-2;
-            # max_gradient=max_gradient/2;
-            if fu<=2
-                fu=2;
-            end
+            td=td+1;
         end
     end
+    #=
+    if td==5
+        fu=fu-1;
+        max_gradient=max_gradient*.9;
+        if fu<=1
+            fu=1;
+        end
+        if max_gradient<=100 && l<=100
+            max_gradient=100;
+        end
+        td=0;
+    end
+    =#
+    if mod(l,10)==0
+        fu=fu-1;
+        max_gradient=max_gradient*.6;
+        if fu<=1
+            fu=1;
+        end
+        if max_gradient<=100 && l<=100
+            max_gradient=100;
+        end
+    end
+
     s_max_gradient[l]=max_gradient;
     JSWAP.CSV.write(string("./inversion_progress/E_",l,".csv"),
     JSWAP.DataFrame([reshape(s_E,length(s_E),) reshape(s_fu,length(s_fu),) reshape(s_max_gradient,length(s_max_gradient),)],:auto));

@@ -1,9 +1,9 @@
 ## import packages
-using JSWAP,MATLAB,FileIO
+using JSWAP,MATLAB
 ## inversion paramemters
-n_iteration=200;
-max_gradient=300;
-fu=20;
+n_iteration=100;
+max_gradient=200;
+fu=1;
 
 R_true=Vector{Vector{Float64}}();
 s1=Vector{Vector{Int64}}();
@@ -31,7 +31,7 @@ dx=h;
 dy=h;
 dz=h;
 v=tt["vp"];
-v[:] .=6300;
+v[:] .=5500;
 
 tt=readdir("./crati_traveltime_input/");
 file_name=tt;
@@ -99,26 +99,18 @@ mutable struct data2
     vp
 end
 data=data2(0,0,0,0,0,0,0,0,0,0);
-
+td=0;
 for l=1:n_iteration
-    global v,n_decrease_fu,alp,max_gradient,fu
-    # adjust max_gradient and fu
-    #=
-    if mod(l,5)==0 && l!=1
-        fu=fu-1;
-    end
-    if mod(l,15)==0 && l!=1
-        max_gradient=max_gradient/2;
-    end
-    =#
+    global v,n_decrease_fu,alp,max_gradient,fu,td;
+
     DV=zeros(nx,ny,nz);
     E=zeros(size(s1,1),1);
 
-    M=[0:30:size(s1,1);size(s1,1)];
+    M=[0:50:size(s1,1);size(s1,1)];
 
     for m=1:size(M,1)-1
         Threads.@threads for I=(M[m]+1):M[m+1]
-            global R_true;
+            global R_true,td;
             input_s1=zeros(Int64,1,1);
             input_s2=zeros(Int64,1,1);
             input_s3=zeros(Int64,1,1);
@@ -177,20 +169,29 @@ for l=1:n_iteration
     """
     if l>=2
         if s_E[l]>s_E[l-1]
-            fu=fu-2;
-            # max_gradient=max_gradient/2;
-            if fu<=2
-                fu=2;
-            end
+            td=td+1;
         end
     end
+
+    if td==10
+        fu=fu-1;
+        max_gradient=max_gradient*.5;
+        if fu<=1
+            fu=1;
+        end
+        if max_gradient<=100 && l<=100
+            max_gradient=100;
+        end
+        td=0;
+    end
+
     s_max_gradient[l]=max_gradient;
     JSWAP.CSV.write(string("./inversion_progress/E_",l,".csv"),
     JSWAP.DataFrame([reshape(s_E,length(s_E),) reshape(s_fu,length(s_fu),) reshape(s_max_gradient,length(s_max_gradient),)],:auto));
 
     v=v-max_gradient/maximum(abs.(DV))*DV;
     vtkfile=JSWAP.vtk_grid(string("./inversion_progress/v_",l),X,
-    Y,Z);
+    Y,-Z);
     vtkfile["v"]=v;
     vtkfile["DV"]=DV;
     JSWAP.vtk_save(vtkfile);

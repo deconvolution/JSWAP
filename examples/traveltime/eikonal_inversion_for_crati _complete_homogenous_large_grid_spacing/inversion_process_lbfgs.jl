@@ -1,9 +1,9 @@
 ## import packages
-using JSWAP,MATLAB,FileIO
+using JSWAP,MATLAB,FileIO,Statistics
 ## inversion paramemters
-n_iteration=200;
+n_iteration=50;
 max_gradient=300;
-fu=20;
+fu=3;
 
 R_true=Vector{Vector{Float64}}();
 s1=Vector{Vector{Int64}}();
@@ -99,23 +99,106 @@ mutable struct data2
     vp
 end
 data=data2(0,0,0,0,0,0,0,0,0,0);
+## initialization for l-bfgs
+m=10;
+# size of the problem
+alpha=zeros(m,1);
+s=zeros(nx,ny,nz,m);
+y=copy(s);
+rho=zeros(m,1);
+v_old=zeros(nx,ny,nz);
+D=copy(v_old);
+D_old=copy(D);
 
 for l=1:n_iteration
-    global v,n_decrease_fu,alp,max_gradient,fu
-    # adjust max_gradient and fu
-    #=
-    if mod(l,5)==0 && l!=1
+    global v,n_decrease_fu,alp,max_gradient,fu;
+    if mod(l,5)==0
         fu=fu-1;
+        if fu<=2
+            fu=2;
+        end
     end
-    if mod(l,15)==0 && l!=1
-        max_gradient=max_gradient/2;
-    end
-    =#
-    DV=zeros(nx,ny,nz);
     E=zeros(size(s1,1),1);
-
+    # batch for parallelization
     M=[0:30:size(s1,1);size(s1,1)];
 
+    DV=zeros(nx,ny,nz);
+    if l==1
+        for m=1:size(M,1)-1
+            Threads.@threads for I=(M[m]+1):M[m+1]
+                global R_true;
+                input_s1=zeros(Int64,1,1);
+                input_s2=zeros(Int64,1,1);
+                input_s3=zeros(Int64,1,1);
+                input_s1[:] .=s1[I][1];
+                input_s2[:] .=s2[I][1];
+                input_s3[:] .=s3[I][1];
+
+                T,R_cal=JSWAP.eikonal.acoustic_eikonal_forward(nx=nx,
+                ny=ny,
+                nz=nz,
+                h=h,
+                v=v,
+                s1=input_s1,
+                s2=input_s2,
+                s3=input_s3,
+                T0=0,
+                s1t=s1t[I][1],
+                s2t=s2t[I][1],
+                s3t=s3t[I][1],
+                r1=r1[I]',
+                r2=r2[I]',
+                r3=r3[I]',
+                r1t=r1t[I]',
+                r2t=r2t[I]',
+                r3t=r3t[I]',
+                X=X,
+                Y=Y,
+                Z=Z,
+                path=string("./inversion_configuration/",I,"/"),
+                write_t=0);
+
+                lambda=JSWAP.eikonal.acoustic_eikonal_adjoint(nx=nx,
+                ny=ny,
+                nz=nz,
+                h=h,
+                T=T,
+                r1=reshape(r1[I],1,size(r1[I],1)),
+                r2=reshape(r2[I],1,size(r2[I],1)),
+                r3=reshape(r3[I],1,size(r3[I],1)),
+                s1=s1[I][1],
+                s2=s2[I][1],
+                s3=s3[I][1],
+                R_cal=R_cal,
+                R_true=R_true[I]');
+
+                E[I]=JSWAP.norm(R_cal-R_true[I]',2);
+                DV[:,:,:]=DV[:,:,:]+lambda ./v .^3;
+            end
+        end
+        s_E[l]=sum(E);
+        s_fu[l]=fu;
+
+        D[:,:,:]=DV;
+
+        mat"""
+        $G=imgaussfilt3($D,$fu);
+        """
+        max_gradient=.1*mean(v);
+        rho[end]=max_gradient;
+        v_old[:,:,:]=v;
+        v[:,:,:]=v-max_gradient*G/maximum(abs.(G));
+    end
+    ## lbfgs
+    s[:,:,:,1:end-1]=s[:,:,:,2:end];
+    y[:,:,:,1:end-1]=y[:,:,:,2:end];
+    rho[1:end-1]=rho[2:end];
+
+    s[:,:,:,end]=v-v_old;
+    v_old[:,:,:]=v;
+    D_old[:,:,:]=D;
+
+    DV=zeros(nx,ny,nz);
     for m=1:size(M,1)-1
         Threads.@threads for I=(M[m]+1):M[m+1]
             global R_true;
@@ -168,31 +251,44 @@ for l=1:n_iteration
             DV[:,:,:]=DV[:,:,:]+lambda ./v .^3;
         end
     end
-    s_E[l]=sum(E);
+    D[:,:,:]=DV;
+    y[:,:,:,end]=D-D_old;
 
-    s_fu[l]=fu;
+    q=copy(D);
+    alpha=zeros(m,1);
+    rho[end]=1/sum(y[:,:,:,end].*s[:,:,:,end],dims=[1,2,3])[1];
+    for j=m:-1:1
+        alpha[j]=rho[j]*sum(s[:,:,:,j].*q,dims=[1,2,3])[1];
+        q=q-alpha[j]*y[:,:,:,j];
+    end
+    gamma=sum(s[:,:,:,end].*y[:,:,:,end],dims=[1,2,3])[1]/sum(y[:,:,:,end].*y[:,:,:,end],dims=[1,2,3])[1];
+    z=gamma*q;
+
+    for j=1:m
+        beta=rho[j]*sum(y[:,:,:,j].*z,dims=[1,2,3])[1];
+        z=z+s[:,:,:,j]*(alpha[j]-beta);
+    end
 
     mat"""
-    $DV=imgaussfilt3($DV,$fu);
+    $G=imgaussfilt3($z,$fu);
     """
+
+    v[:,:,:]=v-G;
+
     if l>=2
-        if s_E[l]>s_E[l-1]
-            fu=fu-2;
-            # max_gradient=max_gradient/2;
-            if fu<=2
-                fu=2;
-            end
-        end
+        s_E[l]=sum(E);
+        s_fu[l]=fu;
     end
-    s_max_gradient[l]=max_gradient;
+
+
+    ## write
     JSWAP.CSV.write(string("./inversion_progress/E_",l,".csv"),
     JSWAP.DataFrame([reshape(s_E,length(s_E),) reshape(s_fu,length(s_fu),) reshape(s_max_gradient,length(s_max_gradient),)],:auto));
 
-    v=v-max_gradient/maximum(abs.(DV))*DV;
     vtkfile=JSWAP.vtk_grid(string("./inversion_progress/v_",l),X,
     Y,Z);
     vtkfile["v"]=v;
-    vtkfile["DV"]=DV;
+    vtkfile["D"]=D;
     JSWAP.vtk_save(vtkfile);
     ## write velocity
     data.X=X;
