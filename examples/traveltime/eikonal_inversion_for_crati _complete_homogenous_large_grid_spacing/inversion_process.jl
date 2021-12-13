@@ -31,7 +31,7 @@ dx=h;
 dy=h;
 dz=h;
 v=tt["vp"];
-v[:] .=5377;
+v[:] .=5349;
 
 tt=readdir("./crati_traveltime_input/");
 file_name=tt;
@@ -202,7 +202,7 @@ for l=1:n_iteration
 
     v=v-max_gradient/maximum(abs.(DV))*DV;
     vtkfile=JSWAP.vtk_grid(string("./inversion_progress/v_",l),X,
-    Y,Z);
+    Y,-Z);
     vtkfile["v"]=v;
     vtkfile["DV"]=DV;
     JSWAP.vtk_save(vtkfile);
