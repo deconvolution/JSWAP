@@ -30,7 +30,7 @@ for i=1:floor(Int64, nx/n)+1
     end
 end
 
-v=6800*mv;
+v=5346*mv;
 
 vtkfile=JSWAP.vtk_grid("checkerboard_model",X,Y,Z);
 vtkfile["v"]=v;
@@ -68,11 +68,11 @@ for m=1:size(M,1)-1
 
         s1t=h*s1;
         s2t=h*s2;
-        s3t=h*(s3 .-zero_Z[2]);
+        s3t=h*(zero_Z[2] .-s3);
 
         r1t=h*r1;
         r2t=h*r2;
-        r3t=h*(r3 .-zero_Z[2]);
+        r3t=h*(zero_Z[2] .-r3);
         path="./source_1";
         T,R_cal=JSWAP.eikonal.acoustic_eikonal_forward(
         nx=nx,

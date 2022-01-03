@@ -1,4 +1,4 @@
-function acoustic_eikonal_adjoint(;nx,ny,nz,h,T,r1,r2,r3,s1,s2,s3,R_cal,R_true)
+function acoustic_eikonal_adjoint(;nx,ny,nz,h,T,r1,r2,r3,s1,s2,s3,R_cal,R_true,N)
     ## calculate misfit
     lambda=zeros(nx,ny,nz);
     R_diff=R_cal-R_true;
@@ -41,7 +41,7 @@ function acoustic_eikonal_adjoint(;nx,ny,nz,h,T,r1,r2,r3,s1,s2,s3,R_cal,R_true)
     A2[s1,s2,s3-1]+A2[s1,s2,s3+1]);
 
     ## boundary condition of lambda
-    lambda[CartesianIndex.(r1,r2,r3)]=R_diff./Tz[CartesianIndex.(r1,r2,r3)];
+    lambda[CartesianIndex.(r1,r2,r3)]=R_diff./Tz[CartesianIndex.(r1,r2,r3)]./N;
     ##
     lambda_old=copy(lambda);
     for l=1

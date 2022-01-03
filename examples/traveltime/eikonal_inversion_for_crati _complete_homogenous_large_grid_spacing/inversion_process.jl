@@ -26,6 +26,7 @@ nz=round(Int64,tt["nz"]);
 X=tt["X"];
 Y=tt["Y"];
 Z=tt["Z"];
+topo=tt["topo"];
 h=tt["dx"];
 dx=h;
 dy=h;
@@ -58,7 +59,7 @@ r2t=r2*dx;
 # receiver true location z
 s3t=copy(s3);
 for i=1:size(s3t,1)
-    s3t[i]=h*(s3[i] .-zero_Z[2]);
+    s3t[i]=-h*(s3[i] .-zero_Z[2]);
 end
 # source true location x
 s1t=s1*dx;
@@ -67,7 +68,7 @@ s2t=s2*dx;
 # source true location z
 r3t=copy(r3);
 for i=1:size(r3t,1)
-    r3t[i]=h*(r3[i] .-zero_Z[2]);
+    r3t[i]=-h*(r3[i] .-zero_Z[2]);
 end
 
 tt=zeros(1,size(s1t,1));
@@ -154,7 +155,8 @@ for l=1:n_iteration
             s2=s2[I][1],
             s3=s3[I][1],
             R_cal=R_cal,
-            R_true=R_true[I]');
+            R_true=R_true[I]',
+            N=ones(size(R_cal))*(-1));
 
             E[I]=JSWAP.norm(R_cal-R_true[I]',2);
             DV[:,:,:]=DV[:,:,:]+lambda ./v .^3;
@@ -202,7 +204,7 @@ for l=1:n_iteration
 
     v=v-max_gradient/maximum(abs.(DV))*DV;
     vtkfile=JSWAP.vtk_grid(string("./inversion_progress/v_",l),X,
-    Y,-Z);
+    Y,Z);
     vtkfile["v"]=v;
     vtkfile["DV"]=DV;
     JSWAP.vtk_save(vtkfile);

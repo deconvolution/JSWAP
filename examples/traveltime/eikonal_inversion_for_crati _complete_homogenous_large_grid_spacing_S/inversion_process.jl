@@ -104,6 +104,12 @@ data=data2(0,0,0,0,0,0,0,0,0,0);
 td=0;
 for l=1:n_iteration
     global v,n_decrease_fu,alp,max_gradient,fu,td;
+    if mod(l,10)==0
+        fu=fu/2;
+        if fu<=1
+            fu=1;
+        end
+    end
 
     DV=zeros(nx,ny,nz);
     E=zeros(size(s1,1),1);
@@ -156,7 +162,8 @@ for l=1:n_iteration
             s2=s2[I][1],
             s3=s3[I][1],
             R_cal=R_cal,
-            R_true=R_true[I]');
+            R_true=R_true[I]',
+            N=ones(size(R_cal))*(-1));
 
             E[I]=JSWAP.norm(R_cal-R_true[I]',2);
             DV[:,:,:]=DV[:,:,:]+lambda ./v .^3;
@@ -189,7 +196,7 @@ for l=1:n_iteration
     =#
     if mod(l,10)==0
         fu=fu-1;
-        max_gradient=max_gradient*.6;
+        max_gradient=max_gradient*.8;
         if fu<=1
             fu=1;
         end

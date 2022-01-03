@@ -1,9 +1,9 @@
 ## import packages
 using JSWAP,MATLAB
 ## inversion paramemters
-n_iteration=100;
+n_iteration=50;
 max_gradient=200;
-fu=1;
+fu=3;
 
 R_true=Vector{Vector{Float64}}();
 s1=Vector{Vector{Int64}}();
@@ -27,17 +27,27 @@ X=tt["X"];
 Y=tt["Y"];
 Z=tt["Z"];
 h=tt["dx"];
+topo=tt["topo"];
 dx=h;
 dy=h;
 dz=h;
 v=tt["vp"];
-v[:] .=5500;
-
-tt=readdir("./crati_traveltime_input/");
+v[:] .=5346;
+##
+#=
+topo_ones=zeros(nx,ny,nz);
+for i=1:nx
+    for j=1:ny
+        IND=findall(x->x<=topo[i,j],Z[i,j,:]*dz .+minimum(Z));
+        topo_ones[i,j,IND] .=1;
+    end
+end
+=#
+tt=readdir("./crati_traveltime_checkerboard_input/");
 file_name=tt;
 for I=1:size(tt,1)
     global R_true,s1,s2,s3,r1,r2,r3;
-    tt2=JSWAP.readmat(string("./crati_traveltime_input/",tt[I]),"data");
+    tt2=JSWAP.readmat(string("./crati_traveltime_checkerboard_input/",tt[I]),"data");
     R_true=push!(R_true,tt2["Rp"][:,4]);
     s1=push!(s1,round.(Int64,tt2["S"][:,1]));
     s2=push!(s2,round.(Int64,tt2["S"][:,2]));
@@ -58,7 +68,7 @@ r2t=r2*dx;
 # receiver true location z
 s3t=copy(s3);
 for i=1:size(s3t,1)
-    s3t[i]=h*(s3[i] .-zero_Z[2]);
+    s3t[i]=h*(zero_Z[2] .-s3[i]);
 end
 # source true location x
 s1t=s1*dx;
@@ -67,7 +77,7 @@ s2t=s2*dx;
 # source true location z
 r3t=copy(r3);
 for i=1:size(r3t,1)
-    r3t[i]=h*(r3[i] .-zero_Z[2]);
+    r3t[i]=h*(zero_Z[2] .-r3[i]);
 end
 
 tt=zeros(1,size(s1t,1));
@@ -102,6 +112,13 @@ data=data2(0,0,0,0,0,0,0,0,0,0);
 td=0;
 for l=1:n_iteration
     global v,n_decrease_fu,alp,max_gradient,fu,td;
+
+    if mod(l,10)==0
+        fu=fu/2;
+        if fu<=1
+            fu=1;
+        end
+    end
 
     DV=zeros(nx,ny,nz);
     E=zeros(size(s1,1),1);
@@ -154,7 +171,8 @@ for l=1:n_iteration
             s2=s2[I][1],
             s3=s3[I][1],
             R_cal=R_cal,
-            R_true=R_true[I]');
+            R_true=R_true[I]',
+            N=ones(size(R_cal))*(-1));
 
             E[I]=JSWAP.norm(R_cal-R_true[I]',2);
             DV[:,:,:]=DV[:,:,:]+lambda ./v .^3;
@@ -191,7 +209,7 @@ for l=1:n_iteration
 
     v=v-max_gradient/maximum(abs.(DV))*DV;
     vtkfile=JSWAP.vtk_grid(string("./inversion_progress/v_",l),X,
-    Y,-Z);
+    Y,Z);
     vtkfile["v"]=v;
     vtkfile["DV"]=DV;
     JSWAP.vtk_save(vtkfile);

@@ -2,7 +2,7 @@
 using JSWAP,MATLAB,Statistics
 ## inversion paramemters
 n_iteration=40;
-max_gradient=200;
+max_gradient=400;
 fu=2;
 
 R_true=Vector{Vector{Float64}}();
@@ -183,8 +183,11 @@ for l=1:n_iteration
             end
         end
         s_E[l]=E;
+
         s_fu[l]=fu;
+
         D[:,:,:]=DV;
+
         mat"""
         $G=imgaussfilt3($D,$fu);
         """
@@ -256,7 +259,7 @@ for l=1:n_iteration
         s_fu[l]=fu;
 
         p[:,:,:]=G[:,:,:];
-
+        #=
         for j=m:-1:max(m-l+2,1)
             alpha[j]=sum(s[:,:,:,j] .*p,dims=[1,2,3])[1]/sum(y[:,:,:,j] .*s[:,:,:,j],dims=[1,2,3])[1];
             p[:,:,:]=p-alpha[j]*y[:,:,:,j];
@@ -266,7 +269,7 @@ for l=1:n_iteration
             beta=sum(y[:,:,:,j] .*p,dims=[1,2,3])[1]/sum(s[:,:,:,j] .*y[:,:,:,end],dims=[1,2,3])[1];
             p[:,:,:]=p+s[:,:,:,j]*(alpha[j]-beta);
         end
-
+        =#
     end
     ## evaluate error again for line search
     tt_error=Inf;
@@ -393,10 +396,10 @@ for l=1:n_iteration
     s[:,:,:,end]=v-v_old;
 
     ## write
-    JSWAP.CSV.write(string("./inversion_progress/E_",l,".csv"),
+    JSWAP.CSV.write(string("./inversion_progress2/E_",l,".csv"),
     JSWAP.DataFrame([reshape(s_E,length(s_E),) reshape(s_fu,length(s_fu),) reshape(s_max_gradient,length(s_max_gradient),)],:auto));
 
-    vtkfile=JSWAP.vtk_grid(string("./inversion_progress/v_",l),X,
+    vtkfile=JSWAP.vtk_grid(string("./inversion_progress2/v_",l),X,
     Y,Z);
     vtkfile["v"]=v;
     vtkfile["G"]=G;
@@ -412,7 +415,7 @@ for l=1:n_iteration
     data.dx=dx;
     data.dy=dy;
     data.dz=dz;
-    file=JSWAP.matopen(string("./inversion_progress/", "output_vp_",l,".mat"), "w");
+    file=JSWAP.matopen(string("./inversion_progress2/", "output_vp_",l,".mat"), "w");
     write(file,"data",data);
     close(file);
     println("iteration = ",l);
