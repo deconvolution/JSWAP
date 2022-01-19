@@ -9,28 +9,24 @@ Y=tt["Y"];
 Z=tt["Z"];
 h=tt["dx"];
 ## create checkerboard
-n=8;
+n=40;
 
 mv=ones(nx, ny, nz);
 
-for i=1:floor(Int64, nx/n)+1
-    for j=1:floor(Int64, ny/n)+1
-        for k=1:floor(Int64, nz/n)+1
+for i=1:floor(Int64, nx/n)
+    for j=1:floor(Int64, ny/n)
+        for k=1:floor(Int64, nz/n)
             if mod(i + j + k, 2)==0
-                tt=1.1;
+                tt=1.2;
             else
-                tt=.9;
+                tt=.8;
             end
-            if i==floor(Int64,nx/n)+1 || j==floor(Int64,ny/n)+1 || k==floor(Int64,nz/n)+1
-                mv[((1+(i-1)*n):end), ((1+(j-1)*n):end), ((1+(k-1)*n):end)] .= tt;
-            else
-                mv[((1:n).+(i-1)*n), ((1:n).+(j-1)*n), ((1:n).+(k-1)*n)] .= tt;
-            end
+            mv[((1:n).+(i-1)*n), ((1:n).+(j-1)*n), ((1:n).+(k-1)*n)] .= tt;
         end
     end
 end
 
-v=5346*mv;
+v=6800*mv;
 
 vtkfile=JSWAP.vtk_grid("checkerboard_model",X,Y,Z);
 vtkfile["v"]=v;
@@ -68,36 +64,36 @@ for m=1:size(M,1)-1
 
         s1t=h*s1;
         s2t=h*s2;
-        s3t=h*(zero_Z[2] .-s3);
+        s3t=h*(s3 .-zero_Z[2]);
 
         r1t=h*r1;
         r2t=h*r2;
-        r3t=h*(zero_Z[2] .-r3);
+        r3t=h*(r3 .-zero_Z[2]);
         path="./source_1";
         T,R_cal=JSWAP.eikonal.acoustic_eikonal_forward(
-        nx=nx,
-        ny=ny,
-        nz=nz,
-        h=h,
-        v=v,
-        s1=s1,
-        s2=s2,
-        s3=s3,
-        T0=0,
-        s1t=s1t,
-        s2t=s2t,
-        s3t=s3t,
-        r1=r1,
-        r2=r2,
-        r3=r3,
-        r1t=r1t,
-        r2t=r2t,
-        r3t=r3t,
-        X=X,
-        Y=Y,
-        Z=Z,
-        path=path,
-        write_t=0);
+            nx=nx,
+            ny=ny,
+            nz=nz,
+            h=h,
+            v=v,
+            s1=s1,
+            s2=s2,
+            s3=s3,
+            T0=0,
+            s1t=s1t,
+            s2t=s2t,
+            s3t=s3t,
+            r1=r1,
+            r2=r2,
+            r3=r3,
+            r1t=r1t,
+            r2t=r2t,
+            r3t=r3t,
+            X=X,
+            Y=Y,
+            Z=Z,
+            path=path,
+            write_t=0);
 
         data=copy(tt2);
         data["Rp"][:,4]=R_cal;

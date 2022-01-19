@@ -9,7 +9,7 @@ Y=tt["Y"];
 Z=tt["Z"];
 h=tt["dx"];
 ## create checkerboard
-n=8;
+n=16;
 
 mv=ones(nx, ny, nz);
 

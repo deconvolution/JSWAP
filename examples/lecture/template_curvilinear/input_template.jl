@@ -41,6 +41,7 @@ r2[:] .=data["r2"];
 # receiver grid location z
 r3=zeros(Int64,1,1);
 r3[:] .=data["r3"];
+
 # source grid location x
 s1=zeros(Int64,1,1);
 s1[:] .=data["s1"];
@@ -50,15 +51,16 @@ s2[:] .=data["s2"];
 # source grid location z
 s3=zeros(Int64,1,1);
 s3[:] .=data["s3"];
+
 # Directional source
 src1=zeros(nt,1);
 src2=zeros(nt,1);
 src3=zeros(nt,1);
 srcp=zeros(nt,1);
-freq=20;
-src1[:]=0*rickerWave(freq,dt,nt,2);
+freq=15;
+src1[:]=1*rickerWave(freq,dt,nt,2);
 src2[:]=0*rickerWave(freq,dt,nt,2);
-src3[:]=1*rickerWave(freq,dt,nt,2);
+src3[:]=0*rickerWave(freq,dt,nt,2);
 srcp[:]=0*rickerWave(freq,dt,nt,2);
 
 # receiver true location x
@@ -79,7 +81,7 @@ lp=10;
 # PML power
 nPML=2;
 # PML theorecital coefficient
-Rc=.001;
+Rc=.1;
 # set PML active
 # xminus,xplus,yminus,yplus,zminus,zplus
 PML_active=[1 1 1 1 1 0];

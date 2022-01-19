@@ -3,7 +3,7 @@ using JSWAP,MATLAB
 ## inversion paramemters
 n_iteration=50;
 max_gradient=200;
-fu=2;
+fu=6;
 
 R_true=Vector{Vector{Float64}}();
 s1=Vector{Vector{Int64}}();
@@ -104,12 +104,7 @@ data=data2(0,0,0,0,0,0,0,0,0,0);
 td=0;
 for l=1:n_iteration
     global v,n_decrease_fu,alp,max_gradient,fu,td;
-    if mod(l,10)==0
-        fu=fu/2;
-        if fu<=1
-            fu=1;
-        end
-    end
+
 
     DV=zeros(nx,ny,nz);
     E=zeros(size(s1,1),1);
