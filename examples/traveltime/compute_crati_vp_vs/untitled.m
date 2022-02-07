@@ -18,4 +18,6 @@ data.Y=Y;
 data.Z=Z;
 save('vp_vs.mat','data');
 %%
+histogram(vp_vs(:),20)
+%%
 vtkwrite('./vp_vs.vtk','structured_grid',X,Y,Z,'scalars','vp_vs',vp_vs)

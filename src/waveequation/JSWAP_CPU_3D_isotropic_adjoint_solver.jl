@@ -93,53 +93,50 @@ end
     return nothing
 end
 ##
-@timeit ti "iso_3D" function iso_3D_adjoint(dt,dx,dy,dz,nt,
+@timeit ti "iso_3D" function JSWAP_CPU_3D_adjoint_isotropic_solver(;dt,dx,dy,dz,nt,
 nx,ny,nz,X,Y,Z,r1,r2,r3,s1,s2,s3,src1,src2,src3,srcp,
 r1t,r2t,r3t,
 s1t,s2t,s3t,
-lp,nPML,Rc,pml_active,
-C,
-plot_interval,
+lp,nPML,Rc,PML_active,
+lambda,mu,rho,
+plot_interval=nothing,
 wavefield_interval,
-path,
-path_pic,
-path_model,
-path_wavefield);
+path)
 
 global data
 
 IND_accuracy=9;
 
 # zero stress condition at the boundaries
-C.lambda[1:5,:,:] .=0;
-C.lambda[end-4:end,:,:] .=0;
-C.lambda[:,1:5,:] .=0;
-C.lambda[:,end-4:end,:] .=0;
-C.lambda[:,:,1:5] .=0;
-C.lambda[:,:,end-4:end] .=0;
+lambda[1:5,:,:] .=0;
+lambda[end-4:end,:,:] .=0;
+lambda[:,1:5,:] .=0;
+lambda[:,end-4:end,:] .=0;
+lambda[:,:,1:5] .=0;
+lambda[:,:,end-4:end] .=0;
 
-C.mu[1:5,:,:] .=0;
-C.mu[end-4:end,:,:] .=0;
-C.mu[:,1:5,:] .=0;
-C.mu[:,end-4:end,:] .=0;
-C.mu[:,:,1:5] .=0;
-C.mu[:,:,end-4:end] .=0;
+mu[1:5,:,:] .=0;
+mu[end-4:end,:,:] .=0;
+mu[:,1:5,:] .=0;
+mu[:,end-4:end,:] .=0;
+mu[:,:,1:5] .=0;
+mu[:,:,end-4:end] .=0;
 
 # shift coordinate of stiffness
 
 tt=zeros(nx,ny,nz);
 #=
-tt[1:end-1,1:end-1,1:end-1]=C.lambda[2:end,2:end,2:end];
-tt[end,:,:]=C.lambda[end,:,:];
-tt[:,end,:]=C.lambda[:,end,:];
-tt[:,:,end]=C.lambda[:,:,end];
-C.lambda=tt;
+tt[1:end-1,1:end-1,1:end-1]=lambda[2:end,2:end,2:end];
+tt[end,:,:]=lambda[end,:,:];
+tt[:,end,:]=lambda[:,end,:];
+tt[:,:,end]=lambda[:,:,end];
+lambda=tt;
 
-tt[1:end-1,1:end-1,1:end-1]=C.rho[2:end,2:end,2:end];
-tt[end,:,:]=C.rho[end,:,:];
-tt[:,end,:]=C.rho[:,end,:];
-tt[:,:,end]=C.rho[:,:,end];
-C.rho=tt;
+tt[1:end-1,1:end-1,1:end-1]=rho[2:end,2:end,2:end];
+tt[end,:,:]=rho[end,:,:];
+tt[:,end,:]=rho[:,end,:];
+tt[:,:,end]=rho[:,:,end];
+rho=tt;
 =#
 tt=nothing;
 
@@ -155,7 +152,8 @@ end
 # create folder for picture
 n_picture=1;
 n_wavefield=1;
-if path_pic!=nothing
+path_pic=string(path,"/pic");
+if path!=nothing
     if isdir(path_pic)==0
         mkdir(path_pic);
     end
@@ -164,28 +162,30 @@ if path_pic!=nothing
 end
 
 # create folder for model
-if path_model!=nothing
+path_model=string(path,"/model_adjoint");
+if path!=nothing
     if isdir(path_model)==0
-        mkdir(path_model)
+        mkdir(path_model);
     end
     vtkfile = vtk_grid(string(path_model,"/material_properties"),X,Y,Z);
-    vtkfile["lambda"]=C.lambda;
-    vtkfile["mu"]=C.mu;
-    vtkfile["rho"]=C.rho;
+    vtkfile["lambda"]=lambda;
+    vtkfile["mu"]=mu;
+    vtkfile["rho"]=rho;
     vtk_save(vtkfile);
     CSV.write(string(path_model,"/receiver location.csv"),DataFrame([r1t' r2t' r3t'],:auto));
-    #CSV.write(string(path_model,"/source location.csv"),DataFrame([s1t' s2t' s3t'],:auto));
+    CSV.write(string(path_model,"/source location.csv"),DataFrame([s1t' s2t' s3t'],:auto));
 end
 
 # create folder for wavefield
-if path_wavefield!=nothing
+path_wavefield=string(path,"/wavefield_adjoint");
+if path!=nothing
     if isdir(path_wavefield)==0
         mkdir(path_wavefield)
     end
 end
 
 # PML
-vmax=sqrt.((C.lambda+2*C.mu) ./C.rho);
+vmax=sqrt.((lambda+2*mu) ./rho);
 beta0=(ones(nx,ny,nz) .*vmax .*(nPML+1) .*log(1/Rc)/2/lp/dx);
 beta1=(@zeros(nx,ny,nz));
 beta2=copy(beta1);
@@ -328,7 +328,7 @@ auxiliary_in_vadjoint_3D3_3_minus=copy(v1);
 
 l=1;
 # save wavefield
-if path_wavefield!=nothing && wavefield_interval!=0
+if path_wavefield!=nothing && wavefield_interval!=nothing
     if mod(l,wavefield_interval)==0
         data=zeros(nx,ny,nz);
         write2mat(string(path_wavefield,"/v1_",n_wavefield,".mat"),data);
@@ -350,87 +350,110 @@ end
 #
 pro_bar=Progress(nt,1,"adjoint_simulation...",50);
 for l=1:nt-1
-    @parallel Dx_inn(v1,dtt1);
-    @parallel (2:ny-1,2:nz-1) u_1_plus(dtt1,v1_1_plus);
+    #@parallel Dx_inn(v1,dtt1);
+    #@parallel (2:ny-1,2:nz-1) u_1_plus(dtt1,v1_1_plus);
+    @parallel Dx_12(v1,v1_1_plus,6,5,0,0,0,0);
 
-    @parallel Dy_inn(v1,dtt2);
-    @parallel (2:nx-1,2:nz-1) u_2_minus(dtt2,v1_2_minus);
+    #@parallel Dy_inn(v1,dtt2);
+    #@parallel (2:nx-1,2:nz-1) u_2_minus(dtt2,v1_2_minus);
+    @parallel Dy_12(v1,v1_2_minus,0,0,5,6,0,0);
 
-    @parallel Dz_inn(v1,dtt3);
-    @parallel (2:nx-1,2:ny-1) u_3_minus(dtt3,v1_3_minus);
+    #@parallel Dz_inn(v1,dtt3);
+    #@parallel (2:nx-1,2:ny-1) u_3_minus(dtt3,v1_3_minus);
+    @parallel Dz_12(v1,v1_3_minus,0,0,0,0,5,6);
 
-    @parallel Dx_inn(v2,dtt1);
-    @parallel (2:ny-1,2:nz-1) u_1_minus(dtt1,v2_1_minus);
+    #@parallel Dx_inn(v2,dtt1);
+    #@parallel (2:ny-1,2:nz-1) u_1_minus(dtt1,v2_1_minus);
+    @parallel Dx_12(v2,v2_1_minus,5,6,0,0,0,0);
 
-    @parallel Dy_inn(v2,dtt2);
-    @parallel (2:nx-1,2:nz-1) u_2_plus(dtt2,v2_2_plus);
+    #@parallel Dy_inn(v2,dtt2);
+    #@parallel (2:nx-1,2:nz-1) u_2_plus(dtt2,v2_2_plus);
+    @parallel Dy_12(v2,v2_2_plus,0,0,6,5,0,0);
 
-    @parallel Dz_inn(v2,dtt3);
-    @parallel (2:nx-1,2:ny-1) u_3_minus(dtt3,v2_3_minus);
+    #@parallel Dz_inn(v2,dtt3);
+    #@parallel (2:nx-1,2:ny-1) u_3_minus(dtt3,v2_3_minus);
+    @parallel Dz_12(v2,v2_3_minus,0,0,0,0,5,6);
 
-    @parallel Dx_inn(v3,dtt1);
-    @parallel (2:ny-1,2:nz-1) u_1_minus(dtt1,v3_1_minus);
+    #@parallel Dx_inn(v3,dtt1);
+    #@parallel (2:ny-1,2:nz-1) u_1_minus(dtt1,v3_1_minus);
+    @parallel Dx_12(v3,v3_1_minus,5,6,0,0,0,0);
 
-    @parallel Dy_inn(v3,dtt2);
-    @parallel (2:nx-1,2:nz-1) u_2_minus(dtt2,v3_2_minus);
+    #@parallel Dy_inn(v3,dtt2);
+    #@parallel (2:nx-1,2:nz-1) u_2_minus(dtt2,v3_2_minus);
+    @parallel Dy_12(v3,v3_2_minus,0,0,5,6,0,0);
 
-    @parallel Dz_inn(v3,dtt3);
-    @parallel (2:nx-1,2:ny-1) u_3_plus(dtt3,v3_3_plus);
-    @timeit ti "compute_sigma" @parallel compute_sigma_adjoint(dt,dx,dy,dz,C.lambda,C.mu,
+    #@parallel Dz_inn(v3,dtt3);
+    #@parallel (2:nx-1,2:ny-1) u_3_plus(dtt3,v3_3_plus);
+    @parallel Dz_12(v3,v3_3_plus,0,0,0,0,6,5);
+
+    @timeit ti "compute_sigma" @parallel compute_sigma_adjoint(dt,dx,dy,dz,lambda,mu,
     beta,
     v1_1_plus,v1_2_minus,v1_3_minus,
     v2_1_minus,v2_2_plus,v2_3_minus,
     v3_1_minus,v3_2_minus,v3_3_plus,
     sigmas11,sigmas22,sigmas33,sigmas23,sigmas13,sigmas12,p);
 
-    @timeit ti "minus" @parallel compute_auxiliary_in_vadjoint_3D(C.lambda,C.mu,
+    @timeit ti "minus" @parallel compute_auxiliary_in_vadjoint_3D(lambda,mu,
     sigmas11,sigmas22,sigmas33,p,auxiliary_in_vadjoint_3D,
     auxiliary_in_vadjoint_3D2,auxiliary_in_vadjoint_3D3);
 
-    @parallel Dx_inn(sigmas11,dtt1);
-    @parallel (2:ny-1,2:nz-1) u_1_minus(dtt1,sigmas11_1_minus);
+    #@parallel Dx_inn(sigmas11,dtt1);
+    #@parallel (2:ny-1,2:nz-1) u_1_minus(dtt1,sigmas11_1_minus);
+    @parallel Dx_12(sigmas11,sigmas11_1_minus,5,6,0,0,0,0);
 
-    @parallel Dy_inn(sigmas22,dtt2);
-    @parallel (2:nx-1,2:nz-1) u_2_minus(dtt2,sigmas22_2_minus);
+    #@parallel Dy_inn(sigmas22,dtt2);
+    #@parallel (2:nx-1,2:nz-1) u_2_minus(dtt2,sigmas22_2_minus);
+    @parallel Dy_12(sigmas22,sigmas22_2_minus,0,0,5,6,0,0);
 
-    @parallel Dz_inn(sigmas33,dtt3);
-    @parallel (2:nx-1,2:ny-1) u_3_minus(dtt3,sigmas33_3_minus);
+    #@parallel Dz_inn(sigmas33,dtt3);
+    #@parallel (2:nx-1,2:ny-1) u_3_minus(dtt3,sigmas33_3_minus);
+    @parallel Dz_12(sigmas33,sigmas33_3_minus,0,0,0,0,5,6);
 
-    @parallel Dy_inn(sigmas23,dtt2);
-    @parallel (2:nx-1,2:nz-1) u_2_plus(dtt2,sigmas23_2_plus);
-    @parallel Dz_inn(sigmas23,dtt3);
-    @parallel (2:nx-1,2:ny-1) u_3_plus(dtt3,sigmas23_3_plus);
+    #@parallel Dy_inn(sigmas23,dtt2);
+    #@parallel (2:nx-1,2:nz-1) u_2_plus(dtt2,sigmas23_2_plus);
+    @parallel Dy_12(sigmas23,sigmas23_2_plus,0,0,6,5,0,0);
+    #@parallel Dz_inn(sigmas23,dtt3);
+    #@parallel (2:nx-1,2:ny-1) u_3_plus(dtt3,sigmas23_3_plus);
+    @parallel Dz_12(sigmas23,sigmas23_3_plus,0,0,0,0,6,5);
 
-    @parallel Dx_inn(sigmas13,dtt1);
-    @parallel (2:ny-1,2:nz-1) u_1_plus(dtt1,sigmas13_1_plus);
-    @parallel Dz_inn(sigmas13,dtt3);
-    @parallel (2:nx-1,2:ny-1) u_3_plus(dtt3,sigmas13_3_plus);
+    #@parallel Dx_inn(sigmas13,dtt1);
+    #@parallel (2:ny-1,2:nz-1) u_1_plus(dtt1,sigmas13_1_plus);
+    @parallel Dx_12(sigmas13,sigmas13_1_plus,6,5,0,0,0,0);
+    #@parallel Dz_inn(sigmas13,dtt3);
+    #@parallel (2:nx-1,2:ny-1) u_3_plus(dtt3,sigmas13_3_plus);
+    @parallel Dz_12(sigmas13,sigmas13_3_plus,0,0,0,0,6,5);
 
-    @parallel Dx_inn(sigmas12,dtt1);
-    @parallel (2:ny-1,2:nz-1) u_1_plus(dtt1,sigmas12_1_plus);
-    @parallel Dy_inn(sigmas12,dtt2);
-    @parallel (2:nx-1,2:nz-1) u_2_plus(dtt2,sigmas12_2_plus);
+    #@parallel Dx_inn(sigmas12,dtt1);
+    #@parallel (2:ny-1,2:nz-1) u_1_plus(dtt1,sigmas12_1_plus);
+    @parallel Dx_12(sigmas12,sigmas12_1_plus,6,5,0,0,0,0);
+    #@parallel Dy_inn(sigmas12,dtt2);
+    #@parallel (2:nx-1,2:nz-1) u_2_plus(dtt2,sigmas12_2_plus);
+    @parallel Dy_12(sigmas12,sigmas12_2_plus,0,0,6,5,0,0);
 
-    @parallel Dx_inn(p,dtt1);
-    @parallel (2:ny-1,2:nz-1) u_1_minus(dtt1,p_1_minus);
-    @parallel Dy_inn(p,dtt2);
-    @parallel (2:nx-1,2:nz-1) u_2_minus(dtt2,p_2_minus);
-    @parallel Dz_inn(p,dtt3);
-    @parallel (2:nx-1,2:ny-1) u_3_minus(dtt3,p_3_minus);
+    #@parallel Dx_inn(p,dtt1);
+    #@parallel (2:ny-1,2:nz-1) u_1_minus(dtt1,p_1_minus);
+    @parallel Dx_12(p,p_1_minus,5,6,0,0,0,0);
+    #@parallel Dy_inn(p,dtt2);
+    #@parallel (2:nx-1,2:nz-1) u_2_minus(dtt2,p_2_minus);
+    @parallel Dy_12(p,p_2_minus,0,0,5,6,0,0);
+    #@parallel Dz_inn(p,dtt3);
+    #@parallel (2:nx-1,2:ny-1) u_3_minus(dtt3,p_3_minus);
+    @parallel Dz_12(p,p_3_minus,0,0,0,0,5,6);
 
-    @parallel Dx_inn(auxiliary_in_vadjoint_3D,dtt1);
-    @parallel (2:ny-1,2:nz-1) u_1_minus(dtt1,auxiliary_in_vadjoint_3D_1_minus);
+    #@parallel Dx_inn(auxiliary_in_vadjoint_3D,dtt1);
+    #@parallel (2:ny-1,2:nz-1) u_1_minus(dtt1,auxiliary_in_vadjoint_3D_1_minus);
+    @parallel Dx_12(auxiliary_in_vadjoint_3D,auxiliary_in_vadjoint_3D_1_minus,5,6,0,0,0,0);
+
+    #@parallel Dy_inn(auxiliary_in_vadjoint_3D2,dtt2);
+    #@parallel (2:nx-1,2:nz-1) u_2_minus(dtt2,auxiliary_in_vadjoint_3D2_2_minus);
+    @parallel Dy_12(auxiliary_in_vadjoint_3D2,auxiliary_in_vadjoint_3D2_2_minus,0,0,5,6,0,0);
+
+    #@parallel Dz_inn(auxiliary_in_vadjoint_3D3,dtt3);
+    #@parallel (2:nx-1,2:ny-1) u_3_minus(dtt3,auxiliary_in_vadjoint_3D3_3_minus);
+    @parallel Dz_12(auxiliary_in_vadjoint_3D3,auxiliary_in_vadjoint_3D3_3_minus,0,0,0,0,5,6);
 
 
-    @parallel Dy_inn(auxiliary_in_vadjoint_3D2,dtt2);
-    @parallel (2:nx-1,2:nz-1) u_2_minus(dtt2,auxiliary_in_vadjoint_3D2_2_minus);
-
-    @parallel Dz_inn(auxiliary_in_vadjoint_3D3,dtt3);
-    @parallel (2:nx-1,2:ny-1) u_3_minus(dtt3,auxiliary_in_vadjoint_3D3_3_minus);
-
-
-
-    @timeit ti "compute_v" @parallel compute_v_adjoint_3D(dt,dx,dy,dz,C.rho,C.mu,beta,
+    @timeit ti "compute_v" @parallel compute_v_adjoint_3D(dt,dx,dy,dz,rho,mu,beta,
     v1,v2,v3,
     sigmas11_1_minus,
     sigmas22_2_minus,
@@ -445,14 +468,14 @@ for l=1:nt-1
 
 
     if ns==1
-        v1[CartesianIndex.(s1,s2,s3)]=v1[CartesianIndex.(s1,s2,s3)]+1 ./C.rho[CartesianIndex.(s1,s2,s3)] .*src1[l];
-        v2[CartesianIndex.(s1,s2,s3)]=v2[CartesianIndex.(s1,s2,s3)]+1 ./C.rho[CartesianIndex.(s1,s2,s3)] .*src2[l];
-        v3[CartesianIndex.(s1,s2,s3)]=v3[CartesianIndex.(s1,s2,s3)]+1 ./C.rho[CartesianIndex.(s1,s2,s3)] .*src3[l];
+        v1[CartesianIndex.(s1,s2,s3)]=v1[CartesianIndex.(s1,s2,s3)]+1 ./rho[CartesianIndex.(s1,s2,s3)] .*src1[l];
+        v2[CartesianIndex.(s1,s2,s3)]=v2[CartesianIndex.(s1,s2,s3)]+1 ./rho[CartesianIndex.(s1,s2,s3)] .*src2[l];
+        v3[CartesianIndex.(s1,s2,s3)]=v3[CartesianIndex.(s1,s2,s3)]+1 ./rho[CartesianIndex.(s1,s2,s3)] .*src3[l];
         p[CartesianIndex.(s1,s2,s3)]=p[CartesianIndex.(s1,s2,s3)]+srcp[l];
     else
-        v1[CartesianIndex.(s1,s2,s3)]=v1[CartesianIndex.(s1,s2,s3)]+1 ./C.rho[CartesianIndex.(s1,s2,s3)] .*src1[l,:]';
-        v2[CartesianIndex.(s1,s2,s3)]=v2[CartesianIndex.(s1,s2,s3)]+1 ./C.rho[CartesianIndex.(s1,s2,s3)] .*src2[l,:]';
-        v3[CartesianIndex.(s1,s2,s3)]=v3[CartesianIndex.(s1,s2,s3)]+1 ./C.rho[CartesianIndex.(s1,s2,s3)] .*src3[l,:]';
+        v1[CartesianIndex.(s1,s2,s3)]=v1[CartesianIndex.(s1,s2,s3)]+1 ./rho[CartesianIndex.(s1,s2,s3)] .*src1[l,:]';
+        v2[CartesianIndex.(s1,s2,s3)]=v2[CartesianIndex.(s1,s2,s3)]+1 ./rho[CartesianIndex.(s1,s2,s3)] .*src2[l,:]';
+        v3[CartesianIndex.(s1,s2,s3)]=v3[CartesianIndex.(s1,s2,s3)]+1 ./rho[CartesianIndex.(s1,s2,s3)] .*src3[l,:]';
         p[CartesianIndex.(s1,s2,s3)]=p[CartesianIndex.(s1,s2,s3)]+srcp[l,:]';
 
     end
@@ -463,7 +486,7 @@ for l=1:nt-1
     @timeit ti "receiver" R3[l+1,:]=reshape(v3[CartesianIndex.(r1,r2,r3)],length(r3),);
     @timeit ti "receiver" P[l+1,:]=reshape(p[CartesianIndex.(r1,r2,r3)],length(r3),);
     # save wavefield
-    if path_wavefield!=nothing && wavefield_interval!=0
+    if path_wavefield!=nothing && wavefield_interval!=nothing
         if mod(l,wavefield_interval)==0
             data=v1;
             write2mat(string(path_wavefield,"/v1_",n_wavefield,".mat"),data);
@@ -490,7 +513,7 @@ for l=1:nt-1
     end
 
     # plot
-    if path_pic!=nothing && plot_interval!=0
+    if path_pic!=nothing && plot_interval!=nothing
         if mod(l,plot_interval)==0 || l==nt-1
             vtkfile = vtk_grid(string(path_pic,"/wavefield_pic_",n_picture),X,Y,Z);
             vtkfile["v1"]=v1;
@@ -498,9 +521,9 @@ for l=1:nt-1
             vtkfile["v3"]=v3;
             vtkfile["p"]=p;
             vtkfile["sigmas33"]=sigmas33;
-            vtkfile["lambda"]=C.lambda;
-            vtkfile["mu"]=C.mu;
-            vtkfile["rho"]=C.rho;
+            vtkfile["lambda"]=lambda;
+            vtkfile["mu"]=mu;
+            vtkfile["rho"]=rho;
             pvd[dt*(l+1)]=vtkfile;
             n_picture=n_picture+1;
         end
@@ -523,15 +546,19 @@ write2mat(string(path_rec,"/rec_3.mat"),data);
 data=P;
 write2mat(string(path_rec,"/rec_p.mat"),data);
 =#
-if path_pic!=nothing && plot_interval!=0
+if path_pic!=nothing && plot_interval!=nothing
     vtk_save(pvd);
 end
 
 return v1,v2,v3
 end
 ## correlate
-function compute_sensitivity_kernel_iso_3D(path,nt,nx,ny,nz,dt,dx,dy,dz,X,Y,Z,lambda,mu,
+function JSWAP_CPU_3D_compute_sensitivity(;path,nt,nx,ny,nz,dt,dx,dy,dz,X,Y,Z,lambda,mu,rho,
     path_forward_wavefield,path_adjoint_wavefield,wavefield_interval)
+    if isdir(string(path))==0
+        mkdir(string(path));
+    end
+
     if isdir(string(path,"/sensitivity_kernel"))==0
         mkdir(string(path,"/sensitivity_kernel"));
     end
@@ -578,9 +605,9 @@ function compute_sensitivity_kernel_iso_3D(path,nt,nx,ny,nz,dt,dx,dy,dz,X,Y,Z,la
         @parallel compute_gradient(gradient_lambda,gradient_mu,klambda,kmu);
 
         vtkfile = vtk_grid(string(path,"/sensitivity_kernel/pic/sensitivity",n_picture),X,Y,Z);
-        vtkfile["lambda"]=C.lambda;
-        vtkfile["mu"]=C.mu;
-        vtkfile["rho"]=C.rho;
+        vtkfile["lambda"]=lambda;
+        vtkfile["mu"]=mu;
+        vtkfile["rho"]=rho;
         vtkfile["klambda"]=klambda;
         vtkfile["kmu"]=kmu;
         vtkfile["gradient_lambda"]=gradient_lambda/n_picture;

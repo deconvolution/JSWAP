@@ -3,7 +3,7 @@ using JSWAP,MATLAB
 ## inversion paramemters
 n_iteration=50;
 max_gradient=200;
-fu=6;
+fu=8;
 
 R_true=Vector{Vector{Float64}}();
 s1=Vector{Vector{Int64}}();
@@ -32,7 +32,7 @@ dx=h;
 dy=h;
 dz=h;
 v=tt["vp"];
-v[:] .=5.2849e03;
+v[:] .=5324;
 
 tt=readdir("./crati_traveltime_input/");
 file_name=tt;

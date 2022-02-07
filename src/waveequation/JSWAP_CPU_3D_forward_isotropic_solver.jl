@@ -1,5 +1,60 @@
 "
 CPU 3D isotropic forward solver
+
+Input:
+  nt is the number of time steps.
+  nx is the number of grids in the x-direciton.
+  ny is the number of grids in the y-direction.
+  nz is the number of grids in the z-direction.
+  dt is the time interval for the simulation.
+  dx is the grid spacing in the x-direction.
+  dy is the grid spacing in the y-direction.
+  dz is the grid spacing in the z-direction.
+  X is the x true coordinate.
+  Y is the y true coordinate.
+  Z is the z true coordinate.
+  lambda and mu are the Lame constants.
+  rho is the density.
+  inv_Qa is the apparent attenuation.
+  s1 is the grid location of source in the x-direction.
+  s2 is the grid location of source in the y-direction.
+  s3 is the grid location of source in the z-direction.
+  s1t is the true location of source in the x-direction.
+  s2t is the true location of source in the y-direction.
+  s3t is the true location of source in the z-direction.
+  r1 is the grid location of receiver in the x-direction.
+  r2 is the grid location of receiver in the y-direction.
+  r3 is the grid location of receiver in the z-direction.
+  r1t is the true location of receiver in the x-direction.
+  r2t 2 is the true location of receiver in the y-direction.
+  r3t is the true location of receiver in the z-direction.
+  path is the path where one wants to save the output.
+  wavefield_interval is the time interval for saving wavefield, nothing for not saving.
+  plot_interval is the time interval for plot the wavefield, nothing for not plotting.
+  M11, M22, M33, M23, M13 and M12 are the moment tensors.
+  src1, src2, src3 and srcp are the source components for the x-, y-, z- and pressure components.
+  lp is the number of PML layers.
+  Rc is the theoretical reflectivity for PML.
+  nPML is the power of the PML problem, normally 2.
+  PML_active is whether or not to activate PML in each direciton.
+
+Output:
+  <path>/model/material_properties.vts is the pareview file to visualize material properties.
+  <path>/model/receiver location.csv is the receiver location in a .csv file.
+  <path>/model/source location.csv is the source location in a .csv file.
+  <path>/pic/ contains .vts files for wavefield visualization in paraview.
+  <path>/rec/ contains .mat files for seismograms.
+  <path>/wavefield contains .mat files for wavefield.
+  <path>/time_info.pvd is a file that can be loaded to paraview for wavefield movie.
+
+Return:
+  v1_iph_j_k is the v1 component at the last time step.
+  v2_i_jph_k is the v2 component at the last time step.
+  v3_i_j_kph is the v3 component at the last time step.
+  R1 is the recording of v1.
+  R2 is the recording of v2.
+  R3 is the recording of v3.
+  P is the recording of pressure.
 "
 function JSWAP_CPU_3D_forward_isotropic_solver(;nt,
     nx,
