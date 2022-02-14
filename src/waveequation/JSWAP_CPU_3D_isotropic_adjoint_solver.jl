@@ -236,27 +236,27 @@ for k=nz-5:nz
     beta3[:,:,k]=beta3[:,:,end-6];
 end
 
-if pml_active[1]==0
+if PML_active[1]==0
     beta1[5+2:5+lp+1,5+lp+2:-5+ny-lp-1,5+lp+2:-5+nz-lp-1] .=0;
 end
 
-if pml_active[2]==0
+if PML_active[2]==0
     beta1[-5+nz-lp:-5+nz-1,5+lp+2:-5+ny-lp-1,5+lp+2:-5+nz-lp-1] .=0;
 end
 
-if pml_active[3]==0
+if PML_active[3]==0
     beta2[5+lp+2:-5+nx-lp-1,5+2:5+lp+1,5+lp+2:-5+nz-lp-1] .=0;
 end
 
-if pml_active[4]==0
+if PML_active[4]==0
     beta2[5+lp+2:-5+nx-lp-1,-5+nz-lp:-5+nz-1,5+lp+2:-5+nz-lp-1] .=0;
 end
 
-if pml_active[5]==0
+if PML_active[5]==0
     beta3[5+lp+2:-5+nx-lp-1,5+lp+2:-5+ny-lp-1,5+2:5+lp+1] .=0;
 end
 
-if pml_active[6]==0
+if PML_active[6]==0
     beta3[5+lp+2:-5+nx-lp-1,5+lp+2:-5+ny-lp-1,-5+nz-lp:-5+nz-1] .=0;
 end
 
