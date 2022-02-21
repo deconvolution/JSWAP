@@ -1,0 +1,23 @@
+clear all;
+tt=load('./vp.mat');
+X=tt.data.X;
+Y=tt.data.Y;
+Z=tt.data.Z;
+vp=tt.data.vp;
+%%
+tt=load('./vs.mat');
+X=tt.data.X;
+Y=tt.data.Y;
+Z=tt.data.Z;
+vs=tt.data.vp;
+vp_vs=vp./vs;
+%%
+data.vp_vs=vp_vs;
+data.X=X;
+data.Y=Y;
+data.Z=Z;
+save('vp_vs.mat','data');
+%%
+histogram(vp_vs(:),20)
+%%
+vtkwrite('./vp_vs.vtk','structured_grid',X,Y,Z,'scalars','vp_vs',vp_vs)

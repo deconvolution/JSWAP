@@ -71,6 +71,7 @@ s2[:] .= 20;
 s3=zeros(Int64,1,1);
 s3[:] .= 20;
 # moment tensor source
+#=
 M11=zeros(nt,1);
 M22=zeros(nt,1);
 M33=zeros(nt,1);
@@ -84,7 +85,13 @@ M33[:]=0*rickerWave(freq,dt,nt,2);
 M23[:]=0*rickerWave(freq,dt,nt,2);
 M13[:]=0*rickerWave(freq,dt,nt,2);
 M12[:]=0*rickerWave(freq,dt,nt,2);
-
+=#
+freq=1.5;
+src1=zeros(nt,1);
+src2=zeros(nt,1);
+src3=zeros(nt,1);
+srcp=zeros(nt,1);
+src3[:]=rickerWave(freq,dt,nt,2);
 # receiver true location x
 r1t=r1*dx;
 # receiver true location y
