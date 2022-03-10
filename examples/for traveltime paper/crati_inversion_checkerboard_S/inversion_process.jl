@@ -3,7 +3,7 @@ using JSWAP,MATLAB
 ## inversion paramemters
 n_iteration=50;
 max_gradient=200;
-fu=8;
+fu=10;
 
 R_true=Vector{Vector{Float64}}();
 s1=Vector{Vector{Int64}}();
@@ -32,7 +32,7 @@ dx=h;
 dy=h;
 dz=h;
 v=tt["vs"];
-v[:] .=5346;
+v[:] .=3000;
 ##
 #=
 topo_ones=zeros(nx,ny,nz);

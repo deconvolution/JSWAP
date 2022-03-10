@@ -105,7 +105,6 @@ td=0;
 for l=1:n_iteration
     global v,n_decrease_fu,alp,max_gradient,fu,td;
 
-
     DV=zeros(nx,ny,nz);
     E=zeros(size(s1,1),1);
 
