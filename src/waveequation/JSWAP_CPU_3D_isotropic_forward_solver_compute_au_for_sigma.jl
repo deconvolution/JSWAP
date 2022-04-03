@@ -31,7 +31,6 @@ Compuites auxiliary variable used to compute sigma, subfunction of JSWAP_CPU_3D_
     (-2*@all(mu)) .*@all(v3_i_j_kph_3)/dz;
 
     # sigmas22
-
     @all(ax2)=(-2*@all(mu)) .*(@all(v1_iph_j_k_1)/dx)+
     (4*@all(mu)) .* (@all(v2_i_jph_k_2)/dy)+
     (-2*@all(mu)) .*@all(v3_i_j_kph_3)/dz;
