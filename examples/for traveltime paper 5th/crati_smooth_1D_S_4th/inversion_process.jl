@@ -1,9 +1,9 @@
 ## import packages
 using JSWAP,MATLAB
 ## inversion paramemters
-n_iteration=50;
-max_gradient=50;
-fu=8;
+n_iteration=30;
+max_gradient=100;
+fu=10;
 
 R_true=Vector{Vector{Float64}}();
 s1=Vector{Vector{Int64}}();
@@ -27,34 +27,27 @@ X=tt["X"];
 Y=tt["Y"];
 Z=tt["Z"];
 h=tt["dx"];
-topo=tt["topo"];
 dx=h;
 dy=h;
 dz=h;
-v=tt["vp"];
-v[:] .=5346;
-##
-#=
-topo_ones=zeros(nx,ny,nz);
-for i=1:nx
-    for j=1:ny
-        IND=findall(x->x<=topo[i,j],Z[i,j,:]*dz .+minimum(Z));
-        topo_ones[i,j,IND] .=1;
-    end
-end
-=#
-tt=readdir("./crati_traveltime_checkerboard_input/");
+v=tt["vs"];
+
+v0=copy(v);
+
+tt=readdir("./crati_traveltime_input/");
 file_name=tt;
 for I=1:size(tt,1)
     global R_true,s1,s2,s3,r1,r2,r3;
-    tt2=JSWAP.readmat(string("./crati_traveltime_checkerboard_input/",tt[I]),"data");
-    R_true=push!(R_true,tt2["Rp"][:,4]);
-    s1=push!(s1,round.(Int64,tt2["S"][:,1]));
-    s2=push!(s2,round.(Int64,tt2["S"][:,2]));
-    s3=push!(s3,round.(Int64,tt2["S"][:,3]));
-    r1=push!(r1,round.(Int64,tt2["Rp"][:,1]));
-    r2=push!(r2,round.(Int64,tt2["Rp"][:,2]));
-    r3=push!(r3,round.(Int64,tt2["Rp"][:,3]));
+    tt2=JSWAP.readmat(string("./crati_traveltime_input/",tt[I]),"data");
+    if size(tt2["Rs"],1)!=0
+        R_true=push!(R_true,tt2["Rs"][:,4]);
+        s1=push!(s1,round.(Int64,tt2["S"][:,1]));
+        s2=push!(s2,round.(Int64,tt2["S"][:,2]));
+        s3=push!(s3,round.(Int64,tt2["S"][:,3]));
+        r1=push!(r1,round.(Int64,tt2["Rs"][:,1]));
+        r2=push!(r2,round.(Int64,tt2["Rs"][:,2]));
+        r3=push!(r3,round.(Int64,tt2["Rs"][:,3]));
+    end
 end
 ## receiver and source configuration.
 "
@@ -68,7 +61,7 @@ r2t=r2*dx;
 # receiver true location z
 s3t=copy(s3);
 for i=1:size(s3t,1)
-    s3t[i]=h*(zero_Z[2] .-s3[i]);
+    s3t[i]=h*(s3[i] .-zero_Z[2]);
 end
 # source true location x
 s1t=s1*dx;
@@ -77,7 +70,7 @@ s2t=s2*dx;
 # source true location z
 r3t=copy(r3);
 for i=1:size(r3t,1)
-    r3t[i]=h*(zero_Z[2] .-r3[i]);
+    r3t[i]=h*(r3[i] .-zero_Z[2]);
 end
 
 tt=zeros(1,size(s1t,1));
@@ -112,14 +105,7 @@ data=data2(0,0,0,0,0,0,0,0,0,0);
 td=0;
 for l=1:n_iteration
     global v,n_decrease_fu,alp,max_gradient,fu,td;
-    #=
-    if mod(l,10)==0
-        fu=fu/2;
-        if fu<=1
-            fu=1;
-        end
-    end
-    =#
+
     DV=zeros(nx,ny,nz);
     E=zeros(size(s1,1),1);
 
@@ -190,10 +176,10 @@ for l=1:n_iteration
             td=td+1;
         end
     end
-
-    if mod(l,10)==0
+    #=
+    if td==5
         fu=fu-1;
-        max_gradient=max_gradient*.5;
+        max_gradient=max_gradient*.9;
         if fu<=1
             fu=1;
         end
@@ -201,6 +187,17 @@ for l=1:n_iteration
             max_gradient=100;
         end
         td=0;
+    end
+    =#
+    if mod(l,10)==0
+        fu=fu-1;
+        max_gradient=max_gradient*.8;
+        if fu<=1
+            fu=1;
+        end
+        if max_gradient<=100 && l<=100
+            max_gradient=100;
+        end
     end
 
     s_max_gradient[l]=max_gradient;

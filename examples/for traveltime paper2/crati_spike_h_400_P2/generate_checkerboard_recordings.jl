@@ -9,16 +9,11 @@ Y=tt["Y"];
 Z=tt["Z"];
 h=tt["dx"];
 ## create checkerboard
-perturbation=.1;
-half_period=6400;
-wx=sin.(pi/half_period*(X .-minimum(X)));
-wy=sin.(pi/half_period*(Y .-minimum(Y)));
-wz=sin.(pi/half_period*(Z .-minimum(Z)));
-w=(wx.*wy.*wz);
-w=w*perturbation .+1;
+w=ones(size(X));
+w[50:75,100:125,end-43:end-35] .=.9;
 v=5346*w;
 
-vtkfile=JSWAP.vtk_grid("checkerboard_model",X,Y,Z);
+vtkfile=JSWAP.vtk_grid("spike_model",X,Y,Z);
 vtkfile["v"]=v;
 JSWAP.vtk_save(vtkfile);
 

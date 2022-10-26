@@ -1,9 +1,9 @@
 ## import packages
 using JSWAP,MATLAB
 ## inversion paramemters
-n_iteration=50;
+n_iteration=20;
 max_gradient=50;
-fu=8;
+fu=5;
 
 R_true=Vector{Vector{Float64}}();
 s1=Vector{Vector{Int64}}();
@@ -31,8 +31,8 @@ topo=tt["topo"];
 dx=h;
 dy=h;
 dz=h;
-v=tt["vp"];
-v[:] .=5346;
+v=tt["vs"];
+v[:] .=3000;
 ##
 #=
 topo_ones=zeros(nx,ny,nz);
@@ -48,13 +48,15 @@ file_name=tt;
 for I=1:size(tt,1)
     global R_true,s1,s2,s3,r1,r2,r3;
     tt2=JSWAP.readmat(string("./crati_traveltime_checkerboard_input/",tt[I]),"data");
-    R_true=push!(R_true,tt2["Rp"][:,4]);
-    s1=push!(s1,round.(Int64,tt2["S"][:,1]));
-    s2=push!(s2,round.(Int64,tt2["S"][:,2]));
-    s3=push!(s3,round.(Int64,tt2["S"][:,3]));
-    r1=push!(r1,round.(Int64,tt2["Rp"][:,1]));
-    r2=push!(r2,round.(Int64,tt2["Rp"][:,2]));
-    r3=push!(r3,round.(Int64,tt2["Rp"][:,3]));
+    if size(tt2["Rs"],1)!=0
+        R_true=push!(R_true,tt2["Rs"][:,4]);
+        s1=push!(s1,round.(Int64,tt2["S"][:,1]));
+        s2=push!(s2,round.(Int64,tt2["S"][:,2]));
+        s3=push!(s3,round.(Int64,tt2["S"][:,3]));
+        r1=push!(r1,round.(Int64,tt2["Rs"][:,1]));
+        r2=push!(r2,round.(Int64,tt2["Rs"][:,2]));
+        r3=push!(r3,round.(Int64,tt2["Rs"][:,3]));
+    end
 end
 ## receiver and source configuration.
 "
@@ -191,7 +193,7 @@ for l=1:n_iteration
         end
     end
 
-    if mod(l,10)==0
+    if td==10
         fu=fu-1;
         max_gradient=max_gradient*.5;
         if fu<=1

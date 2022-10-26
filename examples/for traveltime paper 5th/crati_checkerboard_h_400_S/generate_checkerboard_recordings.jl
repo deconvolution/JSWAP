@@ -9,16 +9,44 @@ Y=tt["Y"];
 Z=tt["Z"];
 h=tt["dx"];
 ## create checkerboard
-mv=ones(nx, ny, nz);
-
 perturbation=.1;
 half_period=6400;
 wx=sin.(pi/half_period*(X .-minimum(X)));
 wy=sin.(pi/half_period*(Y .-minimum(Y)));
 wz=sin.(pi/half_period*(Z .-minimum(Z)));
 w=(wx.*wy.*wz);
+w[w .>=0] .=1;
+w[w .<0] .=-1;
 w=w*perturbation .+1;
 v=3000*w;
+
+mutable struct data3
+    X
+    Y
+    Z
+    nx
+    ny
+    nz
+    dx
+    dy
+    dz
+    vp
+end
+data=data3(0,0,0,0,0,0,0,0,0,0);
+
+data.X=X;
+data.Y=Y;
+data.Z=Z;
+data.vp=v;
+data.nx=nx;
+data.ny=ny;
+data.nz=nz;
+data.dx=h;
+data.dy=h;
+data.dz=h;
+file=JSWAP.matopen(string("./checkerboard_model.mat"), "w");
+write(file,"data",data);
+close(file);
 
 vtkfile=JSWAP.vtk_grid("checkerboard_model",X,Y,Z);
 vtkfile["v"]=v;

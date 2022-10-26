@@ -9,16 +9,24 @@ Y=tt["Y"];
 Z=tt["Z"];
 h=tt["dx"];
 ## create checkerboard
+n=40;
+
 mv=ones(nx, ny, nz);
 
-perturbation=.1;
-half_period=6400;
-wx=sin.(pi/half_period*(X .-minimum(X)));
-wy=sin.(pi/half_period*(Y .-minimum(Y)));
-wz=sin.(pi/half_period*(Z .-minimum(Z)));
-w=(wx.*wy.*wz);
-w=w*perturbation .+1;
-v=3000*w;
+for i=1:floor(Int64, nx/n)
+    for j=1:floor(Int64, ny/n)
+        for k=1:floor(Int64, nz/n)
+            if mod(i + j + k, 2)==0
+                tt=1.1;
+            else
+                tt=.9;
+            end
+            mv[((1:n).+(i-1)*n), ((1:n).+(j-1)*n), ((1:n).+(k-1)*n)] .= tt;
+        end
+    end
+end
+
+v=3148*mv;
 
 vtkfile=JSWAP.vtk_grid("checkerboard_model",X,Y,Z);
 vtkfile["v"]=v;
@@ -57,11 +65,11 @@ for m=1:size(M,1)-1
 
             s1t=h*s1;
             s2t=h*s2;
-            s3t=h*(zero_Z[2] .-s3);
+            s3t=h*(s3 .-zero_Z[2]);
 
             r1t=h*r1;
             r2t=h*r2;
-            r3t=h*(zero_Z[2] .-r3);
+            r3t=h*(r3 .-zero_Z[2]);
             path="./source_1";
             T,R_cal=JSWAP.eikonal.acoustic_eikonal_forward(
             nx=nx,

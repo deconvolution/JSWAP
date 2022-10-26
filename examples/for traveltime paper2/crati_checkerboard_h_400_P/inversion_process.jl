@@ -1,9 +1,9 @@
 ## import packages
 using JSWAP,MATLAB
 ## inversion paramemters
-n_iteration=50;
-max_gradient=50;
-fu=8;
+n_iteration=15;
+max_gradient=200;
+fu=6;
 
 R_true=Vector{Vector{Float64}}();
 s1=Vector{Vector{Int64}}();
@@ -191,7 +191,7 @@ for l=1:n_iteration
         end
     end
 
-    if mod(l,10)==0
+    if td==10
         fu=fu-1;
         max_gradient=max_gradient*.5;
         if fu<=1

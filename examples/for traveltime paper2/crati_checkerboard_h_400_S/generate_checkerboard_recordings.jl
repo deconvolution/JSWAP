@@ -9,8 +9,6 @@ Y=tt["Y"];
 Z=tt["Z"];
 h=tt["dx"];
 ## create checkerboard
-mv=ones(nx, ny, nz);
-
 perturbation=.1;
 half_period=6400;
 wx=sin.(pi/half_period*(X .-minimum(X)));

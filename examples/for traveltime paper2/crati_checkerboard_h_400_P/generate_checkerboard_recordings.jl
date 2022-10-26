@@ -10,7 +10,7 @@ Z=tt["Z"];
 h=tt["dx"];
 ## create checkerboard
 perturbation=.1;
-half_period=6400;
+half_period=4000;
 wx=sin.(pi/half_period*(X .-minimum(X)));
 wy=sin.(pi/half_period*(Y .-minimum(Y)));
 wz=sin.(pi/half_period*(Z .-minimum(Z)));
